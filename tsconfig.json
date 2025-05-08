@@ -106,8 +106,8 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  // "include": ["src", "global.d.ts", "index.ts"],
+  "include": ["src", "global.d.ts", "index.ts"],
 	"exclude": ["node_modules/**"],
-	// "files": ["./src/types/index.d.ts", "./src/types/express.d.ts"],
+	"files": ["./src/types/index.d.ts", "./src/types/express.d.ts"],
 	"compileOnSave": false
 }

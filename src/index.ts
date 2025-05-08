@@ -1,8 +1,10 @@
-import express from "express";
+import { connectDatabase } from "./database/connection"
+import app from "./app"
 
-const app = express()
+async function main() {
+    await connectDatabase()
+    app.listen(process.env.APP_PORT || 3000)
+    console.log(`Server running on port ${process.env.APP_PORT || 3000} 🚀`)
+}
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000")
-})
-
+main()
