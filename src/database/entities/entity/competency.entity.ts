@@ -30,9 +30,6 @@ export class CompetencyEntity extends BaseEntity {
   @Column()
   category_id: number;
 
-  @Column()
-  evaluation_method_id: number;
-
   @Column({ type: "enum", enum: LevelCompetencyEnum })
   level: LevelCompetencyType;
 
