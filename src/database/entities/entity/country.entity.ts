@@ -7,7 +7,7 @@ export class CountryEntity extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ type: "enum", enum: StatusEnum })
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   status: StatusType;
 
   @OneToMany(() => JobPositionEntity, (jobPosition) => jobPosition.country)

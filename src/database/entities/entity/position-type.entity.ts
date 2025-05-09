@@ -9,8 +9,8 @@ export class PositionTypeEntity extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ type: "enum", enum: StatusEnum })
-  state: StatusType;
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @ManyToMany(() => CompetencyEntity, (competency) => competency.positionTypes)
   competencies: CompetencyEntity[]

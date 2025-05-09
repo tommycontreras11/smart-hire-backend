@@ -34,8 +34,8 @@ export class TrainingEntity extends BaseEntity {
   @Column()
   institution_id: number;
 
-  @Column({ type: "enum", enum: StatusEnum })
-  state: StatusType;
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @ManyToOne(() => InstitutionEntity, (institution) => institution.trainings)
   @JoinColumn({ name: "institution_id", referencedColumnName: "id" })

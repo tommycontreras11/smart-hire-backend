@@ -35,8 +35,8 @@ export class CompetencyEntity extends BaseEntity {
   @Column({ type: "enum", enum: LevelCompetencyEnum })
   level: LevelCompetencyType;
 
-  @Column({ type: "enum", enum: StatusEnum })
-  state: StatusType;
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @ManyToOne(() => CategoryEntity, (category) => category.competencies)
   @JoinColumn({ name: "category_id", referencedColumnName: "id" })

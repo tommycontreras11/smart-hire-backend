@@ -7,7 +7,7 @@ export class CategoryEntity extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ type: "enum", enum: StatusEnum })
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   state: StatusType;
 
   @OneToMany(() => CompetencyEntity, (competency) => competency.category)

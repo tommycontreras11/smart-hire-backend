@@ -3,11 +3,15 @@ import { PersonBaseEntity } from "../base/person.base.entity";
 import { JobPositionEntity } from "./job-position.entity";
 import { RequestEntity } from "./request.entity";
 import { InstitutionEntity } from "./institution.entity";
+import { StatusEnum, StatusType } from "../base/base.entity";
 
 @Entity({ name: "recruiters" })
 export class RecruiterEntity extends PersonBaseEntity {
   @Column()
   file_name: string;
+
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @ManyToOne(() => InstitutionEntity, (institution) => institution.recruiters)
   @JoinColumn({ name: "institution_id", referencedColumnName: "id" })

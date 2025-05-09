@@ -7,8 +7,8 @@ export class EvaluationMethodEntity extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ type: "enum", enum: StatusEnum })
-  state: StatusType;
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @ManyToMany(() => CompetencyEntity, (competency) => competency.evaluationMethods)
   competencies: CompetencyEntity[]

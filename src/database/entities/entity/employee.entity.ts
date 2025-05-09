@@ -7,6 +7,7 @@ import {
 import { PersonBaseEntity } from "../base/person.base.entity";
 import { DepartmentEntity } from "./department.entity";
 import { JobPositionEntity } from "./job-position.entity";
+import { StatusEnum, StatusType } from "../base/base.entity";
 
 @Entity({ name: "employees" })
 export class EmployeeEntity extends PersonBaseEntity {
@@ -24,6 +25,9 @@ export class EmployeeEntity extends PersonBaseEntity {
 
   @Column()
   file_name: string;
+
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @ManyToOne(() => DepartmentEntity, (department) => department.candidates)
   @JoinColumn({ name: "department_id", referencedColumnName: "id" })

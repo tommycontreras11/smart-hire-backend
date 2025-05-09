@@ -14,6 +14,7 @@ import { PositionTypeEntity } from "./position-type.entity";
 import { RequestEntity } from "./request.entity";
 import { TrainingEntity } from "./training.entity";
 import { WorkExperienceEntity } from "./work-experience.entity";
+import { StatusEnum, StatusType } from "../base/base.entity";
 
 @Entity({ name: "candidates" })
 export class CandidateEntity extends PersonBaseEntity {
@@ -34,6 +35,9 @@ export class CandidateEntity extends PersonBaseEntity {
 
   @Column()
   file_name: string;
+
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @ManyToOne(() => PositionTypeEntity, (position) => position.desiredPositions)
   @JoinColumn({ name: "desired_position_id", referencedColumnName: "id" })

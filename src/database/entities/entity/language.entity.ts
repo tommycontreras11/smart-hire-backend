@@ -7,8 +7,8 @@ export class LanguageEntity extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ type: "enum", enum: StatusEnum })
-  state: StatusType;
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @OneToMany(() => JobPositionEntity, (jobPosition) => jobPosition.language)
   jobPositions: JobPositionEntity[];
