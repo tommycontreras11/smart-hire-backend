@@ -3,8 +3,9 @@ import {
 	IQueryPagination
 } from '@interfaces/common/express.interface'
 import { FindOptionsWhere } from 'typeorm'
-import { UserEntity } from './../database/entities/entity/user.entity'
+import { CandidateEntity } from './../database/entities/entity/candidate.entity'
 import { EmployeeEntity } from './../database/entities/entity/employee.entity'
+import { RecruiterEntity } from './../database/entities/entity/recruiter.entity'
 
 declare global {
 	namespace Express {
@@ -14,7 +15,7 @@ declare global {
 			dates?: IQueryDates
 			order: "ASC" | "DESC"
 			filter: FindOptionsWhere | ObjectI
-			user: UserEntity | EmployeeEntity
+			user: RecruiterEntity | EmployeeEntity | CandidateEntity
 			cookies: {
 				[key: string]: string
 			}
@@ -23,3 +24,4 @@ declare global {
 }
 
 export { }
+
