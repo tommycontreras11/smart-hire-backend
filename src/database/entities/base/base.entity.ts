@@ -9,13 +9,6 @@ import {
   Column
 } from "typeorm";
 
-export enum StatusEnum {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE'
-}
-
-export type StatusType = keyof typeof StatusEnum
-
 export class BaseEntity extends Base {
   @PrimaryGeneratedColumn()
   id: number;
