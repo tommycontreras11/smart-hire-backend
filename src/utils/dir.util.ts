@@ -3,7 +3,7 @@ import { BaseEntity, FindOneOptions } from "typeorm";
 export const getExtensionByFileName = (fileName: string) =>
   fileName.match(/\.([^.]+)$/)?.[1];
 
-type EntityWithFileName = BaseEntity & { file_name: string };
+export type EntityWithFileName = BaseEntity & { file_name: string };
 
 export async function generateUniqueFileName<T extends typeof BaseEntity>(
   entityClass: T & {
