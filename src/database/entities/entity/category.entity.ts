@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import { BaseEntity, StatusEnum, StatusType } from "../base/base.entity";
+import { BaseEntity } from "../base/base.entity";
 import { CompetencyEntity } from "./competency.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 
 @Entity({ name: "categories" })
 export class CategoryEntity extends BaseEntity {

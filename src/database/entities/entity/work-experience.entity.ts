@@ -1,7 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { BaseEntity, StatusEnum, StatusType } from "../base/base.entity";
+import { BaseEntity } from "../base/base.entity";
 import { PositionTypeEntity } from "./position-type.entity";
 import { CandidateEntity } from "./candidate.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 
 @Entity({ name: "work_experiences" })
 export class WorkExperienceEntity extends BaseEntity {

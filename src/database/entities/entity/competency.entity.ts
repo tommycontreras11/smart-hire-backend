@@ -7,11 +7,12 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { BaseEntity, StatusEnum, StatusType } from "../base/base.entity";
+import { BaseEntity } from "../base/base.entity";
 import { CategoryEntity } from "./category.entity";
 import { EvaluationMethodEntity } from "./evaluation-method.entity";
 import { PositionTypeEntity } from "./position-type.entity";
 import { CandidateEntity } from "./candidate.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 
 export enum LevelCompetencyEnum {
   BEGINNER = "BEGINNER",

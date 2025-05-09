@@ -1,10 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { BaseEntity, StatusEnum, StatusType } from "../base/base.entity";
+import { BaseEntity } from "../base/base.entity";
 import { RequestEntity } from "./request.entity";
 import { EmployeeEntity } from "./employee.entity";
 import { CountryEntity } from "./country.entity";
 import { LanguageEntity } from "./language.entity";
 import { RecruiterEntity } from "./recruiter.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 
 export enum JobPositionRiskLevelEnum {
   LOW = "LOW",

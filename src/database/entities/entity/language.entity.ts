@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import { BaseEntity, StatusEnum, StatusType } from "../base/base.entity";
+import { BaseEntity } from "../base/base.entity";
 import { JobPositionEntity } from "./job-position.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 
 @Entity({ name: "languages" })
 export class LanguageEntity extends BaseEntity {

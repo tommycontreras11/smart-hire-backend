@@ -3,7 +3,7 @@ import { PersonBaseEntity } from "../base/person.base.entity";
 import { JobPositionEntity } from "./job-position.entity";
 import { RequestEntity } from "./request.entity";
 import { InstitutionEntity } from "./institution.entity";
-import { StatusEnum, StatusType } from "../base/base.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 
 @Entity({ name: "recruiters" })
 export class RecruiterEntity extends PersonBaseEntity {

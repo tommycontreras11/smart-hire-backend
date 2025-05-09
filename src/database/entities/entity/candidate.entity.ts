@@ -1,11 +1,11 @@
 import {
-    Column,
-    Entity,
-    JoinColumn,
-    JoinTable,
-    ManyToMany,
-    ManyToOne,
-    OneToMany,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
 } from "typeorm";
 import { PersonBaseEntity } from "../base/person.base.entity";
 import { CompetencyEntity } from "./competency.entity";
@@ -14,7 +14,7 @@ import { PositionTypeEntity } from "./position-type.entity";
 import { RequestEntity } from "./request.entity";
 import { TrainingEntity } from "./training.entity";
 import { WorkExperienceEntity } from "./work-experience.entity";
-import { StatusEnum, StatusType } from "../base/base.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 
 @Entity({ name: "candidates" })
 export class CandidateEntity extends PersonBaseEntity {
