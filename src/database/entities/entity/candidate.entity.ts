@@ -32,6 +32,9 @@ export class CandidateEntity extends PersonBaseEntity {
   @Column()
   recommend_by: string;
 
+  @Column()
+  file_name: string;
+
   @ManyToOne(() => PositionTypeEntity, (position) => position.desiredPositions)
   @JoinColumn({ name: "desired_position_id", referencedColumnName: "id" })
   desiredPosition: PositionTypeEntity;
@@ -46,6 +49,9 @@ export class CandidateEntity extends PersonBaseEntity {
   )
   @JoinColumn({ name: "work_experience_id", referencedColumnName: "id" })
   workExperience: WorkExperienceEntity;
+
+  @OneToMany(() => RequestEntity, (request) => request.candidate)
+  requests: RequestEntity[];
 
   @ManyToMany(() => CompetencyEntity, (competency) => competency.candidates)
   @JoinTable({
@@ -74,7 +80,4 @@ export class CandidateEntity extends PersonBaseEntity {
     },
   })
   trainings: TrainingEntity[];
-
-  @OneToMany(() => RequestEntity, (request) => request.candidate)
-  requests: RequestEntity[];
 }

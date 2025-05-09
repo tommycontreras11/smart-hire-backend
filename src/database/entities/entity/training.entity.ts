@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity, StatusEnum, StatusType } from "../base/base.entity";
 import { CandidateEntity } from "./candidate.entity";
+import { InstitutionEntity } from "./institution.entity";
 
 export enum TrainingLevelEnum {
   BACHELORS = "BACHELOR'S DEGREE",
@@ -31,10 +32,14 @@ export class TrainingEntity extends BaseEntity {
   date_to: Date;
 
   @Column()
-  institution: string;
+  institution_id: number;
 
   @Column({ type: "enum", enum: StatusEnum })
   state: StatusType;
+
+  @ManyToOne(() => InstitutionEntity, (institution) => institution.trainings)
+  @JoinColumn({ name: "institution_id", referencedColumnName: "id" })
+  institution: InstitutionEntity;
 
   @OneToMany(() => CandidateEntity, (candidate) => candidate.trainings)
   candidates: CandidateEntity[];

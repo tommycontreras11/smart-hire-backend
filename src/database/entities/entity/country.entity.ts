@@ -4,7 +4,7 @@ import { JobPositionEntity } from "./job-position.entity";
 
 @Entity({ name: "countries" })
 export class CountryEntity extends BaseEntity {
-  @Column({ length: 100 })
+  @Column()
   name: string;
 
   @Column({ type: "enum", enum: StatusEnum })

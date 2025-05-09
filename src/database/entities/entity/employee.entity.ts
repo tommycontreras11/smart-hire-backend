@@ -22,6 +22,9 @@ export class EmployeeEntity extends PersonBaseEntity {
   @Column()
   job_position_id: number;
 
+  @Column()
+  file_name: string;
+
   @ManyToOne(() => DepartmentEntity, (department) => department.candidates)
   @JoinColumn({ name: "department_id", referencedColumnName: "id" })
   department: DepartmentEntity;
