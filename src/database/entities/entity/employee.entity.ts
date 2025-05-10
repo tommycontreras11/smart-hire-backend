@@ -5,7 +5,7 @@ import {
   ManyToOne
 } from "typeorm";
 import { PersonBaseEntity } from "../base/person.base.entity";
-import { StatusEnum } from "./../../../constants";
+import { StatusEnum, StatusType } from "./../../../constants";
 import { DepartmentEntity } from "./department.entity";
 import { JobPositionEntity } from "./job-position.entity";
 
@@ -27,7 +27,7 @@ export class EmployeeEntity extends PersonBaseEntity {
   file_name: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
-  status: StatusEnum;
+  status: StatusType;
 
   @ManyToOne(() => DepartmentEntity, (department) => department.employees)
   @JoinColumn({ name: "department_id", referencedColumnName: "id" })

@@ -37,7 +37,7 @@ export class CandidateEntity extends PersonBaseEntity {
   file_name: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
-  status: StatusEnum;
+  status: StatusType;
 
   @ManyToOne(() => PositionTypeEntity, (position) => position.desiredPositions)
   @JoinColumn({ name: "desired_position_id", referencedColumnName: "id" })

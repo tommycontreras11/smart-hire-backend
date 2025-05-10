@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { PersonBaseEntity } from "../base/person.base.entity";
-import { StatusEnum } from "./../../../constants";
+import { StatusEnum, StatusType } from "./../../../constants";
 import { InstitutionEntity } from "./institution.entity";
 import { JobPositionEntity } from "./job-position.entity";
 import { RequestEntity } from "./request.entity";
@@ -11,7 +11,7 @@ export class RecruiterEntity extends PersonBaseEntity {
   file_name: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
-  status: StatusEnum;
+  status: StatusType;
 
   @ManyToOne(() => InstitutionEntity, (institution) => institution.recruiters)
   @JoinColumn({ name: "institution_id", referencedColumnName: "id" })

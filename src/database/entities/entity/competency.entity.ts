@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { StatusEnum } from "./../../../constants";
+import { StatusEnum, StatusType } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
 import { CategoryEntity } from "./category.entity";
 import { EvaluationMethodEntity } from "./evaluation-method.entity";
@@ -31,10 +31,10 @@ export class CompetencyEntity extends BaseEntity {
   category_id: number;
 
   @Column({ type: "enum", enum: LevelCompetencyEnum })
-  level: LevelCompetencyEnum;
+  level: LevelCompetencyType;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
-  status: StatusEnum;
+  status: StatusType;
 
   @ManyToOne(() => CategoryEntity, (category) => category.competencies)
   @JoinColumn({ name: "category_id", referencedColumnName: "id" })

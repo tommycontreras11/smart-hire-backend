@@ -9,7 +9,7 @@ export class CategoryEntity extends BaseEntity {
   name: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
-  status: StatusEnum;
+  status: StatusType;
 
   @OneToMany(() => CompetencyEntity, (competency) => competency.category)
   competencies: CompetencyEntity[]

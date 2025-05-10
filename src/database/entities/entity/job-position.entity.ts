@@ -38,10 +38,10 @@ export class JobPositionEntity extends BaseEntity {
   maximum_salary: string;
 
   @Column({ type: "enum", enum: JobPositionRiskLevelEnum })
-  risk_level: JobPositionRiskLevelEnum;
+  risk_level: JobPositionRiskLevelType;
 
   @Column({ type: "enum", enum: JobPositionContractTypeEnum })
-  contract_type: JobPositionContractTypeEnum;
+  contract_type: JobPositionContractType;
 
   @Column()
   country_id: string;
