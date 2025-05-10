@@ -4,9 +4,9 @@ import { RecruiterEntity } from "./recruiter.entity";
 import { TrainingEntity } from "./training.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
 
-@Entity({ name: "institution" })
+@Entity({ name: "institutions" })
 export class InstitutionEntity extends BaseEntity {
-  @Column({ length: 100 })
+  @Column()
   name: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
