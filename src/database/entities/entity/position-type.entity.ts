@@ -1,9 +1,9 @@
 import { Column, Entity, ManyToMany, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
+import { StatusEnum } from "./../../../constants";
+import { CandidateEntity } from "./candidate.entity";
 import { CompetencyEntity } from "./competency.entity";
 import { WorkExperienceEntity } from "./work-experience.entity";
-import { CandidateEntity } from "./candidate.entity";
-import { StatusEnum, StatusType } from "./../../../constants";
 
 @Entity({ name: "position_types" })
 export class PositionTypeEntity extends BaseEntity {
@@ -11,7 +11,7 @@ export class PositionTypeEntity extends BaseEntity {
   name: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
-  status: StatusType;
+  status: StatusEnum;
 
   @ManyToMany(() => CompetencyEntity, (competency) => competency.positionTypes)
   competencies: CompetencyEntity[]

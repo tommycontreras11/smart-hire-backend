@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { PositionTypeEntity } from "./position-type.entity";
+import { StatusEnum } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
-import { StatusEnum, StatusType } from "./../../../constants";
+import { PositionTypeEntity } from "./position-type.entity";
 
 @Entity({ name: "work_experiences" })
 export class WorkExperienceEntity extends BaseEntity {
@@ -22,7 +22,7 @@ export class WorkExperienceEntity extends BaseEntity {
   position_id: number;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
-  status: StatusType;
+  status: StatusEnum;
 
   @ManyToOne(() => PositionTypeEntity, (position) => position.workExperiences)
   @JoinColumn({ name: "position_id", referencedColumnName: "id" })

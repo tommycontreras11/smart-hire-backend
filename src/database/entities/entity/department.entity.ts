@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
+import { StatusEnum } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
-import { StatusEnum, StatusType } from "./../../../constants";
 import { EmployeeEntity } from "./employee.entity";
 
 @Entity({ name: "departments" })
@@ -10,7 +10,7 @@ export class DepartmentEntity extends BaseEntity {
   name: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
-  status: StatusType;
+  status: StatusEnum;
 
   @OneToMany(() => CandidateEntity, (candidate) => candidate.department)
   candidates: CandidateEntity[]

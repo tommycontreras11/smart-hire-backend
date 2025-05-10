@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { StatusRequestEnum, StatusRequestType } from "./../../../constants";
+import { StatusRequestEnum } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
 import { JobPositionEntity } from "./job-position.entity";
 import { RecruiterEntity } from "./recruiter.entity";
@@ -9,7 +9,7 @@ import { RequestHistoryEntity } from "./request-history.entity";
 @Entity({ name: "requests" })
 export class RequestEntity extends BaseEntity {
   @Column({ type: "enum", enum: StatusRequestEnum, default: StatusRequestEnum.DRAFT })
-  status: StatusRequestType;
+  status: StatusRequestEnum;
 
   @Column()
   candidate_id: number;
