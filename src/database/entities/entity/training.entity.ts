@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
 import { InstitutionEntity } from "./institution.entity";
-import { StatusEnum, StatusType } from "./../../../constants";
 
 export enum TrainingLevelEnum {
-  BACHELORS = "BACHELOR'S DEGREE",
+  BACHELORS = "BACHELOR’S DEGREE",
   POSTGRADUATE = "POSTGRADUATE",
   MASTERS = "MASTER’S DEGREE",
   DOCTORATE = "DOCTORATE",
