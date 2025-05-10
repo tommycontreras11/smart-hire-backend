@@ -14,7 +14,7 @@ const countries = [
   "Dominican Republic",
 ];
 
-export const countryData: Partial<CountryEntity>[] = countries.map((country) => ({
+export const countriesData: Partial<CountryEntity>[] = countries.map((country) => ({
   name: country,
   status: StatusEnum.ACTIVE,
 }));
