@@ -11,13 +11,13 @@ export const getOneEvaluationMethodController = async (req: Request, res: Respon
     },
   })
     .then((data) => {
-      const positionType = {
+      const evaluationMethod = {
         uuid: data.uuid,
         name: data.name,
         status: data.status,
       };
 
-      res.status(statusCode.OK).json({ data: positionType });
+      res.status(statusCode.OK).json({ data: evaluationMethod });
     })
     .catch((e) =>
       res

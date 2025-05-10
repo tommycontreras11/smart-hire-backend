@@ -5,13 +5,13 @@ import { statusCode } from "../../utils/status.util";
 export const getAllPositionTypeController = async (_req: Request, res: Response) => {
   getAllPositionTypeService({})
     .then((data) => {
-      const countries = data.map((c) => ({
-        uuid: c.uuid,
-        name: c.name,
-        status: c.status,
+      const positionTypes = data.map((positionType) => ({
+        uuid: positionType.uuid,
+        name: positionType.name,
+        status: positionType.status,
       }));
 
-      res.status(statusCode.OK).json({ data: countries });
+      res.status(statusCode.OK).json({ data: positionTypes });
     })
     .catch((e) =>
       res

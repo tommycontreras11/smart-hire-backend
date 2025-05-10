@@ -5,10 +5,10 @@ import { statusCode } from "../../utils/status.util";
 export const getAllCountryController = async (_req: Request, res: Response) => {
   getAllCountryService({})
     .then((data) => {
-      const countries = data.map((c) => ({
-        uuid: c.uuid,
-        name: c.name,
-        status: c.status,
+      const countries = data.map((country) => ({
+        uuid: country.uuid,
+        name: country.name,
+        status: country.status,
       }));
 
       res.status(statusCode.OK).json({ data: countries });

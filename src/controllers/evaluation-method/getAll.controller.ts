@@ -5,13 +5,13 @@ import { statusCode } from "../../utils/status.util";
 export const getAllEvaluationMethodController = async (_req: Request, res: Response) => {
   getAllEvaluationMethodService({})
     .then((data) => {
-      const countries = data.map((c) => ({
-        uuid: c.uuid,
-        name: c.name,
-        status: c.status,
+      const evaluationMethods = data.map((evaluationMethod) => ({
+        uuid: evaluationMethod.uuid,
+        name: evaluationMethod.name,
+        status: evaluationMethod.status,
       }));
 
-      res.status(statusCode.OK).json({ data: countries });
+      res.status(statusCode.OK).json({ data: evaluationMethods });
     })
     .catch((e) =>
       res

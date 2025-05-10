@@ -5,13 +5,13 @@ import { statusCode } from "../../utils/status.util";
 export const getAllLanguageController = async (_req: Request, res: Response) => {
   getAllLanguageService({})
     .then((data) => {
-      const countries = data.map((c) => ({
-        uuid: c.uuid,
-        name: c.name,
-        status: c.status,
+      const languages = data.map((language) => ({
+        uuid: language.uuid,
+        name: language.name,
+        status: language.status,
       }));
 
-      res.status(statusCode.OK).json({ data: countries });
+      res.status(statusCode.OK).json({ data: languages });
     })
     .catch((e) =>
       res
