@@ -19,18 +19,20 @@ export async function updateLanguageService(
     });
   }
 
-  const existingLanguage = await LanguageEntity.findOne({
-    where: { name, uuid: Not(uuid) },
-  }).catch((e) => {
-    console.error("updateLanguageService -> LanguageEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (existingLanguage) {
-    return Promise.reject({
-      message: "Language already exists",
-      status: statusCode.BAD_REQUEST,
+  if (name) {
+    const existingLanguage = await LanguageEntity.findOne({
+      where: { name, uuid: Not(uuid) },
+    }).catch((e) => {
+      console.error("updateLanguageService -> LanguageEntity.findOneBy: ", e);
+      return null;
     });
+
+    if (existingLanguage) {
+      return Promise.reject({
+        message: "Language already exists",
+        status: statusCode.BAD_REQUEST,
+      });
+    }
   }
 
   await LanguageEntity.update(

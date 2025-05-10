@@ -19,18 +19,20 @@ export async function updateCountryService(
     });
   }
 
-  const existingCountry = await CountryEntity.findOne({
-    where: { name, uuid: Not(uuid) },
-  }).catch((e) => {
-    console.error("updateCountryService -> CountryEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (existingCountry) {
-    return Promise.reject({
-      message: "Country already exists",
-      status: statusCode.BAD_REQUEST,
+  if (name) {
+    const existingCountry = await CountryEntity.findOne({
+      where: { name, uuid: Not(uuid) },
+    }).catch((e) => {
+      console.error("updateCountryService -> CountryEntity.findOneBy: ", e);
+      return null;
     });
+
+    if (existingCountry) {
+      return Promise.reject({
+        message: "Country already exists",
+        status: statusCode.BAD_REQUEST,
+      });
+    }
   }
 
   await CountryEntity.update(

@@ -7,8 +7,13 @@ export async function updateEvaluationMethodService(
   uuid: string,
   { name, status }: UpdateEvaluationMethodDTO
 ) {
-  const foundEvaluationMethod = await EvaluationMethodEntity.findOneBy({ uuid }).catch((e) => {
-    console.error("updateEvaluationMethodService -> EvaluationMethodEntity.findOneBy: ", e);
+  const foundEvaluationMethod = await EvaluationMethodEntity.findOneBy({
+    uuid,
+  }).catch((e) => {
+    console.error(
+      "updateEvaluationMethodService -> EvaluationMethodEntity.findOneBy: ",
+      e
+    );
     return null;
   });
 
@@ -19,25 +24,33 @@ export async function updateEvaluationMethodService(
     });
   }
 
-  const existingEvaluationMethod = await EvaluationMethodEntity.findOne({
-    where: { name, uuid: Not(uuid) },
-  }).catch((e) => {
-    console.error("updateEvaluationMethodService -> EvaluationMethodEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (existingEvaluationMethod) {
-    return Promise.reject({
-      message: "Evaluation method already exists",
-      status: statusCode.BAD_REQUEST,
+  if (name) {
+    const existingEvaluationMethod = await EvaluationMethodEntity.findOne({
+      where: { name, uuid: Not(uuid) },
+    }).catch((e) => {
+      console.error(
+        "updateEvaluationMethodService -> EvaluationMethodEntity.findOneBy: ",
+        e
+      );
+      return null;
     });
+
+    if (existingEvaluationMethod) {
+      return Promise.reject({
+        message: "Evaluation method already exists",
+        status: statusCode.BAD_REQUEST,
+      });
+    }
   }
 
   await EvaluationMethodEntity.update(
     { uuid },
     { ...(name && { name }), ...(status && { status }) }
   ).catch((e) => {
-    console.error("updateEvaluationMethodService -> EvaluationMethodEntity.update: ", e);
+    console.error(
+      "updateEvaluationMethodService -> EvaluationMethodEntity.update: ",
+      e
+    );
     return null;
   });
 

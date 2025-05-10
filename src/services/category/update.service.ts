@@ -19,18 +19,20 @@ export async function updateCategoryService(
     });
   }
 
-  const existingCategory = await CategoryEntity.findOne({
-    where: { name, uuid: Not(uuid) },
-  }).catch((e) => {
-    console.error("updateCategoryService -> CategoryEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (existingCategory) {
-    return Promise.reject({
-      message: "Category already exists",
-      status: statusCode.BAD_REQUEST,
+  if (name) {
+    const existingCategory = await CategoryEntity.findOne({
+      where: { name, uuid: Not(uuid) },
+    }).catch((e) => {
+      console.error("updateCategoryService -> CategoryEntity.findOneBy: ", e);
+      return null;
     });
+
+    if (existingCategory) {
+      return Promise.reject({
+        message: "Category already exists",
+        status: statusCode.BAD_REQUEST,
+      });
+    }
   }
 
   await CategoryEntity.update(

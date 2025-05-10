@@ -7,10 +7,15 @@ export async function updatePositionTypeService(
   uuid: string,
   { name, status }: UpdatePositionTypeDTO
 ) {
-  const foundPositionType = await PositionTypeEntity.findOneBy({ uuid }).catch((e) => {
-    console.error("updatePositionTypeService -> PositionTypeEntity.findOneBy: ", e);
-    return null;
-  });
+  const foundPositionType = await PositionTypeEntity.findOneBy({ uuid }).catch(
+    (e) => {
+      console.error(
+        "updatePositionTypeService -> PositionTypeEntity.findOneBy: ",
+        e
+      );
+      return null;
+    }
+  );
 
   if (!foundPositionType) {
     return Promise.reject({
@@ -19,25 +24,33 @@ export async function updatePositionTypeService(
     });
   }
 
-  const existingPositionType = await PositionTypeEntity.findOne({
-    where: { name, uuid: Not(uuid) },
-  }).catch((e) => {
-    console.error("updatePositionTypeService -> PositionTypeEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (existingPositionType) {
-    return Promise.reject({
-      message: "Position type already exists",
-      status: statusCode.BAD_REQUEST,
+  if (name) {
+    const existingPositionType = await PositionTypeEntity.findOne({
+      where: { name, uuid: Not(uuid) },
+    }).catch((e) => {
+      console.error(
+        "updatePositionTypeService -> PositionTypeEntity.findOneBy: ",
+        e
+      );
+      return null;
     });
+
+    if (existingPositionType) {
+      return Promise.reject({
+        message: "Position type already exists",
+        status: statusCode.BAD_REQUEST,
+      });
+    }
   }
 
   await PositionTypeEntity.update(
     { uuid },
     { ...(name && { name }), ...(status && { status }) }
   ).catch((e) => {
-    console.error("updatePositionTypeService -> PositionTypeEntity.update: ", e);
+    console.error(
+      "updatePositionTypeService -> PositionTypeEntity.update: ",
+      e
+    );
     return null;
   });
 
