@@ -5,16 +5,16 @@ import { FindManyOptions } from "typeorm";
 export async function getAllLanguageService(
   options?: FindManyOptions<LanguageEntity>
 ) {
-  const countries = await LanguageEntity.find(options).catch((e) => {
+  const languages = await LanguageEntity.find(options).catch((e) => {
     console.error("getAllLanguageService -> LanguageEntity.find: ", e);
     return null;
   });
 
-  if (!countries)
+  if (!languages)
     return Promise.reject({
-      message: "No countries found",
+      message: "No languages found",
       status: statusCode.NOT_FOUND,
     });
 
-  return countries;
+  return languages;
 }
