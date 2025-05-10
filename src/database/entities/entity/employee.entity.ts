@@ -29,7 +29,7 @@ export class EmployeeEntity extends PersonBaseEntity {
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   status: StatusType;
 
-  @ManyToOne(() => DepartmentEntity, (department) => department.candidates)
+  @ManyToOne(() => DepartmentEntity, (department) => department.employees)
   @JoinColumn({ name: "department_id", referencedColumnName: "id" })
   department: DepartmentEntity;
 
