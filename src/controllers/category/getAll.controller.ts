@@ -5,13 +5,13 @@ import { statusCode } from "../../utils/status.util";
 export const getAllCategoryController = async (_req: Request, res: Response) => {
   getAllCategoryService({})
     .then((data) => {
-      const countries = data.map((category) => ({
+      const categories = data.map((category) => ({
         uuid: category.uuid,
         name: category.name,
         status: category.status,
       }));
 
-      res.status(statusCode.OK).json({ data: countries });
+      res.status(statusCode.OK).json({ data: categories });
     })
     .catch((e) =>
       res
