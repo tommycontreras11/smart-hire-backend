@@ -5,13 +5,13 @@ import { statusCode } from "../../utils/status.util";
 export const getAllTrainingController = async (_req: Request, res: Response) => {
   getAllTrainingService({})
     .then((data) => {
-      const countries = data.map((training) => ({
+      const training = data.map((training) => ({
         uuid: training.uuid,
         name: training.name,
         status: training.status,
       }));
 
-      res.status(statusCode.OK).json({ data: countries });
+      res.status(statusCode.OK).json({ data: training });
     })
     .catch((e) =>
       res

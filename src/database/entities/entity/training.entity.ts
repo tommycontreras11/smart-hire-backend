@@ -42,6 +42,6 @@ export class TrainingEntity extends BaseEntity {
   @JoinColumn({ name: "institution_id", referencedColumnName: "id" })
   institution: InstitutionEntity;
 
-  @OneToMany(() => CandidateEntity, (candidate) => candidate.trainings)
+  @OneToMany(() => CandidateEntity, (candidate) => candidate.training)
   candidates: CandidateEntity[];
 }
