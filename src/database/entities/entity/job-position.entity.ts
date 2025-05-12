@@ -35,7 +35,7 @@ export class JobPositionEntity extends BaseEntity {
   minimum_salary: number;
 
   @Column({ type: "float", precision: 10, scale: 2 })
-  maximum_salary: string;
+  maximum_salary: number;
 
   @Column({ type: "enum", enum: JobPositionRiskLevelEnum })
   risk_level: JobPositionRiskLevelType;
