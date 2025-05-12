@@ -71,7 +71,7 @@ export async function updateCompetencyService(
   }
 
   let foundEvaluationMethods: EvaluationMethodEntity[] | null = [];
-  if (evaluationMethodUUIDs.length > 0) {
+  if (evaluationMethodUUIDs?.length > 0) {
     foundEvaluationMethods = await EvaluationMethodEntity.find({
       where: { uuid: In(evaluationMethodUUIDs) },
     }).catch((e) => {
@@ -94,7 +94,7 @@ export async function updateCompetencyService(
   }
 
   let foundPositionTypes: PositionTypeEntity[] | null = [];
-  if (positionTypeUUIDs.length > 0) {
+  if (positionTypeUUIDs?.length > 0) {
     foundPositionTypes = await PositionTypeEntity.find({
       where: { uuid: In(positionTypeUUIDs) },
     }).catch((e) => {
