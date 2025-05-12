@@ -10,6 +10,9 @@ export class RecruiterEntity extends PersonBaseEntity {
   @Column()
   file_name: string;
 
+  @Column()
+  institution_id: number;
+
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   status: StatusType;
 
