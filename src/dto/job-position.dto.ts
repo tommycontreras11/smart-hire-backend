@@ -1,12 +1,11 @@
 import {
   IsEnum,
   IsNotEmpty,
-  IsNumber,
   IsNumberString,
   IsOptional,
   IsString,
   IsUUID,
-  Matches,
+  Matches
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
 import {
@@ -15,7 +14,6 @@ import {
   JobPositionRiskLevelEnum,
   JobPositionRiskLevelType,
 } from "./../database/entities/entity/job-position.entity";
-import { Transform, Type } from "class-transformer";
 
 export class CreateJobPositionDTO {
   @IsNotEmpty()
