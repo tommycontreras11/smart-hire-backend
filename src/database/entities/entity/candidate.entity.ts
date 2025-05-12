@@ -83,5 +83,5 @@ export class CandidateEntity extends PersonBaseEntity {
       referencedColumnName: "id",
     },
   })
-  trainings: TrainingEntity[];
+  training: TrainingEntity[];
 }

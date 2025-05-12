@@ -1,0 +1,27 @@
+import { Request, Response } from "express";
+import { getOneCandidateService } from "../../services/candidate/getOne.service";
+import { statusCode } from "../../utils/status.util";
+
+export const getOneCandidateController = async (req: Request, res: Response) => {
+  const { uuid } = req.params;
+
+  getOneCandidateService({
+    where: {
+      uuid,
+    },
+  })
+    .then((data) => {
+      const candidate = {
+        uuid: data.uuid,
+        name: data.name,
+        status: data.status,
+      };
+
+      res.status(statusCode.OK).json({ data: candidate });
+    })
+    .catch((e) =>
+      res
+        .status(e.status ?? statusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: { message: e.message } })
+    );
+};
