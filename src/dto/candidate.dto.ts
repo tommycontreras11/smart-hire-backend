@@ -87,11 +87,11 @@ export class UpdateCandidateDTO {
   @IsUUID("4")
   departmentUUID: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsUUID("4", { each: true })
   trainingUUIDs: string[];
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsUUID("4", { each: true })
   competencyUUIDs: string[];
 
