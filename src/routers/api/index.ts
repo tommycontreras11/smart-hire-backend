@@ -12,6 +12,7 @@ import positionType from "./position-type";
 import evaluationMethod from "./evaluation-method";
 import jobPosition from "./job-position";
 import workExperience from "./work-experience";
+import recruiter from "./recruiter";
 
 const router = Router();
 
@@ -27,5 +28,6 @@ router.use('/position-types', positionType);
 router.use('/evaluation-methods', evaluationMethod);
 router.use('/job-positions', jobPosition);
 router.use('/work-experiences', workExperience);
+router.use('/recruiters', recruiter);
 
 export default router;

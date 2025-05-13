@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { updateCandidateService } from "../../services/candidate/update.service";
+import { deleteRecruiterService } from "../../services/recruiter/delete.service";
 import { statusCode } from "../../utils/status.util";
 
-export const updateCandidateController = async (req: Request, res: Response) => {
+export const deleteRecruiterController = async (req: Request, res: Response) => {
   const { uuid } = req.params;
 
-  updateCandidateService(uuid, req.body)
+  deleteRecruiterService(uuid)
     .then((data) => res.status(statusCode.OK).json({ message: data }))
     .catch((e) =>
       res
