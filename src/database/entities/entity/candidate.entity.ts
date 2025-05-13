@@ -15,6 +15,7 @@ import { RequestEntity } from "./request.entity";
 import { TrainingEntity } from "./training.entity";
 import { WorkExperienceEntity } from "./work-experience.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
+import { RecruitmentEntity } from "./recruitment.entity";
 
 @Entity({ name: "candidates" })
 export class CandidateEntity extends PersonBaseEntity {
@@ -84,4 +85,7 @@ export class CandidateEntity extends PersonBaseEntity {
     },
   })
   training: TrainingEntity[];
+
+  @OneToMany(() => RecruitmentEntity, (recruitment) => recruitment.candidate)
+  recruitment: RecruitmentEntity[];
 }
