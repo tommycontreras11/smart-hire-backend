@@ -1,3 +1,4 @@
+import { validateIdentification } from "./../../utils/user.util";
 import { RecruiterEntity } from "../../database/entities/entity/recruiter.entity";
 import { CreateRecruiterDTO } from "../../dto/recruiter.dto";
 import { hashPassword } from "../../utils/common.util";
@@ -13,19 +14,10 @@ export async function createRecruiterService(
   }: CreateRecruiterDTO,
   // file?: Express.Multer.File | undefined
 ) {
-  const foundRecruiter = await RecruiterEntity.findOneBy({
-    identification,
-  }).catch((e) => {
-    console.error("createRecruiterService -> RecruiterEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (foundRecruiter) {
-    return Promise.reject({
-      message: "Recruiter's identification already exists",
-      status: statusCode.BAD_REQUEST,
-    });
-  }
+  await validateIdentification<RecruiterEntity>(
+    RecruiterEntity,
+    identification
+  );
 
   let foundInstitution = await InstitutionEntity.findOneBy({
     name: institution,

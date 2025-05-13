@@ -1,47 +1,42 @@
-import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
+import { In } from "typeorm";
 import { CandidateEntity } from "../../database/entities/entity/candidate.entity";
 import { CreateCandidateDTO } from "../../dto/candidate.dto";
 import { statusCode } from "../../utils/status.util";
+import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
+import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
+import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
+import { TrainingEntity } from "./../../database/entities/entity/training.entity";
 import { createWorkExperienceService } from "./../../services/work-experience/create.service";
 import { hashPassword } from "./../../utils/common.util";
-import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
-import { In } from "typeorm";
-import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
-import { TrainingEntity } from "./../../database/entities/entity/training.entity";
+import {
+  validateIdentification
+} from "./../../utils/user.util";
 
-export async function createCandidateService(
-  {
-    identification,
-    password,
-    desired_salary,
-    positionUUID,
-    departmentUUID,
-    trainingUUIDs, 
-    competencyUUIDs,
-    workExperience,
-    recommendBy,
-    ...payload
-  }: CreateCandidateDTO,
+export async function createCandidateService({
+  identification,
+  password,
+  desired_salary,
+  positionUUID,
+  departmentUUID,
+  trainingUUIDs,
+  competencyUUIDs,
+  workExperience,
+  recommendBy,
+  ...payload
+}: CreateCandidateDTO) {
   // file?: Express.Multer.File | undefined
-) {
-  const foundCandidate = await CandidateEntity.findOneBy({
-    identification,
-  }).catch((e) => {
-    console.error("createCandidateService -> CandidateEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (foundCandidate) {
-    return Promise.reject({
-      message: "Candidate's identification already exists",
-      status: statusCode.BAD_REQUEST,
-    });
-  }
+  await validateIdentification<CandidateEntity>(
+    CandidateEntity,
+    identification
+  );
 
   const foundPositionType = await PositionTypeEntity.findOneBy({
     uuid: positionUUID,
   }).catch((e) => {
-    console.error("createCandidateService -> PositionTypeEntity.findOneBy: ", e);
+    console.error(
+      "createCandidateService -> PositionTypeEntity.findOneBy: ",
+      e
+    );
     return null;
   });
 
@@ -68,14 +63,14 @@ export async function createCandidateService(
 
   const foundTraining = await TrainingEntity.find({
     where: {
-      uuid: In(trainingUUIDs)
+      uuid: In(trainingUUIDs),
     },
   }).catch((e) => {
     console.error("createCandidateService -> TrainingEntity.findOneBy: ", e);
     return null;
   });
 
-  if(!foundTraining || foundTraining.length !== trainingUUIDs.length) {
+  if (!foundTraining || foundTraining.length !== trainingUUIDs.length) {
     return Promise.reject({
       message: "Training not found",
       status: statusCode.NOT_FOUND,
@@ -84,14 +79,17 @@ export async function createCandidateService(
 
   const foundCompetencies = await CompetencyEntity.find({
     where: {
-      uuid: In(competencyUUIDs)
+      uuid: In(competencyUUIDs),
     },
   }).catch((e) => {
     console.error("createCandidateService -> CompetencyEntity.findOneBy: ", e);
     return null;
   });
 
-  if(!foundCompetencies || foundCompetencies.length !== competencyUUIDs.length) {
+  if (
+    !foundCompetencies ||
+    foundCompetencies.length !== competencyUUIDs.length
+  ) {
     return Promise.reject({
       message: "Competencies not found",
       status: statusCode.NOT_FOUND,

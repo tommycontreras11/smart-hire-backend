@@ -1,9 +1,9 @@
 import { CandidateEntity } from "./../database/entities/entity/candidate.entity";
 import { EmployeeEntity } from "./../database/entities/entity/employee.entity";
 import { RecruiterEntity } from "./../database/entities/entity/recruiter.entity";
+import { statusCode } from "./status.util";
 
-export async function retrieveIfUserExists<T>(
-  entityClass: { new (): T },
+export async function retrieveIfUserExists(
   identification?: string | null,
   uuid?: string | null
 ) {
@@ -22,5 +22,18 @@ export async function retrieveIfUserExists<T>(
     }),
   ]);
 
-  return entities.find((entity) => entity instanceof entityClass) || null;
+  return entities.find((entity) => entity) || null;
+}
+
+export async function validateIdentification<T>(entityClass: { new (): T }, identification: string) {
+    const foundUser = await retrieveIfUserExists(identification);
+  
+    const isEntityClassType = foundUser instanceof entityClass;
+  
+    if (foundUser && (!isEntityClassType || isEntityClassType)) {
+      return Promise.reject({
+        message: "Identification already exists",
+        status: statusCode.BAD_REQUEST,
+      });
+    }
 }
