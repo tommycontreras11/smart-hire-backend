@@ -26,17 +26,17 @@ export class CreateJobPositionDTO {
 
   @IsNotEmpty()
   @IsNumberString()
-  @Matches(/^\d{1,8}(\.\d{1,2})?$/, {
+  @Matches(/^\d{1,8}(\.\d{0,2})?$/, {
     message:
-      "Minimum salary must have at most 10 digits in total and 2 decimal places",
+      "Minimum salary must have at most 10 digits in total and 2 decimal places (optional)",
   })
   minimum_salary: string;
 
   @IsNotEmpty()
   @IsNumberString()
-  @Matches(/^\d{1,8}(\.\d{1,2})?$/, {
+  @Matches(/^\d{1,8}(\.\d{0,2})?$/, {
     message:
-      "Maximum salary must have at most 10 digits in total and 2 decimal places",
+      "Maximum salary must have at most 10 digits in total and 2 decimal places (optional)",
   })
   maximum_salary: string;
 

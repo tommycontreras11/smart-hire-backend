@@ -3,11 +3,34 @@ import { getAllJobPositionService } from "../../services/job-position/getAll.ser
 import { statusCode } from "../../utils/status.util";
 
 export const getAllJobPositionController = async (_req: Request, res: Response) => {
-  getAllJobPositionService({})
+  getAllJobPositionService({
+    relations: {
+      country: true,
+      language: true,
+      recruiter: true,
+    }
+  })
     .then((data) => {
       const jobPositions = data.map((jobPosition) => ({
         uuid: jobPosition.uuid,
         name: jobPosition.name,
+        description: jobPosition.description,
+        minimum_salary: jobPosition.minimum_salary,
+        maximum_salary: jobPosition.maximum_salary,
+        risk_level: jobPosition.risk_level,
+        contract_type: jobPosition.contract_type,
+        country: {
+          uuid: jobPosition.country.uuid,
+          name: jobPosition.country.name,
+        },
+        language: {
+          uuid: jobPosition.language.uuid,
+          name: jobPosition.language.name,
+        },
+        recruiter: {
+          uuid: jobPosition.recruiter.uuid,
+          name: jobPosition.recruiter.name,
+        },
         status: jobPosition.status,
       }));
 
