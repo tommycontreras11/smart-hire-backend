@@ -3,6 +3,7 @@ import { TrainingEntity } from "../../database/entities/entity/training.entity";
 import { UpdateTrainingDTO } from "../../dto/training.dto";
 import { Not } from "typeorm";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
+import { getFullDate } from "./../../utils/date.util";
 
 export async function updateTrainingService(
   uuid: string,
@@ -70,8 +71,8 @@ export async function updateTrainingService(
       ...(name && { name }),
       ...(description && { description }),
       ...(level && { level }),
-      ...(date_from && { date_from }),
-      ...(date_to && { date_to }),
+      ...(date_from && { date_from: getFullDate(new Date(date_from)) }),
+      ...(date_to && { date_to: getFullDate(new Date(date_to)) }),
       ...(foundInstitution && { institution: foundInstitution }),
       ...(status && { status }),
     }

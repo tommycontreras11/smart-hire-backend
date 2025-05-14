@@ -2,8 +2,15 @@ import { InstitutionEntity } from "./../../database/entities/entity/institution.
 import { TrainingEntity } from "../../database/entities/entity/training.entity";
 import { CreateTrainingDTO } from "../../dto/training.dto";
 import { statusCode } from "../../utils/status.util";
+import { getFullDate } from "./../../utils/date.util";
 
-export async function createTrainingService({ name, institutionUUID, ...payload }: CreateTrainingDTO) {
+export async function createTrainingService({
+  name,
+  institutionUUID,
+  date_from,
+  date_to,
+  ...payload
+}: CreateTrainingDTO) {
   const foundTraining = await TrainingEntity.findOneBy({ name }).catch((e) => {
     console.error("createTrainingService -> TrainingEntity.findOneBy: ", e);
     return null;
@@ -16,7 +23,9 @@ export async function createTrainingService({ name, institutionUUID, ...payload 
     });
   }
 
-  const foundInstitution = await InstitutionEntity.findOneBy({ uuid: institutionUUID }).catch((e) => {
+  const foundInstitution = await InstitutionEntity.findOneBy({
+    uuid: institutionUUID,
+  }).catch((e) => {
     console.error("createTrainingService -> InstitutionEntity.findOneBy: ", e);
     return null;
   });
@@ -30,6 +39,8 @@ export async function createTrainingService({ name, institutionUUID, ...payload 
 
   await TrainingEntity.create({
     name,
+    date_from: getFullDate(new Date(date_from)),
+    date_to: getFullDate(new Date(date_to)),
     institution: foundInstitution,
     ...payload,
   })
