@@ -8,10 +8,6 @@ import {
   Matches,
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
-import {
-  CreateWorkExperienceDTO,
-  UpdateWorkExperienceDTO,
-} from "./work-experience.dto";
 
 export class CreateCandidateDTO {
   @IsNotEmpty()
@@ -41,21 +37,16 @@ export class CreateCandidateDTO {
   @IsNotEmpty()
   @IsUUID("4")
   departmentUUID: string;
+}
 
-  @IsNotEmpty()
+export class ModifyProfileDetailDTO {
+  @IsOptional()
   @IsUUID("4", { each: true })
   trainingUUIDs: string[];
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsUUID("4", { each: true })
   competencyUUIDs: string[];
-
-  @IsNotEmpty()
-  workExperience: CreateWorkExperienceDTO;
-
-  @IsNotEmpty()
-  @IsString()
-  recommendBy: string;
 }
 
 export class UpdateCandidateDTO {
@@ -86,21 +77,6 @@ export class UpdateCandidateDTO {
   @IsOptional()
   @IsUUID("4")
   departmentUUID: string;
-
-  @IsOptional()
-  @IsUUID("4", { each: true })
-  trainingUUIDs: string[];
-
-  @IsOptional()
-  @IsUUID("4", { each: true })
-  competencyUUIDs: string[];
-
-  @IsOptional()
-  workExperience: UpdateWorkExperienceDTO;
-
-  @IsOptional()
-  @IsString()
-  recommendBy: string;
 
   @IsOptional()
   @IsEnum(StatusEnum)

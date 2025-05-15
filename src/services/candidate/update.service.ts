@@ -1,14 +1,10 @@
-import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
-import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
-import { WorkExperienceEntity } from "./../../database/entities/entity/work-experience.entity";
-import { updateWorkExperienceService } from "./../../services/work-experience/update.service";
-import { In, Not } from "typeorm";
-import { hashPassword } from "./../../utils/common.util";
+import { Not } from "typeorm";
 import { CandidateEntity } from "../../database/entities/entity/candidate.entity";
 import { UpdateCandidateDTO } from "../../dto/candidate.dto";
 import { statusCode } from "../../utils/status.util";
-import { TrainingEntity } from "./../../database/entities/entity/training.entity";
-import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
+import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
+import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
+import { hashPassword } from "./../../utils/common.util";
 
 export async function updateCandidateService(
   uuid: string,
@@ -19,10 +15,6 @@ export async function updateCandidateService(
     desired_salary,
     positionUUID,
     departmentUUID,
-    trainingUUIDs,
-    competencyUUIDs,
-    workExperience,
-    recommendBy,
     status,
   }: UpdateCandidateDTO
 ) {
@@ -99,65 +91,6 @@ export async function updateCandidateService(
       });
     }
   }
-  let foundTraining: TrainingEntity[] | null = [];
-  if (trainingUUIDs?.length > 0) {
-    foundTraining = await TrainingEntity.find({
-      where: {
-        uuid: In(trainingUUIDs),
-      },
-    }).catch((e) => {
-      console.error("updateCandidateService -> TrainingEntity.findOneBy: ", e);
-      return null;
-    });
-
-    if (!foundTraining || foundTraining.length !== trainingUUIDs.length) {
-      return Promise.reject({
-        message: "Training not found",
-        status: statusCode.NOT_FOUND,
-      });
-    }
-  }
-  let foundCompetencies: CompetencyEntity[] | null = [];
-  if (competencyUUIDs?.length > 0) {
-    foundCompetencies = await CompetencyEntity.find({
-      where: {
-        uuid: In(competencyUUIDs),
-      },
-    }).catch((e) => {
-      console.error(
-        "updateCandidateService -> CompetencyEntity.findOneBy: ",
-        e
-      );
-      return null;
-    });
-
-    if (
-      !foundCompetencies ||
-      foundCompetencies.length !== competencyUUIDs.length
-    ) {
-      return Promise.reject({
-        message: "Competencies not found",
-        status: statusCode.NOT_FOUND,
-      });
-    }
-  }
-
-  let workExperienceUpdated: WorkExperienceEntity | null = null;
-  if (
-    Object.values(workExperience).some((v) => v !== null && v !== undefined)
-  ) {
-    workExperienceUpdated = await updateWorkExperienceService(
-      foundCandidate.workExperience.uuid,
-      workExperience
-    );
-
-    if (!workExperienceUpdated) {
-      return Promise.reject({
-        message: "Work experience not updated",
-        status: statusCode.BAD_REQUEST,
-      });
-    }
-  }
 
   foundCandidate.identification =
     identification ?? foundCandidate.identification;
@@ -168,11 +101,6 @@ export async function updateCandidateService(
   foundCandidate.desiredPosition =
     foundPositionType ?? foundCandidate.desiredPosition;
   foundCandidate.department = foundDepartment ?? foundCandidate.department;
-  foundCandidate.training = foundTraining;
-  foundCandidate.competencies = foundCompetencies;
-  foundCandidate.workExperience =
-    workExperienceUpdated ?? foundCandidate.workExperience;
-  foundCandidate.recommend_by = recommendBy ?? foundCandidate.recommend_by;
   foundCandidate.status = status ?? foundCandidate.status;
 
   await foundCandidate.save().catch((e) => {

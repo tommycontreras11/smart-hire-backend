@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
@@ -18,8 +18,14 @@ export class WorkExperienceEntity extends BaseEntity {
   @Column({ type: "float", precision: 10, scale: 2 })
   salary: number;
 
+  @Column({ nullable: true })
+  recommend_by: string;
+
   @Column()
   position_id: number;
+
+  @Column()
+  candidate_id: number;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   status: StatusType;
@@ -28,6 +34,7 @@ export class WorkExperienceEntity extends BaseEntity {
   @JoinColumn({ name: "position_id", referencedColumnName: "id" })
   position: PositionTypeEntity;
 
-  @OneToMany(() => CandidateEntity, (candidate) => candidate.workExperience)
-  candidates: CandidateEntity[]
+  @OneToOne(() => CandidateEntity, (candidate) => candidate.workExperience)
+  @JoinColumn({ name: "candidate_id", referencedColumnName: "id" })
+  candidate: CandidateEntity
 }

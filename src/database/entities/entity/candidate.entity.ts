@@ -6,6 +6,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from "typeorm";
 import { PersonBaseEntity } from "../base/person.base.entity";
 import { CompetencyEntity } from "./competency.entity";
@@ -29,12 +30,6 @@ export class CandidateEntity extends PersonBaseEntity {
   department_id: number;
 
   @Column()
-  work_experience_id: number;
-
-  @Column()
-  recommend_by: string;
-
-  @Column()
   file_name: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
@@ -48,11 +43,10 @@ export class CandidateEntity extends PersonBaseEntity {
   @JoinColumn({ name: "department_id", referencedColumnName: "id" })
   department: DepartmentEntity;
 
-  @ManyToOne(
+  @OneToOne(
     () => WorkExperienceEntity,
-    (workExperience) => workExperience.candidates
+    (workExperience) => workExperience.candidate
   )
-  @JoinColumn({ name: "work_experience_id", referencedColumnName: "id" })
   workExperience: WorkExperienceEntity;
 
   @OneToMany(() => RequestEntity, (request) => request.candidate)
