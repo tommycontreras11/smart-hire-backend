@@ -2,6 +2,7 @@ import { PositionTypeEntity } from "./../../database/entities/entity/position-ty
 import { WorkExperienceEntity } from "../../database/entities/entity/work-experience.entity";
 import { UpdateWorkExperienceDTO } from "../../dto/work-experience.dto";
 import { statusCode } from "../../utils/status.util";
+import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 
 export async function updateWorkExperienceService(
   uuid: string,
@@ -11,6 +12,8 @@ export async function updateWorkExperienceService(
     date_to,
     salary,
     positionUUID,
+    candidateUUID,
+    recommendBy,
     status,
   }: UpdateWorkExperienceDTO
 ) {
@@ -51,6 +54,26 @@ export async function updateWorkExperienceService(
     }
   }
 
+  let foundCandidate: CandidateEntity | null = null;
+  if (candidateUUID) {
+    foundCandidate = await CandidateEntity.findOneBy({
+      uuid: candidateUUID,
+    }).catch((e) => {
+      console.error(
+        "updateWorkExperienceService -> CandidateEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (!foundCandidate) {
+      return Promise.reject({
+        message: "Candidate not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+
   await WorkExperienceEntity.update(
     { uuid },
     {
@@ -59,6 +82,8 @@ export async function updateWorkExperienceService(
       ...(date_from && { date_from }),
       ...(date_to && { date_to }),
       ...(foundPositionType && { position: foundPositionType }),
+      ...(foundCandidate && { candidate: foundCandidate }),
+      ...(recommendBy && { recommend_by: recommendBy }),
       ...(status && { status }),
     }
   ).catch((e) => {

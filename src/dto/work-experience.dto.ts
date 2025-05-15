@@ -30,9 +30,17 @@ export class CreateWorkExperienceDTO {
   })
   salary: string;
 
+  @IsOptional()
+  @IsString()
+  recommendBy: string;
+
   @IsNotEmpty()
   @IsUUID("4")
   positionUUID: string;
+
+  @IsNotEmpty()
+  @IsUUID("4")
+  candidateUUID: string;
 }
 
 export class UpdateWorkExperienceDTO {
@@ -57,8 +65,16 @@ export class UpdateWorkExperienceDTO {
   salary: string;
 
   @IsOptional()
+  @IsString()
+  recommendBy: string;
+
+  @IsOptional()
   @IsUUID("4")
   positionUUID: string;
+
+  @IsOptional()
+  @IsUUID("4")
+  candidateUUID: string;
 
   @IsOptional()
   @IsEnum(StatusEnum)
