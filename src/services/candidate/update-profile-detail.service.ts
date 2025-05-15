@@ -1,13 +1,13 @@
 import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 import { TrainingEntity } from "./../../database/entities/entity/training.entity";
-import { ModifyProfileDetailDTO } from "./../../dto/candidate.dto";
+import { UpdateCandidateProfileDetailDTO } from "./../../dto/candidate.dto";
 import { In } from "typeorm";
 import { statusCode } from "./../../utils/status.util";
 
-export async function modifyProfileDetailService(uuid: string, { trainingUUIDs, competencyUUIDs,  }: ModifyProfileDetailDTO) {
+export async function updateCandidateProfileDetailService(uuid: string, { trainingUUIDs, competencyUUIDs,  }: UpdateCandidateProfileDetailDTO) {
   const foundCandidate = await CandidateEntity.findOneBy({ uuid }).catch((e) => {
-    console.error("updateCandidateService -> CandidateEntity.findOneBy: ", e);
+    console.error("updateProfileDetailService -> CandidateEntity.findOneBy: ", e);
     return null;
   })
 
@@ -25,7 +25,7 @@ export async function modifyProfileDetailService(uuid: string, { trainingUUIDs, 
         uuid: In(trainingUUIDs),
       },
     }).catch((e) => {
-      console.error("updateCandidateService -> TrainingEntity.findOneBy: ", e);
+      console.error("updateProfileDetailService -> TrainingEntity.findOneBy: ", e);
       return null;
     });
 
@@ -44,7 +44,7 @@ export async function modifyProfileDetailService(uuid: string, { trainingUUIDs, 
       },
     }).catch((e) => {
       console.error(
-        "updateCandidateService -> CompetencyEntity.findOneBy: ",
+        "updateProfileDetailService -> CompetencyEntity.findOneBy: ",
         e
       );
       return null;
@@ -65,7 +65,7 @@ export async function modifyProfileDetailService(uuid: string, { trainingUUIDs, 
   foundCandidate.competencies = foundCompetencies;
 
   await foundCandidate.save().catch((e) => {
-    console.error("updateCandidateService -> CandidateEntity.update: ", e);
+    console.error("updateProfileDetailService -> CandidateEntity.update: ", e);
     return null;
   });
 

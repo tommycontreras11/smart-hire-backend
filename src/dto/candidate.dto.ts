@@ -39,7 +39,7 @@ export class CreateCandidateDTO {
   departmentUUID: string;
 }
 
-export class ModifyProfileDetailDTO {
+export class UpdateCandidateProfileDetailDTO {
   @IsOptional()
   @IsUUID("4", { each: true })
   trainingUUIDs: string[];

@@ -5,9 +5,10 @@ import {
     getAllCandidateController,
     getOneCandidateController,
     updateCandidateController,
+    updateCandidateProfileDetailController,
 } from "../../../controllers/candidate";
 import { UuidDTO } from "../../../dto/common.dto";
-import { CreateCandidateDTO, UpdateCandidateDTO } from "../../../dto/candidate.dto";
+import { CreateCandidateDTO, UpdateCandidateDTO, UpdateCandidateProfileDetailDTO } from "../../../dto/candidate.dto";
 import { validateDTO } from "../../../middlewares/dto/validate-dto.middleware";
 
 const router = Router();
@@ -20,6 +21,11 @@ router.patch(
   "/:uuid",
   [validateDTO(UuidDTO, "params"), validateDTO(UpdateCandidateDTO)],
   updateCandidateController
+);
+router.patch(
+  "/:uuid/profile-details",
+  [validateDTO(UuidDTO, "params"), validateDTO(UpdateCandidateProfileDetailDTO)],
+  updateCandidateProfileDetailController
 );
 
 export default router;
