@@ -34,7 +34,7 @@ export async function createCandidateService({
 
   if (!foundPositionType) {
     return Promise.reject({
-      message: "Job position not found",
+      message: "Position type not found",
       status: statusCode.NOT_FOUND,
     });
   }

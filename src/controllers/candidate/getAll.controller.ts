@@ -13,7 +13,10 @@ export const getAllCandidateController = async (_req: Request, res: Response) =>
     .then((data) => {
       const candidates = data.map((candidate) => ({
         uuid: candidate.uuid,
+        identification: candidate.identification,
         name: candidate.name,
+        password: "******",
+        desired_salary: candidate.desired_salary,
         desiredPosition: {
           uuid: candidate.desiredPosition.uuid,
           name: candidate.desiredPosition.name,
@@ -22,10 +25,12 @@ export const getAllCandidateController = async (_req: Request, res: Response) =>
           uuid: candidate.department.uuid,
           name: candidate.department.name,
         },
-        workExperience: {
-          uuid: candidate.workExperience.uuid,
-          company: candidate.workExperience.company
-        },
+        ...(candidate.workExperience && {
+          workExperience: {
+            uuid: candidate.workExperience.uuid,
+            company: candidate.workExperience.company
+          },
+        }),
         status: candidate.status,
       }));
 
