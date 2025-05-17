@@ -20,7 +20,10 @@ import request from "./request";
 
 const router = Router();
 
-router.use('/auth', auth);
+router.use('/auth', unless([
+    { path: "/sign-in", method: "POST" },
+    { path: "/sign-out", method: "POST" }
+], authMiddleware), auth);
 router.use('/categories', unless([{ path: "/", method: "GET" }], authMiddleware), category);
 router.use('/candidates', unless([{ path: "/", method: "POST" }], authMiddleware), candidate);
 router.use('/countries', unless([{ path: "/", method: "GET" }], authMiddleware), country);
