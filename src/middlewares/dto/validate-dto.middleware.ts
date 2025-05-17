@@ -18,7 +18,7 @@ const typeToDTOMap: Record<UserRoleEnum, ClassConstructor<any>> = {
 
 export const validateDTO = (
   dtoClass: ClassConstructor<ObjectI>,
-  type: ValidationDTOType = 'body',
+  type: ValidationDTOType = "body",
   clearEmptyString = true,
   convertObjectValue = false
 ): RequestHandler => {
@@ -26,9 +26,9 @@ export const validateDTO = (
     const types: string[] = Object.values(ValidationDTOEnum);
     if (!types.includes(type)) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).json({
-        error: { message: 'Invalid type into validation DTO' },
+        error: { message: "Invalid type into validation DTO" },
       });
-	  return;
+      return;
     }
 
     if (convertObjectValue) {
@@ -36,16 +36,20 @@ export const validateDTO = (
     }
 
     const data: ObjectI = plainToInstance(dtoClass, req[type], {
-      strategy: 'exposeAll',
+      strategy: "exposeAll",
     });
 
     try {
       const errors = await validate(data, { whitelist: true });
       if (errors.length > 0) {
         const error = errors[0];
-        const errorMessage = formatError(Object.values(error.constraints || {})[0]);
-        res.status(statusCode.BAD_REQUEST).json({ error: { message: errorMessage } });
-		return;
+        const errorMessage = formatError(
+          Object.values(error.constraints || {})[0]
+        );
+        res
+          .status(statusCode.BAD_REQUEST)
+          .json({ error: { message: errorMessage } });
+        return;
       }
 
       // Special handling for SignUpDTO
@@ -56,21 +60,25 @@ export const validateDTO = (
 
         if (!userDTOClass) {
           res.status(statusCode.BAD_REQUEST).json({
-            error: { message: 'Invalid user role type for sign up' },
+            error: { message: "Invalid user role type for sign up" },
           });
-		  return;
+          return;
         }
 
         const userInstance = plainToInstance(userDTOClass, signUpBody.user, {
-          strategy: 'exposeAll',
+          strategy: "exposeAll",
         });
 
         const userErrors = await validate(userInstance, { whitelist: true });
         if (userErrors.length > 0) {
           const userError = userErrors[0];
-          const userErrorMessage = formatError(Object.values(userError.constraints || {})[0]);
-          res.status(statusCode.BAD_REQUEST).json({ error: { message: userErrorMessage } });
-		  return
+          const userErrorMessage = formatError(
+            Object.values(userError.constraints || {})[0]
+          );
+          res
+            .status(statusCode.BAD_REQUEST)
+            .json({ error: { message: userErrorMessage } });
+          return;
         }
 
         // Assign cleaned and validated user back
@@ -80,7 +88,7 @@ export const validateDTO = (
       // Clean empty/null/undefined values
       for (const key in data) {
         if (
-          (clearEmptyString && data[key] === '') ||
+          (clearEmptyString && data[key] === "") ||
           data[key] === null ||
           data[key] === undefined
         ) {
@@ -92,13 +100,15 @@ export const validateDTO = (
       next();
     } catch (error) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).json({
-        error: { message: error instanceof Error ? error.message : String(error) },
+        error: {
+          message: error instanceof Error ? error.message : String(error),
+        },
       });
     }
   };
 };
 
 const formatError = (error: string) => {
-	error = error.replace("_", " ");
-	return error[0].toUpperCase() + error.slice(1);
-}
+  error = error.replace("_", " ");
+  return error[0].toUpperCase() + error.slice(1);
+};
