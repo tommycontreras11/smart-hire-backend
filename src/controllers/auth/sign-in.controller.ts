@@ -23,7 +23,7 @@ export const signInController = async (req: Request, res: Response) => {
           expires: tokenExpiration,
         })
         .status(statusCode.OK)
-        .json({ message: originalToken });
+        .json({ token: originalToken });
     })
     .catch((e) =>
       res

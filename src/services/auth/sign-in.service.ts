@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import { comparePassword } from "./../../utils/common.util";
 import { SignInDTO } from "./../../dto/auth.dto";
 import { statusCode } from "./../../utils/status.util";
 import { retrieveIfUserExists } from "./../../utils/user.util";
@@ -14,7 +14,7 @@ export async function signInService({ identification, password }: SignInDTO) {
     });
   }
 
-  const compareUserPassword = await bcrypt.compare(password, foundUser.password);
+  const compareUserPassword = await comparePassword(password, foundUser.password);
 
   if (!compareUserPassword) {
     return Promise.reject({
