@@ -5,6 +5,7 @@ import { authMiddleware } from "./../../middlewares/auth/auth.middleware";
 import auth from "./auth";
 import category from "./category";
 import candidate from "./candidate";
+import employee from "./employee";
 import country from "./country";
 import competency from "./competency";
 import department from "./department";
@@ -26,6 +27,7 @@ router.use('/auth', unless([
 ], authMiddleware), auth);
 router.use('/categories', unless([{ path: "/", method: "GET" }], authMiddleware), category);
 router.use('/candidates', unless([{ path: "/", method: "POST" }], authMiddleware), candidate);
+router.use('/employees', unless([{ path: "/", method: "GET" }], authMiddleware), employee);
 router.use('/countries', unless([{ path: "/", method: "GET" }], authMiddleware), country);
 router.use('/competencies', unless([{ path: "/", method: "GET" }], authMiddleware), competency);
 router.use('/departments', unless([{ path: "/", method: "GET" }], authMiddleware), department);
