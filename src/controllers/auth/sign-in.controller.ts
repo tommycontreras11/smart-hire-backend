@@ -11,12 +11,12 @@ export const signInController = async (req: Request, res: Response) => {
         { uuid: data.uuid, expiration: tokenExpiration },
         process.env.ACCESS_TOKEN_SECRET!,
         {
-          expiresIn: "1d",
+          expiresIn: "24h",
         }
       );
 
       return res
-        .cookie("token", originalToken, {
+        .cookie("access_token", originalToken, {
           httpOnly: true,
           sameSite: "lax",
           secure: false,
