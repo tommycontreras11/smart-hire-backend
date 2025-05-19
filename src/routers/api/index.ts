@@ -27,7 +27,7 @@ router.use('/auth', unless([
 ], authMiddleware), auth);
 router.use('/categories', unless([{ path: "/", method: "GET" }], authMiddleware), category);
 router.use('/candidates', unless([{ path: "/", method: "POST" }], authMiddleware), candidate);
-router.use('/employees', unless([{ path: "/", method: "GET" }], authMiddleware), employee);
+router.use('/employees', employee);
 router.use('/countries', unless([{ path: "/", method: "GET" }], authMiddleware), country);
 router.use('/competencies', unless([{ path: "/", method: "GET" }], authMiddleware), competency);
 router.use('/departments', unless([{ path: "/", method: "GET" }], authMiddleware), department);
