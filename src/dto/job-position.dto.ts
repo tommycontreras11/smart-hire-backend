@@ -5,14 +5,12 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  Matches
+  Matches,
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
 import {
   JobPositionContractType,
   JobPositionContractTypeEnum,
-  JobPositionRiskLevelEnum,
-  JobPositionRiskLevelType,
 } from "./../database/entities/entity/job-position.entity";
 
 export class CreateJobPositionDTO {
@@ -41,12 +39,12 @@ export class CreateJobPositionDTO {
   maximum_salary: string;
 
   @IsNotEmpty()
-  @IsEnum(JobPositionRiskLevelEnum)
-  risk_level: JobPositionRiskLevelType;
-
-  @IsNotEmpty()
   @IsEnum(JobPositionContractTypeEnum)
   contract_type: JobPositionContractType;
+
+  @IsNotEmpty()
+  @IsString()
+  due_date: Date;
 
   @IsNotEmpty()
   @IsUUID("4")
@@ -59,6 +57,10 @@ export class CreateJobPositionDTO {
   @IsNotEmpty()
   @IsUUID("4")
   recruiterUUID: string;
+
+  @IsNotEmpty()
+  @IsUUID("4", { each: true })
+  competencyUUIDs: string[];
 }
 
 export class UpdateJobPositionDTO {
@@ -87,12 +89,12 @@ export class UpdateJobPositionDTO {
   maximum_salary: string;
 
   @IsOptional()
-  @IsEnum(JobPositionRiskLevelEnum)
-  risk_level: JobPositionRiskLevelType;
-
-  @IsOptional()
   @IsEnum(JobPositionContractTypeEnum)
   contract_type: JobPositionContractType;
+
+  @IsNotEmpty()
+  @IsString()
+  due_date: Date;
 
   @IsOptional()
   @IsUUID("4")
@@ -105,6 +107,10 @@ export class UpdateJobPositionDTO {
   @IsOptional()
   @IsUUID("4")
   recruiterUUID: string;
+
+  @IsNotEmpty()
+  @IsUUID("4", { each: true })
+  competencyUUIDs: string[];
 
   @IsOptional()
   @IsEnum(StatusEnum)

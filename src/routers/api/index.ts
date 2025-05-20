@@ -25,20 +25,20 @@ router.use('/auth', unless([
     { path: "/sign-in", method: "POST" },
     { path: "/sign-out", method: "POST" }
 ], authMiddleware), auth);
-router.use('/categories', unless([{ path: "/", method: "GET" }], authMiddleware), category);
-router.use('/candidates', unless([{ path: "/", method: "POST" }], authMiddleware), candidate);
+router.use('/categories', category);
+router.use('/candidates', candidate);
 router.use('/employees', employee);
-router.use('/countries', unless([{ path: "/", method: "GET" }], authMiddleware), country);
-router.use('/competencies', unless([{ path: "/", method: "GET" }], authMiddleware), competency);
-router.use('/departments', unless([{ path: "/", method: "GET" }], authMiddleware), department);
-router.use('/languages', unless([{ path: "/", method: "GET" }], authMiddleware), language);
-router.use('/trainings', unless([{ path: "/", method: "GET" }], authMiddleware), training);
-router.use('/institutions', unless([{ path: "/", method: "GET" }], authMiddleware), institution);
-router.use('/position-types', unless([{ path: "/", method: "GET" }], authMiddleware), positionType);
-router.use('/evaluation-methods', unless([{ path: "/", method: "GET" }], authMiddleware), evaluationMethod);
-router.use('/job-positions', unless([{ path: "/", method: "GET" }], authMiddleware), jobPosition);
-router.use('/work-experiences', unless([{ path: "/", method: "GET" }], authMiddleware), workExperience);
-router.use('/recruiters', unless([{ path: "/", method: "GET" }], authMiddleware), recruiter);
-router.use('/requests', unless([{ path: "/", method: "GET" }], authMiddleware), request);
+router.use('/countries', country);
+router.use('/competencies', competency);
+router.use('/departments', department);
+router.use('/languages', language);
+router.use('/trainings', training);
+router.use('/institutions', institution);
+router.use('/position-types', positionType);
+router.use('/evaluation-methods', evaluationMethod);
+router.use('/job-positions', jobPosition);
+router.use('/work-experiences', workExperience);
+router.use('/recruiters', recruiter);
+router.use('/requests', request);
 
 export default router;

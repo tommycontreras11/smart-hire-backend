@@ -12,6 +12,7 @@ import { StatusEnum, StatusType } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
 import { CategoryEntity } from "./category.entity";
 import { EvaluationMethodEntity } from "./evaluation-method.entity";
+import { JobPositionEntity } from "./job-position.entity";
 import { PositionTypeEntity } from "./position-type.entity";
 
 export enum LevelCompetencyEnum {
@@ -67,4 +68,7 @@ export class CompetencyEntity extends BaseEntity {
 
   @OneToMany(() => CandidateEntity, (candidate) => candidate.competencies)
   candidates: CandidateEntity[];
+
+  @ManyToMany(() => JobPositionEntity, (jobPosition) => jobPosition.competencies)
+  jobPositions: JobPositionEntity[];
 }

@@ -12,7 +12,10 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
     relations: {
       country: true,
       language: true,
-      recruiter: true,
+      recruiter: {
+        institution: true,
+      },
+      competencies: true,
     }
   })
     .then((data) => {
@@ -22,7 +25,6 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
         description: data.description,
         minimum_salary: data.minimum_salary,
         maximum_salary: data.maximum_salary,
-        risk_level: data.risk_level,
         contract_type: data.contract_type,
         country: {
           uuid: data.country.uuid,
@@ -35,8 +37,17 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
         recruiter: {
           uuid: data.recruiter.uuid,
           name: data.recruiter.name,
+          institution: {
+            uuid: data.recruiter.institution.uuid,
+            name: data.recruiter.institution.name,
+          },
         },
+        competencies: data.competencies.map((competency) => ({
+          uuid: competency.uuid,
+          name: competency.name,
+        })),
         status: data.status,
+        created_at: data.createdAt,
       };
 
       res.status(statusCode.OK).json({ data: jobPosition });

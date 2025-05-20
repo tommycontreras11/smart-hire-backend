@@ -1,9 +1,12 @@
+import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 import { JobPositionEntity } from "../../database/entities/entity/job-position.entity";
 import { CreateJobPositionDTO } from "../../dto/job-position.dto";
 import { statusCode } from "../../utils/status.util";
 import { CountryEntity } from "./../../database/entities/entity/country.entity";
 import { LanguageEntity } from "./../../database/entities/entity/language.entity";
 import { RecruiterEntity } from "./../../database/entities/entity/recruiter.entity";
+import { In } from "typeorm";
+import { getFullDate } from "utils/date.util";
 
 export async function createJobPositionService({
   name,
@@ -12,6 +15,8 @@ export async function createJobPositionService({
   recruiterUUID,
   minimum_salary,
   maximum_salary,
+  due_date,
+  competencyUUIDs,
   ...payload
 }: CreateJobPositionDTO) {
   const foundJobPosition = await JobPositionEntity.findOneBy({ name }).catch(
@@ -73,6 +78,25 @@ export async function createJobPositionService({
     });
   }
 
+  const foundCompetencies = await CompetencyEntity.find({
+    where: {
+      uuid: In(competencyUUIDs),
+    }
+  }).catch((e) => {
+    console.error(
+      "createJobPositionService -> CompetencyEntity.find: ",
+      e
+    );
+    return null;
+  })
+
+  if(!foundCompetencies || foundCompetencies.length !== competencyUUIDs.length) {
+    return Promise.reject({
+      message: "Competency not found",
+      status: statusCode.NOT_FOUND,
+    });
+  }
+
   await JobPositionEntity.create({
     name,
     minimum_salary: parseFloat(minimum_salary),
@@ -80,6 +104,7 @@ export async function createJobPositionService({
     country: foundCountry,
     language: foundLanguage,
     recruiter: foundRecruiter,
+    competencies: foundCompetencies,
     ...payload,
   })
     .save()

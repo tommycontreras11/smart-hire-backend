@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
 import { RequestEntity } from "./request.entity";
 import { EmployeeEntity } from "./employee.entity";
@@ -6,20 +6,14 @@ import { CountryEntity } from "./country.entity";
 import { LanguageEntity } from "./language.entity";
 import { RecruiterEntity } from "./recruiter.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
-
-export enum JobPositionRiskLevelEnum {
-  LOW = "LOW",
-  MEDIUM = "MEDIUM",
-  HIGH = "HIGH",
-}
+import { CompetencyEntity } from "./competency.entity";
 
 export enum JobPositionContractTypeEnum {
   FULL_TIME = "FULL_TIME",
   PART_TIME = "PART_TIME",
   CONTRACT = "CONTRACT",
+  INTERN = "INTERN",
 }
-
-export type JobPositionRiskLevelType = keyof typeof JobPositionRiskLevelEnum;
 
 export type JobPositionContractType = keyof typeof JobPositionContractTypeEnum;
 
@@ -37,11 +31,11 @@ export class JobPositionEntity extends BaseEntity {
   @Column({ type: "float", precision: 10, scale: 2 })
   maximum_salary: number;
 
-  @Column({ type: "enum", enum: JobPositionRiskLevelEnum })
-  risk_level: JobPositionRiskLevelType;
-
   @Column({ type: "enum", enum: JobPositionContractTypeEnum })
   contract_type: JobPositionContractType;
+
+  @Column({ type: "date" })
+  due_date: Date;
 
   @Column()
   country_id: string;
@@ -72,4 +66,18 @@ export class JobPositionEntity extends BaseEntity {
 
   @OneToMany(() => EmployeeEntity, (employee) => employee.jobPosition)
   employees: EmployeeEntity[];
+
+  @ManyToMany(() => CompetencyEntity, (competency) => competency.jobPositions)
+  @JoinTable({
+    name: "job_position_competencies",
+    joinColumn: {
+      name: "job_position_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "competency_id",
+      referencedColumnName: "id",
+    },
+  })
+  competencies: CompetencyEntity[];
 }
