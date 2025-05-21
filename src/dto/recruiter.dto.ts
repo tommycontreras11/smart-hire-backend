@@ -5,38 +5,15 @@ import {
   IsString
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
+import { PartialPersonDTO, PersonDTO } from "./common.dto";
 
-export class CreateRecruiterDTO {
-  @IsNotEmpty()
-  @IsString()
-  identification: string;
-
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  password: string;
-
+export class CreateRecruiterDTO extends PersonDTO {
   @IsNotEmpty()
   @IsString()
   institution: string;
 }
 
-export class UpdateRecruiterDTO {
-  @IsOptional()
-  @IsString()
-  identification: string;
-
-  @IsOptional()
-  @IsString()
-  name: string;
-
-  @IsOptional()
-  @IsString()
-  password: string;
-
+export class UpdateRecruiterDTO extends (class {} as { new (): PartialPersonDTO }) {
   @IsOptional()
   @IsString()
   institution: string;

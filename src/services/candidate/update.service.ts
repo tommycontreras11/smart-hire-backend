@@ -95,7 +95,7 @@ export async function updateCandidateService(
   foundCandidate.identification =
     identification ?? foundCandidate.identification;
   foundCandidate.name = name ?? foundCandidate.name;
-  foundCandidate.password = hashPassword(password) ?? foundCandidate.password;
+  foundCandidate.password = password ? hashPassword(password) : foundCandidate.password;
   foundCandidate.desired_salary =
     parseFloat(desired_salary) ?? foundCandidate.desired_salary;
   foundCandidate.desiredPosition =

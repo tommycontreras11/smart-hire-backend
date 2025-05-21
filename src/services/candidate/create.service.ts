@@ -5,11 +5,12 @@ import { DepartmentEntity } from "./../../database/entities/entity/department.en
 import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
 import { hashPassword } from "./../../utils/common.util";
 import {
-  validateIdentification
+  validateProperty
 } from "./../../utils/user.util";
 
 export async function createCandidateService({
   identification,
+  email,
   password,
   desired_salary,
   positionUUID,
@@ -17,9 +18,16 @@ export async function createCandidateService({
   ...payload
 }: CreateCandidateDTO) {
   // file?: Express.Multer.File | undefined
-  await validateIdentification<CandidateEntity>(
+  await validateProperty<CandidateEntity>(
     CandidateEntity,
-    identification
+    identification,
+    "Identification"
+  );
+
+  await validateProperty<CandidateEntity>(
+    CandidateEntity,
+    email,
+    "Email"
   );
 
   const foundPositionType = await PositionTypeEntity.findOneBy({

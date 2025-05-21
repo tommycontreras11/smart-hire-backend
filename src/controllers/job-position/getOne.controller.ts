@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getOneJobPositionService } from "../../services/job-position/getOne.service";
 import { statusCode } from "../../utils/status.util";
+import { timeAgo } from "./../../utils/date.util";
 
 export const getOneJobPositionController = async (req: Request, res: Response) => {
   const { uuid } = req.params;
@@ -47,7 +48,7 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
           name: competency.name,
         })),
         status: data.status,
-        created_at: data.createdAt,
+        posted: timeAgo(data.createdAt),
       };
 
       res.status(statusCode.OK).json({ data: jobPosition });

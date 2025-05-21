@@ -8,20 +8,9 @@ import {
   Matches,
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
+import { PartialPersonDTO, PersonDTO } from "./common.dto";
 
-export class CreateCandidateDTO {
-  @IsNotEmpty()
-  @IsString()
-  identification: string;
-
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  password: string;
-
+export class CreateCandidateDTO extends PersonDTO {
   @IsNotEmpty()
   @IsNumberString()
   @Matches(/^\d{1,8}(\.\d{1,2})?$/, {
@@ -49,19 +38,7 @@ export class UpdateCandidateProfileDetailDTO {
   competencyUUIDs: string[];
 }
 
-export class UpdateCandidateDTO {
-  @IsOptional()
-  @IsString()
-  identification: string;
-
-  @IsOptional()
-  @IsString()
-  name: string;
-
-  @IsOptional()
-  @IsString()
-  password: string;
-
+export class UpdateCandidateDTO extends (class {} as { new (): PartialPersonDTO }) {
   @IsOptional()
   @IsNumberString()
   @Matches(/^\d{1,8}(\.\d{1,2})?$/, {

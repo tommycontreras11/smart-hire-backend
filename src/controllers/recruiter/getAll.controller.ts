@@ -12,6 +12,7 @@ export const getAllRecruiterController = async (_req: Request, res: Response) =>
       const recruiters = data.map((recruiter) => ({
         uuid: recruiter.uuid,
         identification: recruiter.identification,
+        email: recruiter.email,
         name: recruiter.name,
         password: recruiter.password,
         institution: {

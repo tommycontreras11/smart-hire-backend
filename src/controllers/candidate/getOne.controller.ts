@@ -22,6 +22,7 @@ export const getOneCandidateController = async (
       const candidate = {
         uuid: data.uuid,
         identification: data.identification,
+        email: data.email,
         name: data.name,
         password: data.password,
         desired_salary: data.desired_salary,

@@ -20,6 +20,7 @@ export const getOneRecruiterController = async (
       const recruiter = {
         uuid: data.uuid,
         identification: data.identification,
+        email: data.email,
         name: data.name,
         password: data.password,
         institution: {

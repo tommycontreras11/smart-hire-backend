@@ -1,23 +1,25 @@
-import { validateIdentification } from "./../../utils/user.util";
+import { validateProperty } from "./../../utils/user.util";
 import { RecruiterEntity } from "../../database/entities/entity/recruiter.entity";
 import { CreateRecruiterDTO } from "../../dto/recruiter.dto";
 import { hashPassword } from "../../utils/common.util";
 import { statusCode } from "../../utils/status.util";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
 
-export async function createRecruiterService(
-  {
-    identification,
-    password,
-    institution,
-    ...payload
-  }: CreateRecruiterDTO,
+export async function createRecruiterService({
+  identification,
+  email,
+  password,
+  institution,
+  ...payload
+}: CreateRecruiterDTO) {
   // file?: Express.Multer.File | undefined
-) {
-  await validateIdentification<RecruiterEntity>(
+  await validateProperty<RecruiterEntity>(
     RecruiterEntity,
-    identification
+    identification,
+    "Identification"
   );
+
+  await validateProperty<RecruiterEntity>(RecruiterEntity, email, "Email");
 
   let foundInstitution = await InstitutionEntity.findOneBy({
     name: institution,
@@ -28,11 +30,16 @@ export async function createRecruiterService(
 
   if (!foundInstitution) {
     foundInstitution = await InstitutionEntity.create({
-      name: institution
-    }).save().catch((e) => {
-      console.error("createRecruiterService -> InstitutionEntity.create: ", e);
-      return null;
+      name: institution,
     })
+      .save()
+      .catch((e) => {
+        console.error(
+          "createRecruiterService -> InstitutionEntity.create: ",
+          e
+        );
+        return null;
+      });
 
     if (!foundInstitution) {
       return Promise.reject({

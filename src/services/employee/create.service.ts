@@ -5,11 +5,12 @@ import { DepartmentEntity } from "../../database/entities/entity/department.enti
 import { JobPositionEntity } from "../../database/entities/entity/job-position.entity";
 import { hashPassword } from "../../utils/common.util";
 import {
-  validateIdentification
+  validateProperty
 } from "../../utils/user.util";
 
 export async function createEmployeeService({
   identification,
+  email,
   password,
   monthly_salary,
   entry_date,
@@ -18,9 +19,16 @@ export async function createEmployeeService({
   ...payload
 }: CreateEmployeeDTO) {
   // file?: Express.Multer.File | undefined
-  await validateIdentification<EmployeeEntity>(
+  await validateProperty<EmployeeEntity>(
     EmployeeEntity,
-    identification
+    identification,
+    "Identification"
+  );
+  
+  await validateProperty<EmployeeEntity>(
+    EmployeeEntity,
+    email,
+    "Email"
   );
 
   const foundJobPosition = await JobPositionEntity.findOneBy({

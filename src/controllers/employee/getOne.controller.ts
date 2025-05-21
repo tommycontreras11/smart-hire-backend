@@ -18,6 +18,7 @@ export const getOneEmployeeController = async (req: Request, res: Response) => {
       const employee = {
         uuid: data.uuid,
         identification: data.identification,
+        email: data.email,
         name: data.name,
         password: "******",
         monthly_salary: data.monthly_salary,

@@ -14,6 +14,7 @@ export const getAllCandidateController = async (_req: Request, res: Response) =>
       const candidates = data.map((candidate) => ({
         uuid: candidate.uuid,
         identification: candidate.identification,
+        email: candidate.email,
         name: candidate.name,
         password: "******",
         desired_salary: candidate.desired_salary,

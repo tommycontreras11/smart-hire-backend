@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getAllJobPositionService } from "../../services/job-position/getAll.service";
 import { statusCode } from "../../utils/status.util";
+import { timeAgo } from "./../../utils/date.util";
 
 export const getAllJobPositionController = async (_req: Request, res: Response) => {
   getAllJobPositionService({
@@ -42,7 +43,7 @@ export const getAllJobPositionController = async (_req: Request, res: Response) 
           name: competency.name,
         })),
         status: jobPosition.status,
-        created_at: jobPosition.createdAt,
+        posted: timeAgo(jobPosition.createdAt),
       }));
 
       res.status(statusCode.OK).json({ data: jobPositions });

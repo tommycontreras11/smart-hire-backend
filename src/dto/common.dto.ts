@@ -8,3 +8,23 @@ export class UuidDTO {
   @IsNotEmpty()
   uuid: string;
 }
+
+export class PersonDTO {
+  @IsNotEmpty()
+  @IsString()
+  identification: string;
+
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+}
+
+export type PartialPersonDTO = Partial<PersonDTO>;
