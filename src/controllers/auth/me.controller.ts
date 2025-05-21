@@ -9,6 +9,7 @@ export const meController = async (req: Request, res: Response) => {
       const data = {
         uuid: user.uuid,
         identification: user.identification,
+        email: user.email,
         name: user.name,
         role: userType,
       };
