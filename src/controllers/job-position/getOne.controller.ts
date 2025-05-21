@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getOneJobPositionService } from "../../services/job-position/getOne.service";
 import { statusCode } from "../../utils/status.util";
 import { timeAgo } from "./../../utils/date.util";
+import { StatusRequestEnum } from "./../../constants";
 
 export const getOneJobPositionController = async (req: Request, res: Response) => {
   const { uuid } = req.params;
@@ -16,6 +17,7 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
       recruiter: {
         institution: true,
       },
+      requests: true,
       competencies: true,
     }
   })
@@ -47,6 +49,7 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
           uuid: competency.uuid,
           name: competency.name,
         })),
+        total_applied: data?.requests?.filter((r) => r?.status === StatusRequestEnum.SUBMITTED)?.length ?? 0,
         status: data.status,
         posted: timeAgo(data.createdAt),
       };

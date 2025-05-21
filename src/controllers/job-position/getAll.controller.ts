@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getAllJobPositionService } from "../../services/job-position/getAll.service";
 import { statusCode } from "../../utils/status.util";
+import { StatusRequestEnum } from "./../../constants";
 import { timeAgo } from "./../../utils/date.util";
 
 export const getAllJobPositionController = async (_req: Request, res: Response) => {
@@ -11,6 +12,7 @@ export const getAllJobPositionController = async (_req: Request, res: Response) 
       recruiter: {
         institution: true,
       },
+      requests: true,
       competencies: true,
     }
   })
@@ -42,8 +44,11 @@ export const getAllJobPositionController = async (_req: Request, res: Response) 
           uuid: competency.uuid,
           name: competency.name,
         })),
+        total_applied: jobPosition?.requests?.filter((r) => r?.status === StatusRequestEnum.SUBMITTED)?.length ?? 0,
         status: jobPosition.status,
         posted: timeAgo(jobPosition.createdAt),
+        date_posted: jobPosition.createdAt,
+        due_date: jobPosition.due_date,
       }));
 
       res.status(statusCode.OK).json({ data: jobPositions });
