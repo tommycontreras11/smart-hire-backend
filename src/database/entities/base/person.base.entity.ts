@@ -8,6 +8,9 @@ export class PersonBaseEntity extends BaseEntity {
   @Column()
   name: string;
 
+  @Column({ unique: true })
+  email: string;
+
   @Column()
   password: string;
 }
