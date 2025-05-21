@@ -4,12 +4,12 @@ import { statusCode } from "./../../utils/status.util";
 import { retrieveIfUserExists } from "./../../utils/user.util";
 
 
-export async function signInService({ identification, password }: SignInDTO) {
-  const foundUser = await retrieveIfUserExists(identification);
+export async function signInService({ email, password }: SignInDTO) {
+  const foundUser = await retrieveIfUserExists(null, email);
 
   if (!foundUser) {
     return Promise.reject({
-      message: "Identification or password incorrect",
+      message: "Email or password incorrect",
       status: statusCode.NOT_FOUND,
     });
   }
@@ -18,7 +18,7 @@ export async function signInService({ identification, password }: SignInDTO) {
 
   if (!compareUserPassword) {
     return Promise.reject({
-      message: "Identification or password incorrect",
+      message: "Email or password incorrect",
       status: statusCode.BAD_REQUEST,
     });
   }

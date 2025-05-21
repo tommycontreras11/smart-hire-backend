@@ -7,7 +7,7 @@ import { UserRoleEnum } from "./../enums/user-role.enum";
 export class SignInDTO {
   @IsNotEmpty()
   @IsString()
-  identification: string;
+  email: string;
 
   @IsNotEmpty()
   @IsString()
