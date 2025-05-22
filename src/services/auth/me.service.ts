@@ -6,7 +6,7 @@ import { UserRoleEnum } from "./../../enums/user-role.enum";
 import { retrieveIfUserExists } from "./../../utils/user.util";
 
 export async function meService(userUUID: string) {
-  const foundUser = await retrieveIfUserExists(null, userUUID);
+  const foundUser = await retrieveIfUserExists(null, null, userUUID);
 
   if (!foundUser)
     return Promise.reject({
