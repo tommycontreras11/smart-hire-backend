@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { meService } from "./../../services/auth/me.service";
 import { statusCode } from "./../../utils/status.util";
-4;
 
 export const meController = async (req: Request, res: Response) => {
   meService(req?.user?.uuid)

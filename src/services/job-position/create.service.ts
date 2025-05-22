@@ -1,12 +1,11 @@
-import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
+import { In } from "typeorm";
 import { JobPositionEntity } from "../../database/entities/entity/job-position.entity";
 import { CreateJobPositionDTO } from "../../dto/job-position.dto";
 import { statusCode } from "../../utils/status.util";
+import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 import { CountryEntity } from "./../../database/entities/entity/country.entity";
 import { LanguageEntity } from "./../../database/entities/entity/language.entity";
 import { RecruiterEntity } from "./../../database/entities/entity/recruiter.entity";
-import { In } from "typeorm";
-import { getFullDate } from "utils/date.util";
 
 export async function createJobPositionService({
   name,
@@ -15,7 +14,6 @@ export async function createJobPositionService({
   recruiterUUID,
   minimum_salary,
   maximum_salary,
-  due_date,
   competencyUUIDs,
   ...payload
 }: CreateJobPositionDTO) {

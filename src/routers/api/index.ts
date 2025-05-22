@@ -25,20 +25,20 @@ router.use('/auth', unless([
     { path: "/sign-in", method: "POST" },
     { path: "/sign-out", method: "POST" }
 ], authMiddleware), auth);
-router.use('/categories', category);
-router.use('/candidates', candidate);
-router.use('/employees', employee);
-router.use('/countries', country);
-router.use('/competencies', competency);
-router.use('/departments', department);
-router.use('/languages', language);
-router.use('/trainings', training);
-router.use('/institutions', institution);
-router.use('/position-types', positionType);
-router.use('/evaluation-methods', evaluationMethod);
-router.use('/job-positions', jobPosition);
-router.use('/work-experiences', workExperience);
-router.use('/recruiters', recruiter);
-router.use('/requests', request);
+router.use('/categories', authMiddleware, category);
+router.use('/candidates', authMiddleware, candidate);
+router.use('/employees', authMiddleware, employee);
+router.use('/countries', authMiddleware, country);
+router.use('/competencies', authMiddleware, competency);
+router.use('/departments', authMiddleware, department);
+router.use('/languages', authMiddleware, language);
+router.use('/trainings', authMiddleware, training);
+router.use('/institutions', authMiddleware, institution);
+router.use('/position-types', authMiddleware, positionType);
+router.use('/evaluation-methods', authMiddleware, evaluationMethod);
+router.use('/job-positions', authMiddleware, jobPosition);
+router.use('/work-experiences', authMiddleware, workExperience);
+router.use('/recruiters', authMiddleware, recruiter);
+router.use('/requests', authMiddleware, request);
 
 export default router;

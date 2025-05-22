@@ -34,7 +34,7 @@ export class JobPositionEntity extends BaseEntity {
   @Column({ type: "enum", enum: JobPositionContractTypeEnum })
   contract_type: JobPositionContractType;
 
-  @Column({ type: "date" })
+  @Column({ type: "datetime" })
   due_date: Date;
 
   @Column()
