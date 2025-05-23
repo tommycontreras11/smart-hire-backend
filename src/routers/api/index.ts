@@ -21,24 +21,55 @@ import request from "./request";
 
 const router = Router();
 
-router.use('/auth', unless([
-    { path: "/sign-in", method: "POST" },
-    { path: "/sign-out", method: "POST" }
-], authMiddleware), auth);
-router.use('/categories', authMiddleware, category);
-router.use('/candidates', authMiddleware, candidate);
-router.use('/employees', authMiddleware, employee);
-router.use('/countries', authMiddleware, country);
-router.use('/competencies', authMiddleware, competency);
-router.use('/departments', authMiddleware, department);
-router.use('/languages', authMiddleware, language);
-router.use('/trainings', authMiddleware, training);
-router.use('/institutions', authMiddleware, institution);
-router.use('/position-types', authMiddleware, positionType);
-router.use('/evaluation-methods', authMiddleware, evaluationMethod);
-router.use('/job-positions', authMiddleware, jobPosition);
-router.use('/work-experiences', authMiddleware, workExperience);
-router.use('/recruiters', authMiddleware, recruiter);
-router.use('/requests', authMiddleware, request);
+router.use(
+  "/auth",
+  unless(
+    [
+      { path: "/sign-in", method: "POST" },
+      { path: "/sign-out", method: "POST" },
+    ],
+    authMiddleware
+  ),
+  auth
+);
+router.use("/categories", authMiddleware, category);
+router.use("/candidates", authMiddleware, candidate);
+router.use("/employees", authMiddleware, employee);
+router.use(
+  "/countries",
+  unless(
+    [
+      {
+        path: "/",
+        method: "GET",
+      },
+    ],
+    authMiddleware
+  ),
+  country
+);
+router.use("/competencies", authMiddleware, competency);
+router.use("/departments", authMiddleware, department);
+router.use("/languages", authMiddleware, language);
+router.use("/trainings", authMiddleware, training);
+router.use("/institutions", authMiddleware, institution);
+router.use("/position-types", authMiddleware, positionType);
+router.use("/evaluation-methods", authMiddleware, evaluationMethod);
+router.use(
+  "/job-positions",
+  unless(
+    [
+      {
+        path: "/",
+        method: "GET",
+      },
+    ],
+    authMiddleware
+  ),
+  jobPosition
+);
+router.use("/work-experiences", authMiddleware, workExperience);
+router.use("/recruiters", authMiddleware, recruiter);
+router.use("/requests", authMiddleware, request);
 
 export default router;
