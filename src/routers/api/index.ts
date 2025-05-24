@@ -26,6 +26,7 @@ router.use(
   unless(
     [
       { path: "/sign-in", method: "POST" },
+      { path: "/sign-up", method: "POST" },
       { path: "/sign-out", method: "POST" },
     ],
     authMiddleware

@@ -63,6 +63,7 @@ export async function createCandidateService({
 
   await CandidateEntity.create({
     identification,
+    email,
     password: hashPassword(password),
     desired_salary: parseFloat(desired_salary),
     desiredPosition: foundPositionType,

@@ -11,6 +11,7 @@ export async function updateCandidateService(
   {
     identification,
     name,
+    email,
     password,
     desired_salary,
     positionUUID,
@@ -95,6 +96,7 @@ export async function updateCandidateService(
   foundCandidate.identification =
     identification ?? foundCandidate.identification;
   foundCandidate.name = name ?? foundCandidate.name;
+  foundCandidate.email = email ?? foundCandidate.email;
   foundCandidate.password = password ? hashPassword(password) : foundCandidate.password;
   foundCandidate.desired_salary =
     parseFloat(desired_salary) ?? foundCandidate.desired_salary;

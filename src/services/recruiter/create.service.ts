@@ -54,6 +54,7 @@ export async function createRecruiterService({
     password: hashPassword(password),
     institution: foundInstitution,
     file_name: "s",
+    email,
     ...payload,
   })
     .save()

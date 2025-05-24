@@ -4,6 +4,7 @@ import { StatusEnum, StatusType } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
 import { CompetencyEntity } from "./competency.entity";
 import { WorkExperienceEntity } from "./work-experience.entity";
+import { EmployeeEntity } from "./employee.entity";
 
 @Entity({ name: "position_types" })
 export class PositionTypeEntity extends BaseEntity {
@@ -14,11 +15,17 @@ export class PositionTypeEntity extends BaseEntity {
   status: StatusType;
 
   @ManyToMany(() => CompetencyEntity, (competency) => competency.positionTypes)
-  competencies: CompetencyEntity[]
+  competencies: CompetencyEntity[];
 
-  @OneToMany(() => WorkExperienceEntity, (workExperience) => workExperience.position)
-  workExperiences: WorkExperienceEntity[]
+  @OneToMany(
+    () => WorkExperienceEntity,
+    (workExperience) => workExperience.position
+  )
+  workExperiences: WorkExperienceEntity[];
 
   @OneToMany(() => CandidateEntity, (candidate) => candidate.desiredPosition)
-  desiredPositions: CandidateEntity[]
+  desiredPositions: CandidateEntity[];
+
+  @OneToMany(() => EmployeeEntity, (employee) => employee.positionType)
+  employees: EmployeeEntity[];
 }
