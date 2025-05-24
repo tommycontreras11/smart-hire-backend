@@ -7,7 +7,7 @@ import {
 import { PersonBaseEntity } from "../base/person.base.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
 import { DepartmentEntity } from "./department.entity";
-import { JobPositionEntity } from "./job-position.entity";
+import { PositionTypeEntity } from "./position-type.entity";
 
 @Entity({ name: "employees" })
 export class EmployeeEntity extends PersonBaseEntity {
@@ -21,7 +21,7 @@ export class EmployeeEntity extends PersonBaseEntity {
   department_id: number;
 
   @Column()
-  job_position_id: number;
+  position_type_id: number;
 
   @Column()
   file_name: string;
@@ -34,9 +34,9 @@ export class EmployeeEntity extends PersonBaseEntity {
   department: DepartmentEntity;
 
   @ManyToOne(
-    () => JobPositionEntity,
-    (jobPosition) => jobPosition.employees
+    () => PositionTypeEntity,
+    (positionType) => positionType.employees
   )
-  @JoinColumn({ name: "job_position_id", referencedColumnName: "id" })
-  jobPosition: JobPositionEntity;
+  @JoinColumn({ name: "position_type_id", referencedColumnName: "id" })
+  positionType: PositionTypeEntity;
 }

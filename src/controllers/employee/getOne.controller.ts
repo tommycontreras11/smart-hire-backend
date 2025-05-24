@@ -10,7 +10,7 @@ export const getOneEmployeeController = async (req: Request, res: Response) => {
       uuid,
     },
     relations: {
-      jobPosition: true,
+      positionType: true,
       department: true,
     },
   })
@@ -23,9 +23,9 @@ export const getOneEmployeeController = async (req: Request, res: Response) => {
         password: "******",
         monthly_salary: data.monthly_salary,
         entry_date: data.entry_date,
-        jobPosition: {
-          uuid: data.jobPosition.uuid,
-          name: data.jobPosition.name,
+        positionType: {
+          uuid: data.positionType.uuid,
+          name: data.positionType.name,
         },
         department: {
           uuid: data.department.uuid,

@@ -29,7 +29,7 @@ export class CreateEmployeeDTO extends PersonDTO {
 
   @IsNotEmpty()
   @IsUUID("4")
-  jobPositionUUID: string;
+  positionTypeUUID: string;
 }
 
 export class UpdateEmployeeDTO extends (class {} as { new (): PartialPersonDTO }) {
@@ -51,7 +51,7 @@ export class UpdateEmployeeDTO extends (class {} as { new (): PartialPersonDTO }
 
   @IsOptional()
   @IsUUID("4")
-  jobPositionUUID: string;
+  positionTypeUUID: string;
 
   @IsOptional()
   @IsEnum(StatusEnum)

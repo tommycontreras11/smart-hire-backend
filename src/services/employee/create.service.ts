@@ -2,11 +2,10 @@ import { EmployeeEntity } from "../../database/entities/entity/employee.entity";
 import { CreateEmployeeDTO } from "../../dto/employee.dto";
 import { statusCode } from "../../utils/status.util";
 import { DepartmentEntity } from "../../database/entities/entity/department.entity";
-import { JobPositionEntity } from "../../database/entities/entity/job-position.entity";
 import { hashPassword } from "../../utils/common.util";
-import {
-  validateProperty
-} from "../../utils/user.util";
+import { validateProperty } from "../../utils/user.util";
+import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
+import { getFullDate } from "./../../utils/date.util";
 
 export async function createEmployeeService({
   identification,
@@ -15,7 +14,7 @@ export async function createEmployeeService({
   monthly_salary,
   entry_date,
   departmentUUID,
-  jobPositionUUID,
+  positionTypeUUID,
   ...payload
 }: CreateEmployeeDTO) {
   // file?: Express.Multer.File | undefined
@@ -24,26 +23,19 @@ export async function createEmployeeService({
     identification,
     "Identification"
   );
-  
-  await validateProperty<EmployeeEntity>(
-    EmployeeEntity,
-    email,
-    "Email"
-  );
 
-  const foundJobPosition = await JobPositionEntity.findOneBy({
-    uuid: jobPositionUUID,
+  await validateProperty<EmployeeEntity>(EmployeeEntity, email, "Email");
+
+  const foundPositionType = await PositionTypeEntity.findOneBy({
+    uuid: positionTypeUUID,
   }).catch((e) => {
-    console.error(
-      "createEmployeeService -> JobPositionEntity.findOneBy: ",
-      e
-    );
+    console.error("createEmployeeService -> PositionTypeEntity.findOneBy: ", e);
     return null;
   });
 
-  if (!foundJobPosition) {
+  if (!foundPositionType) {
     return Promise.reject({
-      message: "Job position not found",
+      message: "Position type not found",
       status: statusCode.NOT_FOUND,
     });
   }
@@ -64,9 +56,11 @@ export async function createEmployeeService({
 
   await EmployeeEntity.create({
     identification,
+    email,
     password: hashPassword(password),
     monthly_salary: parseFloat(monthly_salary),
-    jobPosition: foundJobPosition,
+    entry_date: getFullDate(new Date(entry_date)),
+    positionType: foundPositionType,
     department: foundDepartment,
     file_name: "s",
     ...payload,

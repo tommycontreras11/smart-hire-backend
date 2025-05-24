@@ -5,7 +5,7 @@ import { statusCode } from "../../utils/status.util";
 export const getAllEmployeeController = async (_req: Request, res: Response) => {
   getAllEmployeeService({
     relations: {
-      jobPosition: true,
+      positionType: true,
       department: true,
     }
   })
@@ -19,8 +19,8 @@ export const getAllEmployeeController = async (_req: Request, res: Response) => 
         monthly_salary: employee.monthly_salary,
         entry_date: employee.entry_date,
         jobPosition: {
-          uuid: employee.jobPosition.uuid,
-          name: employee.jobPosition.name,
+          uuid: employee.positionType.uuid,
+          name: employee.positionType.name,
         },
         department: {
           uuid: employee.department.uuid,

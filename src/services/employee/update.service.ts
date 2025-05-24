@@ -3,19 +3,20 @@ import { EmployeeEntity } from "../../database/entities/entity/employee.entity";
 import { UpdateEmployeeDTO } from "../../dto/employee.dto";
 import { statusCode } from "../../utils/status.util";
 import { DepartmentEntity } from "../../database/entities/entity/department.entity";
-import { JobPositionEntity } from "../../database/entities/entity/job-position.entity";
 import { hashPassword } from "../../utils/common.util";
 import { getFullDate } from "./../../utils/date.util";
+import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
 
 export async function updateEmployeeService(
   uuid: string,
   {
     identification,
     name,
+    email,
     password,
     monthly_salary,
     entry_date,
-    jobPositionUUID,
+    positionTypeUUID,
     departmentUUID,
     status,
   }: UpdateEmployeeDTO
@@ -51,21 +52,21 @@ export async function updateEmployeeService(
     }
   }
 
-  let foundJobPosition: JobPositionEntity | null = null;
-  if (jobPositionUUID) {
-    foundJobPosition = await JobPositionEntity.findOneBy({
-      uuid: jobPositionUUID,
+  let foundPositionType: PositionTypeEntity | null = null;
+  if (positionTypeUUID) {
+    foundPositionType = await PositionTypeEntity.findOneBy({
+      uuid: positionTypeUUID,
     }).catch((e) => {
       console.error(
-        "updateEmployeeService -> JobPositionEntity.findOneBy: ",
+        "updateEmployeeService -> PositionTypeEntity.findOneBy: ",
         e
       );
       return null;
     });
 
-    if (!foundJobPosition) {
+    if (!foundPositionType) {
       return Promise.reject({
-        message: "Job position not found",
+        message: "Position type not found",
         status: statusCode.NOT_FOUND,
       });
     }
@@ -94,10 +95,11 @@ export async function updateEmployeeService(
   EmployeeEntity.update({ uuid }, {
     ...(identification && { identification }),
     ...(name && { name }),
+    ...(email && { email }),
     ...(password && { password: hashPassword(password) }),
     ...(monthly_salary && { monthly_salary: parseFloat(monthly_salary) }),
     ...(entry_date && { entry_date: getFullDate(new Date(entry_date)) }),
-    ...(foundJobPosition && { jobPosition: foundJobPosition }),
+    ...(foundPositionType && { positionType: foundPositionType }),
     ...(foundDepartment && { department: foundDepartment }),
     ...(status && { status }),
   }).catch((e) => {

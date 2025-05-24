@@ -64,9 +64,6 @@ export class JobPositionEntity extends BaseEntity {
   @OneToMany(() => RequestEntity, (request) => request.jobPosition)
   requests: RequestEntity[];
 
-  @OneToMany(() => EmployeeEntity, (employee) => employee.jobPosition)
-  employees: EmployeeEntity[];
-
   @ManyToMany(() => CompetencyEntity, (competency) => competency.jobPositions)
   @JoinTable({
     name: "job_position_competencies",
