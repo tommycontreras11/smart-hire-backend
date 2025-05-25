@@ -59,6 +59,14 @@ export class CreateJobPositionDTO {
   recruiterUUID: string;
 
   @IsNotEmpty()
+  @IsUUID("4")
+  departmentUUID: string;
+
+  @IsNotEmpty()
+  @IsUUID("4")
+  positionTypeUUID: string;
+
+  @IsNotEmpty()
   @IsUUID("4", { each: true })
   competencyUUIDs: string[];
 }
@@ -107,6 +115,14 @@ export class UpdateJobPositionDTO {
   @IsOptional()
   @IsUUID("4")
   recruiterUUID: string;
+
+  @IsOptional()
+  @IsUUID("4")
+  departmentUUID: string;
+
+  @IsOptional()
+  @IsUUID("4")
+  positionTypeUUID: string;
 
   @IsNotEmpty()
   @IsUUID("4", { each: true })

@@ -5,6 +5,7 @@ import { CandidateEntity } from "./candidate.entity";
 import { CompetencyEntity } from "./competency.entity";
 import { WorkExperienceEntity } from "./work-experience.entity";
 import { EmployeeEntity } from "./employee.entity";
+import { JobPositionEntity } from "./job-position.entity";
 
 @Entity({ name: "position_types" })
 export class PositionTypeEntity extends BaseEntity {
@@ -28,4 +29,7 @@ export class PositionTypeEntity extends BaseEntity {
 
   @OneToMany(() => EmployeeEntity, (employee) => employee.positionType)
   employees: EmployeeEntity[];
+
+  @OneToMany(() => JobPositionEntity, (jobPosition) => jobPosition.positionType)
+  jobPositions: JobPositionEntity[];
 }

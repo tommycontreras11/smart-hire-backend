@@ -1,12 +1,13 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { RequestEntity } from "./request.entity";
-import { EmployeeEntity } from "./employee.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
+import { CompetencyEntity } from "./competency.entity";
 import { CountryEntity } from "./country.entity";
 import { LanguageEntity } from "./language.entity";
 import { RecruiterEntity } from "./recruiter.entity";
-import { StatusEnum, StatusType } from "./../../../constants";
-import { CompetencyEntity } from "./competency.entity";
+import { RequestEntity } from "./request.entity";
+import { DepartmentEntity } from "./department.entity";
+import { PositionTypeEntity } from "./position-type.entity";
 
 export enum JobPositionContractTypeEnum {
   FULL_TIME = "FULL_TIME",
@@ -46,6 +47,12 @@ export class JobPositionEntity extends BaseEntity {
   @Column()
   recruiter_id: string;
 
+  @Column()
+  department_id: string;
+
+  @Column()
+  position_type_id: string;
+
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   status: StatusType;
 
@@ -60,7 +67,15 @@ export class JobPositionEntity extends BaseEntity {
   @ManyToOne(() => RecruiterEntity, (recruiter) => recruiter.jobPositions)
   @JoinColumn({ name: "recruiter_id", referencedColumnName: "id" })
   recruiter: RecruiterEntity;
+  
+  @ManyToOne(() => DepartmentEntity, (department) => department.jobPositions)
+  @JoinColumn({ name: "department_id", referencedColumnName: "id" })
+  department: DepartmentEntity;
 
+  @ManyToOne(() => PositionTypeEntity, (positionType) => positionType.jobPositions)
+  @JoinColumn({ name: "position_type_id", referencedColumnName: "id" })
+  positionType: PositionTypeEntity;
+ 
   @OneToMany(() => RequestEntity, (request) => request.jobPosition)
   requests: RequestEntity[];
 
