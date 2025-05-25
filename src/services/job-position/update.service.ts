@@ -1,11 +1,13 @@
-import { statusCode } from "../../utils/status.util";
-import { JobPositionEntity } from "../../database/entities/entity/job-position.entity";
-import { UpdateJobPositionDTO } from "../../dto/job-position.dto";
 import { In, Not } from "typeorm";
 import { CountryEntity } from "../../database/entities/entity/country.entity";
+import { JobPositionEntity } from "../../database/entities/entity/job-position.entity";
 import { LanguageEntity } from "../../database/entities/entity/language.entity";
 import { RecruiterEntity } from "../../database/entities/entity/recruiter.entity";
+import { UpdateJobPositionDTO } from "../../dto/job-position.dto";
+import { statusCode } from "../../utils/status.util";
 import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
+import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
+import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
 
 export async function updateJobPositionService(
   uuid: string,
@@ -19,6 +21,8 @@ export async function updateJobPositionService(
     countryUUID,
     languageUUID,
     recruiterUUID,
+    departmentUUID,
+    positionTypeUUID,
     competencyUUIDs,
     status,
   }: UpdateJobPositionDTO
@@ -114,6 +118,44 @@ export async function updateJobPositionService(
     if (!foundRecruiter) {
       return Promise.reject({
         message: "Recruiter not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+  let foundDepartment: DepartmentEntity | null = null;
+  if (departmentUUID) {
+    foundDepartment = await DepartmentEntity.findOneBy({
+      uuid: departmentUUID,
+    }).catch((e) => {
+      console.error(
+        "updateJobPositionService -> DepartmentEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (!foundDepartment) {
+      return Promise.reject({
+        message: "Department not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+  let foundPositionType: PositionTypeEntity | null = null;
+  if (positionTypeUUID) {
+    foundPositionType = await PositionTypeEntity.findOneBy({
+      uuid: positionTypeUUID,
+    }).catch((e) => {
+      console.error(
+        "createJobPositionService -> PositionTypeEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (!foundPositionType) {
+      return Promise.reject({
+        message: "Position type not found",
         status: statusCode.NOT_FOUND,
       });
     }

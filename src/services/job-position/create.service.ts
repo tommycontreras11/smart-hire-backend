@@ -4,8 +4,10 @@ import { CreateJobPositionDTO } from "../../dto/job-position.dto";
 import { statusCode } from "../../utils/status.util";
 import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 import { CountryEntity } from "./../../database/entities/entity/country.entity";
+import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
 import { LanguageEntity } from "./../../database/entities/entity/language.entity";
 import { RecruiterEntity } from "./../../database/entities/entity/recruiter.entity";
+import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
 
 export async function createJobPositionService({
   name,
@@ -14,6 +16,8 @@ export async function createJobPositionService({
   recruiterUUID,
   minimum_salary,
   maximum_salary,
+  departmentUUID,
+  positionTypeUUID,
   competencyUUIDs,
   ...payload
 }: CreateJobPositionDTO) {
@@ -76,19 +80,53 @@ export async function createJobPositionService({
     });
   }
 
-  const foundCompetencies = await CompetencyEntity.find({
-    where: {
-      uuid: In(competencyUUIDs),
-    }
+  const foundDepartment = await DepartmentEntity.findOneBy({
+    uuid: departmentUUID,
   }).catch((e) => {
     console.error(
-      "createJobPositionService -> CompetencyEntity.find: ",
+      "createJobPositionService -> DepartmentEntity.findOneBy: ",
       e
     );
     return null;
-  })
+  });
 
-  if(!foundCompetencies || foundCompetencies.length !== competencyUUIDs.length) {
+  if (!foundDepartment) {
+    return Promise.reject({
+      message: "Department not found",
+      status: statusCode.NOT_FOUND,
+    });
+  }
+
+  const foundPositionType = await PositionTypeEntity.findOneBy({
+    uuid: positionTypeUUID,
+  }).catch((e) => {
+    console.error(
+      "createJobPositionService -> PositionTypeEntity.findOneBy: ",
+      e
+    );
+    return null;
+  });
+
+  if (!foundPositionType) {
+    return Promise.reject({
+      message: "Position type not found",
+      status: statusCode.NOT_FOUND,
+    });
+  }
+
+  const foundCompetencies = await CompetencyEntity.find({
+    where: {
+      uuid: In(competencyUUIDs),
+    },
+  }).catch((e) => {
+    console.error("createJobPositionService -> CompetencyEntity.find: ", e);
+    return null;
+  });
+
+  if (
+    !foundCompetencies ||
+    foundCompetencies.length !== competencyUUIDs.length
+  ) {
     return Promise.reject({
       message: "Competency not found",
       status: statusCode.NOT_FOUND,

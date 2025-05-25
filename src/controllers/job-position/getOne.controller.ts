@@ -17,6 +17,8 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
       recruiter: {
         institution: true,
       },
+      department: true,
+      positionType: true,
       requests: true,
       competencies: true,
     }
@@ -44,6 +46,14 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
             uuid: data.recruiter.institution.uuid,
             name: data.recruiter.institution.name,
           },
+        },
+        department: {
+          uuid: data.department.uuid,
+          name: data.department.name,
+        },
+        positionType: {
+          uuid: data.positionType.uuid,
+          name: data.positionType.name,
         },
         competencies: data.competencies.map((competency) => ({
           uuid: competency.uuid,

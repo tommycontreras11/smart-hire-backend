@@ -15,6 +15,8 @@ export async function getAllJobPositionService({
   let query = JobPositionEntity.createQueryBuilder("job")
     .leftJoinAndSelect("job.country", "country")
     .leftJoinAndSelect("job.language", "language")
+    .leftJoinAndSelect("job.department", "department")
+    .leftJoinAndSelect("job.positionType", "positionType")
     .leftJoinAndSelect("job.recruiter", "recruiter")
     .leftJoinAndSelect("recruiter.institution", "institution")
     .leftJoinAndSelect("job.requests", "requests")
@@ -25,6 +27,8 @@ export async function getAllJobPositionService({
     query.andWhere(
       new Brackets((qb) => {
         qb.where("job.name LIKE :jobOrSkill", {
+          jobOrSkill: jobOrSkillParam,
+        }).orWhere("institution.name LIKE :jobOrSkill", {
           jobOrSkill: jobOrSkillParam,
         }).orWhere(
           `EXISTS (

@@ -37,6 +37,14 @@ export const getAllJobPositionController = async (
             name: jobPosition.recruiter.institution.name,
           },
         },
+        department: {
+          uuid: jobPosition.department.uuid,
+          name: jobPosition.department.name,
+        },
+        positionType: {
+          uuid: jobPosition.positionType.uuid,
+          name: jobPosition.positionType.name,
+        },
         competencies: jobPosition.competencies.map((competency) => ({
           uuid: competency.uuid,
           name: competency.name,
