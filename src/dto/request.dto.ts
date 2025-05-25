@@ -14,10 +14,6 @@ export class CreateRequestDTO {
   @IsNotEmpty()
   @IsUUID("4")
   jobPositionUUID: string;
-
-  @IsNotEmpty()
-  @IsUUID("4")
-  recruiterUUID: string;
 }
 
 export class UpdateRequestDTO {
@@ -28,10 +24,6 @@ export class UpdateRequestDTO {
   @IsOptional()
   @IsUUID("4")
   jobPositionUUID: string;
-
-  @IsOptional()
-  @IsUUID("4")
-  recruiterUUID: string;
 
   @IsOptional()
   @IsEnum(StatusRequestEnum)

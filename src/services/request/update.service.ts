@@ -1,19 +1,21 @@
-import { RecruitmentEntity } from "./../../database/entities/entity/recruitment.entity";
 import { RequestEntity } from "../../database/entities/entity/request.entity";
 import { UpdateRequestDTO } from "../../dto/request.dto";
 import { statusCode } from "../../utils/status.util";
 import { StatusRequestEnum } from "./../../constants";
 import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { JobPositionEntity } from "./../../database/entities/entity/job-position.entity";
-import { RecruiterEntity } from "./../../database/entities/entity/recruiter.entity";
+import { RecruitmentEntity } from "./../../database/entities/entity/recruitment.entity";
 import { RequestHistoryEntity } from "./../../database/entities/entity/request-history.entity";
 
 export async function updateRequestService(
   uuid: string,
-  { candidateUUID, jobPositionUUID, recruiterUUID, status }: UpdateRequestDTO
+  { candidateUUID, jobPositionUUID, status }: UpdateRequestDTO
 ) {
-  const foundRequest = await RequestEntity.findOneBy({ uuid }).catch((e) => {
-    console.error("updateRequestService -> RequestEntity.findOneBy: ", e);
+  const foundRequest = await RequestEntity.findOne({
+    where: { uuid },
+    relations: { candidate: true, jobPosition: true, recruiter: true },
+  }).catch((e) => {
+    console.error("updateRequestService -> RequestEntity.findOne: ", e);
     return null;
   });
 
@@ -56,27 +58,11 @@ export async function updateRequestService(
       });
     }
   }
-  let foundRecruiter: RecruiterEntity | null = null;
-  if (recruiterUUID) {
-    foundRecruiter = await RecruiterEntity.findOneBy({
-      uuid: recruiterUUID,
-    }).catch((e) => {
-      console.error("updateRequestService -> RecruiterEntity.findOneBy: ", e);
-      return null;
-    });
-
-    if (!foundRecruiter) {
-      return Promise.reject({
-        message: "Recruiter not found",
-        status: statusCode.NOT_FOUND,
-      });
-    }
-  }
 
   if (status) {
-    if (status == StatusRequestEnum.HIRED && foundCandidate && foundRecruiter) {
+    if (status == StatusRequestEnum.HIRED && foundCandidate) {
       await RecruitmentEntity.create({
-        recruiter: foundRecruiter,
+        recruiter: foundRequest.recruiter,
         candidate: foundCandidate,
       })
         .save()
@@ -108,7 +94,7 @@ export async function updateRequestService(
     {
       ...(foundCandidate && { candidate: foundCandidate }),
       ...(foundJobPosition && { jobPosition: foundJobPosition }),
-      ...(foundRecruiter && { recruiter: foundRecruiter }),
+      ...(foundRequest.recruiter && { recruiter: foundRequest.recruiter }),
       ...(status && { status }),
     }
   ).catch((e) => {

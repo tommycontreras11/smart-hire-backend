@@ -1,13 +1,18 @@
-import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
-import { JobPositionEntity } from "./../../database/entities/entity/job-position.entity";
+import { RequestHistoryEntity } from "./../../database/entities/entity/request-history.entity";
 import { RequestEntity } from "../../database/entities/entity/request.entity";
 import { CreateRequestDTO } from "../../dto/request.dto";
 import { statusCode } from "../../utils/status.util";
-import { RecruiterEntity } from "./../../database/entities/entity/recruiter.entity";
 import { StatusRequestEnum } from "./../../constants";
+import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
+import { JobPositionEntity } from "./../../database/entities/entity/job-position.entity";
 
-export async function createRequestService({ candidateUUID, jobPositionUUID, recruiterUUID }: CreateRequestDTO) {
-  const foundCandidate = await CandidateEntity.findOneBy({ uuid: candidateUUID }).catch((e) => {
+export async function createRequestService({
+  candidateUUID,
+  jobPositionUUID,
+}: CreateRequestDTO) {
+  const foundCandidate = await CandidateEntity.findOneBy({
+    uuid: candidateUUID,
+  }).catch((e) => {
     console.error("createRequestService -> CandidateEntity.findOneBy: ", e);
     return null;
   });
@@ -19,8 +24,13 @@ export async function createRequestService({ candidateUUID, jobPositionUUID, rec
     });
   }
 
-  const foundJobPosition = await JobPositionEntity.findOneBy({ uuid: jobPositionUUID }).catch((e) => {
-    console.error("createRequestService -> JobPositionEntity.findOneBy: ", e);
+  const foundJobPosition = await JobPositionEntity.findOne({
+    where: {
+      uuid: jobPositionUUID,
+    },
+    relations: { recruiter: true },
+  }).catch((e) => {
+    console.error("createRequestService -> JobPositionEntity.findOne: ", e);
     return null;
   });
 
@@ -31,22 +41,10 @@ export async function createRequestService({ candidateUUID, jobPositionUUID, rec
     });
   }
 
-  const foundRecruiter = await RecruiterEntity.findOneBy({ uuid: recruiterUUID }).catch((e) => {
-    console.error("createRequestService -> RecruiterEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (!foundRecruiter) {
-    return Promise.reject({
-      message: "Recruiter not found",
-      status: statusCode.NOT_FOUND,
-    });
-  }
-
-  await RequestEntity.create({
+  const requestSaved = await RequestEntity.create({
     candidate: foundCandidate,
     jobPosition: foundJobPosition,
-    recruiter: foundRecruiter,
+    recruiter: foundJobPosition.recruiter,
     status: StatusRequestEnum.SUBMITTED,
   })
     .save()
@@ -54,6 +52,20 @@ export async function createRequestService({ candidateUUID, jobPositionUUID, rec
       console.error("createRequestService -> RequestEntity.create: ", e);
       return null;
     });
+
+  requestSaved &&
+    (await RequestHistoryEntity.create({
+      request: requestSaved,
+      status: StatusRequestEnum.SUBMITTED,
+    })
+      .save()
+      .catch((e) => {
+        console.error(
+          "createRequestService -> RequestHistoryEntity.create: ",
+          e
+        );
+        return null;
+      }));
 
   return "Request created successfully";
 }
