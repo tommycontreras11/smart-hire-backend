@@ -7,7 +7,7 @@ export const getAllRequestController = async (_req: Request, res: Response) => {
     relations: {
       candidate: true,
       jobPosition: true,
-      recruiter: true,
+      recruiter: true
     }
   })
     .then((data) => {
