@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   deleteRecruiterController,
   getAllRecruiterController,
+  getAllRecruiterDashboardDetailController,
   getOneRecruiterController,
   updateRecruiterController
 } from "../../../controllers/recruiter";
@@ -13,6 +14,7 @@ const router = Router();
 
 router.delete("/:uuid", validateDTO(UuidDTO, "params"), deleteRecruiterController);
 router.get("/", getAllRecruiterController);
+router.get("/dashboard-detail", getAllRecruiterDashboardDetailController);
 router.get("/:uuid", validateDTO(UuidDTO, "params"), getOneRecruiterController);
 router.patch(
   "/:uuid",

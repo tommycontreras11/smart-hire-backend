@@ -1,4 +1,5 @@
 export * from './delete.controller'
 export * from './getAll.controller'
+export * from './getAllRecruiterDashboardDetail.controller'
 export * from './getOne.controller'
 export * from './update.controller'
