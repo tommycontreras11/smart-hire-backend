@@ -9,36 +9,52 @@ export async function retrieveIfUserExists(
   uuid?: string | null
 ) {
   const entities = await Promise.all([
-    CandidateEntity.findOneBy({
-      ...(identification && { identification }),
-      ...(email && { email }),
-      ...(uuid && { uuid }),
+    CandidateEntity.findOne({
+      where: {
+        ...(identification && { identification }),
+        ...(email && { email }),
+        ...(uuid && { uuid }),
+      },
     }),
-    EmployeeEntity.findOneBy({
-      ...(identification && { identification }),
-      ...(email && { email }),
-      ...(uuid && { uuid }),
+    EmployeeEntity.findOne({
+      where: {
+        ...(identification && { identification }),
+        ...(email && { email }),
+        ...(uuid && { uuid }),
+      },
     }),
-    RecruiterEntity.findOneBy({
-      ...(identification && { identification }),
-      ...(email && { email }),
-      ...(uuid && { uuid }),
+    RecruiterEntity.findOne({
+      where: {
+        ...(identification && { identification }),
+        ...(email && { email }),
+        ...(uuid && { uuid }),
+      },
+      relations: {
+        institution: true,
+      }
     }),
   ]);
 
   return entities.find((entity) => entity) || null;
 }
 
-export async function validateProperty<T>(entityClass: { new (): T }, property: string, columnName: "Identification" | "Email") {
-    const propertyToValidate = columnName === "Identification" ? true : false;
-    const foundUser = await retrieveIfUserExists(propertyToValidate ? property : null, property);
-  
-    const isEntityClassType = foundUser instanceof entityClass;
-  
-    if (foundUser && (!isEntityClassType || isEntityClassType)) {
-      return Promise.reject({
-        message: `${columnName} already exists`,
-        status: statusCode.BAD_REQUEST,
-      });
-    }
+export async function validateProperty<T>(
+  entityClass: { new (): T },
+  property: string,
+  columnName: "Identification" | "Email"
+) {
+  const propertyToValidate = columnName === "Identification" ? true : false;
+  const foundUser = await retrieveIfUserExists(
+    propertyToValidate ? property : null,
+    property
+  );
+
+  const isEntityClassType = foundUser instanceof entityClass;
+
+  if (foundUser && (!isEntityClassType || isEntityClassType)) {
+    return Promise.reject({
+      message: `${columnName} already exists`,
+      status: statusCode.BAD_REQUEST,
+    });
+  }
 }
