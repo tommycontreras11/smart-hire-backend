@@ -4,6 +4,7 @@ export class AddDepartmentRelationOnJobPositionTable1748103209480 implements Mig
     name = 'AddDepartmentRelationOnJobPositionTable1748103209480'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`job_positions\` ADD \`department_id\` int NOT NULL`);
         await queryRunner.query(`ALTER TABLE \`job_positions\` ADD CONSTRAINT \`FK_77e41638b0ac31cafab778c0a1c\` FOREIGN KEY (\`department_id\`) REFERENCES \`departments\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
     }
 

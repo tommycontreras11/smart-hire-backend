@@ -195,6 +195,9 @@ export async function updateJobPositionService(
   foundJobPosition.language = foundLanguage ?? foundJobPosition.language;
   foundJobPosition.recruiter = foundRecruiter ?? foundJobPosition.recruiter;
   foundJobPosition.country = foundCountry ?? foundJobPosition.country;
+  foundJobPosition.department = foundDepartment ?? foundJobPosition.department;
+  foundJobPosition.positionType =
+    foundPositionType ?? foundJobPosition.positionType;
   foundJobPosition.competencies =
     foundCompetencies ?? foundJobPosition.competencies;
   foundJobPosition.status = status ?? foundJobPosition.status;

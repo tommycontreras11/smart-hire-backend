@@ -1,11 +1,11 @@
-import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
-import { EmployeeEntity } from "./../../database/entities/entity/employee.entity";
-import { RecruiterEntity } from "./../../database/entities/entity/recruiter.entity";
+import { CandidateEntity } from "../../database/entities/entity/candidate.entity";
+import { EmployeeEntity } from "../../database/entities/entity/employee.entity";
+import { RecruiterEntity } from "../../database/entities/entity/recruiter.entity";
 import { FindManyOptions } from "typeorm";
 import { JobPositionEntity } from "../../database/entities/entity/job-position.entity";
 import { statusCode } from "../../utils/status.util";
 
-export async function getAllRecruiterDashboardDetailService(
+export async function getAllDashboardDetailService(
   validateUser?: CandidateEntity | EmployeeEntity | RecruiterEntity | null,
   options?: FindManyOptions<JobPositionEntity>
 ) {

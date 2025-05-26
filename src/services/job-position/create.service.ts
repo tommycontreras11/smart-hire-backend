@@ -140,6 +140,8 @@ export async function createJobPositionService({
     country: foundCountry,
     language: foundLanguage,
     recruiter: foundRecruiter,
+    department: foundDepartment,
+    positionType: foundPositionType,
     competencies: foundCompetencies,
     ...payload,
   })
