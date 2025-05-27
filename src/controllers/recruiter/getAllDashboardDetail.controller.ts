@@ -6,12 +6,20 @@ import { RecruiterEntity } from "../../database/entities/entity/recruiter.entity
 import { retrieveIfUserExists } from "../../utils/user.util";
 import { getAllDashboardDetailService } from "./../../services/recruiter/getAllDashboardDetail.service";
 
-interface IRecruitmentActivity {
-  name: string;
-  activity: {
-    total_candidates: number;
-    total_hired: number;
-  };
+interface IRecruitmentCommonActivity {
+  total_candidates: number;
+  total_hired: number;
+}
+
+interface IRecruitmentMonthActivity {
+  month: string;
+  activity: IRecruitmentCommonActivity;
+}
+
+interface IRecruitmentDepartmentActivity extends IRecruitmentCommonActivity {
+  department: string;
+  total_candidates: number;
+  total_hired: number;
 }
 
 export const getAllDashboardDetailController = async (
@@ -63,22 +71,27 @@ export const getAllDashboardDetailController = async (
           due_date: dashboardDetail.due_date,
         }));
 
-      const recentCandidates = data.map(
-        (dashboardDetail) =>
-          dashboardDetail?.requests?.map((r) => ({
-            full_name: r.candidate.name,
-            full_name_initials: r.candidate.name
-              .split(" ")
-              .map((n) => n[0].toLocaleUpperCase()).join(""),
-            position_type: r.candidate.desiredPosition.name,
-            applied_at: r.createdAt,
-            status: r.status,
-          })) || []
-      ).flat();
+      const recentCandidates = data
+        .map(
+          (dashboardDetail) =>
+            dashboardDetail?.requests?.map((r) => ({
+              full_name: r.candidate.name,
+              full_name_initials: r.candidate.name
+                .split(" ")
+                .map((n) => n[0].toLocaleUpperCase())
+                .join(""),
+              position_type: r.candidate.desiredPosition.name,
+              applied_at: r.createdAt,
+              status: r.status,
+            })) || []
+        )
+        .flat();
 
       const dashboardResume = {
-        totalActiveVacancies: activeVacancies?.length === 0 ? 0 : activeVacancies.length,
-        totalRecentCandidates: recentCandidates?.length === 0 ? 0 : recentCandidates.length,
+        totalActiveVacancies:
+          activeVacancies?.length === 0 ? 0 : activeVacancies.length,
+        totalRecentCandidates:
+          recentCandidates?.length === 0 ? 0 : recentCandidates.length,
         totalInterviews: getTotalRequestByStatus(
           data,
           StatusRequestEnum.INTERVIEW
@@ -86,18 +99,32 @@ export const getAllDashboardDetailController = async (
         totalHired: getTotalRequestByStatus(data, StatusRequestEnum.HIRED),
       };
 
-      const recruitmentActivity: IRecruitmentActivity[] = [];
+      const recruitmentMonthActivity: IRecruitmentMonthActivity[] = [];
 
       for (let i = 1; i <= 12; i++) {
         const date = new Date();
         date.setMonth(i - 1);
         const month = getMonth(data, date);
-        recruitmentActivity.push(month);
+        recruitmentMonthActivity.push(month);
+      }
+
+      const recruitmentDepartmentActivity: IRecruitmentDepartmentActivity[] =
+        [];
+
+      for (const department of data
+        .map((d) => d.department.name)
+        .filter((v, i, a) => a.indexOf(v) === i)) {
+        const departmentData = filterRecruitmentActivityByDepartment(
+          data,
+          department
+        );
+        recruitmentDepartmentActivity.push({ ...departmentData, department });
       }
 
       const dashboardDetails = {
         dashboardResume,
-        recruitmentActivity,
+        recruitmentMonthActivity,
+        recruitmentDepartmentActivity,
         activeVacancies,
         recentCandidates,
       };
@@ -159,7 +186,7 @@ export const getRecruitmentActivityCandidateResume = (
 
 export const getMonth = (data: JobPositionEntity[], date: Date) => {
   return {
-    name: date.toLocaleString("default", { month: "long" }),
+    month: date.toLocaleString("default", { month: "long" }),
     activity: filterRecruitmentActivityByMonth(data, date.getMonth() + 1),
   };
 };
@@ -170,12 +197,9 @@ export const getTotalRequestByStatus = (
 ) => {
   if (!existsRequest(data)) return 0;
 
-  return (
-    data
-      ?.filter((dashboard) =>
-        dashboard?.requests?.find((r) => r?.status === status)
-      ).length
-  );
+  return data?.filter((dashboard) =>
+    dashboard?.requests?.find((r) => r?.status === status)
+  ).length;
 };
 
 export const existsRequest = (data: JobPositionEntity[]) => {
