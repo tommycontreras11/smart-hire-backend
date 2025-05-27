@@ -61,6 +61,7 @@ export const getAllDashboardDetailController = async (
           (dashboardDetail) => dashboardDetail.status === StatusEnum.ACTIVE
         )
         .map((dashboardDetail) => ({
+          uuid: dashboardDetail.uuid,
           name: dashboardDetail.name,
           department: dashboardDetail.department.name,
           country: dashboardDetail.country.name,
@@ -75,11 +76,8 @@ export const getAllDashboardDetailController = async (
         .map(
           (dashboardDetail) =>
             dashboardDetail?.requests?.map((r) => ({
+              uuid: r.candidate.uuid,
               full_name: r.candidate.name,
-              full_name_initials: r.candidate.name
-                .split(" ")
-                .map((n) => n[0].toLocaleUpperCase())
-                .join(""),
               position_type: r.candidate.desiredPosition.name,
               applied_at: r.createdAt,
               status: r.status,
@@ -88,15 +86,15 @@ export const getAllDashboardDetailController = async (
         .flat();
 
       const dashboardResume = {
-        totalActiveVacancies:
+        total_active_vacancies:
           activeVacancies?.length === 0 ? 0 : activeVacancies.length,
-        totalRecentCandidates:
+        total_recent_candidates:
           recentCandidates?.length === 0 ? 0 : recentCandidates.length,
-        totalInterviews: getTotalRequestByStatus(
+        total_interviews: getTotalRequestByStatus(
           data,
           StatusRequestEnum.INTERVIEW
         ),
-        totalHired: getTotalRequestByStatus(data, StatusRequestEnum.HIRED),
+        total_hired: getTotalRequestByStatus(data, StatusRequestEnum.HIRED),
       };
 
       const recruitmentMonthActivity: IRecruitmentMonthActivity[] = [];
