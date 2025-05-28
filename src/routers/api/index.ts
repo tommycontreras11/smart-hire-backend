@@ -64,6 +64,10 @@ router.use(
         path: "/",
         method: "GET",
       },
+      {
+        path: "/recruitment-process",
+        method: "GET",
+      },
     ],
     authMiddleware
   ),

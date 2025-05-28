@@ -7,7 +7,7 @@ export const getAllRecruitmentProcessController = async (
   req: Request,
   res: Response
 ) => {
-  const { uuid } = req?.user;
+  const uuid = req?.user?.uuid;
 
   const validateUser = await retrieveIfUserExists(null, null, uuid);
 
@@ -25,20 +25,21 @@ export const getAllRecruitmentProcessController = async (
         recruiter: {
           institution: true,
         },
+        jobPosition: true
       },
     },
   })
     .then((data) => {
       const recruitmentProcess = data.map((recruitmentProcess) =>
         recruitmentProcess?.requests?.map((request) => ({
-          uuid: recruitmentProcess?.uuid,
-          name: recruitmentProcess?.name,
-          institution: recruitmentProcess?.recruiter?.institution?.name,
+          uuid: request?.uuid,
+          institution: request?.recruiter?.institution?.name,
+          position: request?.jobPosition?.name,
           status: request?.status,
           applied_at: request?.createdAt,
           last_update: request?.updatedAt,
-        }))
-      );
+        })) ?? []
+      ).flat();
 
       res.status(statusCode.OK).json({ data: recruitmentProcess });
     })
