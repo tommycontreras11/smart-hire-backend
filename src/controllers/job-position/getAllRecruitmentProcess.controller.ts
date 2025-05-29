@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { retrieveIfUserExists } from "./../../utils/user.util";
 import { getAllRecruitmentProcessService } from "./../../services/job-position/getAllRecruitmentProcess.service";
 import { statusCode } from "./../../utils/status.util";
+import { ObjectStorage } from "./../../libs/object-storage";
 
 export const getAllRecruitmentProcessController = async (
   req: Request,
@@ -25,21 +26,33 @@ export const getAllRecruitmentProcessController = async (
         recruiter: {
           institution: true,
         },
-        jobPosition: true
+        jobPosition: true,
       },
     },
   })
-    .then((data) => {
-      const recruitmentProcess = data.map((recruitmentProcess) =>
-        recruitmentProcess?.requests?.map((request) => ({
-          uuid: request?.uuid,
-          institution: request?.recruiter?.institution?.name,
-          position: request?.jobPosition?.name,
-          status: request?.status,
-          applied_at: request?.createdAt,
-          last_update: request?.updatedAt,
-        })) ?? []
-      ).flat();
+    .then(async (data) => {
+      const storage = ObjectStorage.instance;
+
+      const recruitmentProcess = await Promise.all(
+        data.map(
+          (recruitmentProcess) =>
+            recruitmentProcess?.requests?.map(async (request) => ({
+              uuid: request?.uuid,
+              name: request?.candidate?.name,
+              email: request?.candidate?.email,
+              institution: request?.recruiter?.institution?.name,
+              position: request?.jobPosition?.name,
+              ...(request?.curriculum && {
+                curriculum: await storage.getUrl(request?.curriculum),
+              }),
+              next_step: request?.next_step,
+              interview_date: request?.interview_date,
+              applied_at: request?.createdAt,
+              last_update: request?.updatedAt,
+              status: request?.status,
+            })) ?? []
+        ).flat()
+      );
 
       res.status(statusCode.OK).json({ data: recruitmentProcess });
     })

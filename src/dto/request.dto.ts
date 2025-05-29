@@ -2,7 +2,8 @@ import {
   IsEnum,
   IsNotEmpty,
   IsOptional,
-  IsUUID
+  IsString,
+  IsUUID,
 } from "class-validator";
 import { StatusRequestEnum, StatusRequestType } from "../constants";
 
@@ -24,6 +25,14 @@ export class UpdateRequestDTO {
   @IsOptional()
   @IsUUID("4")
   jobPositionUUID: string;
+
+  @IsOptional()
+  @IsString()
+  nextStep: string;
+
+  @IsOptional()
+  @IsString()
+  interviewDate: Date;
 
   @IsOptional()
   @IsEnum(StatusRequestEnum)

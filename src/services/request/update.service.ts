@@ -9,7 +9,13 @@ import { RequestHistoryEntity } from "./../../database/entities/entity/request-h
 
 export async function updateRequestService(
   uuid: string,
-  { candidateUUID, jobPositionUUID, status }: UpdateRequestDTO
+  {
+    candidateUUID,
+    jobPositionUUID,
+    interviewDate,
+    nextStep,
+    status,
+  }: UpdateRequestDTO
 ) {
   const foundRequest = await RequestEntity.findOne({
     where: { uuid },
@@ -95,6 +101,8 @@ export async function updateRequestService(
       ...(foundCandidate && { candidate: foundCandidate }),
       ...(foundJobPosition && { jobPosition: foundJobPosition }),
       ...(foundRequest.recruiter && { recruiter: foundRequest.recruiter }),
+      ...(interviewDate && { interview_date: interviewDate }),
+      ...(nextStep && { next_step: nextStep }),
       ...(status && { status }),
     }
   ).catch((e) => {

@@ -8,6 +8,15 @@ import { RequestHistoryEntity } from "./request-history.entity";
 
 @Entity({ name: "requests" })
 export class RequestEntity extends BaseEntity {
+  @Column()
+  curriculum: string;
+
+  @Column({ nullable: true })
+  next_step: string;
+
+  @Column({ type: "datetime", nullable: true })
+  interview_date: Date | null;
+
   @Column({ type: "enum", enum: StatusRequestEnum, default: StatusRequestEnum.DRAFT })
   status: StatusRequestType;
 
