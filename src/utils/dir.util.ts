@@ -1,35 +1,23 @@
-import { BaseEntity, FindOneOptions } from "typeorm";
+import { RequestEntity } from "./../database/entities/entity/request.entity"
 
 export const getExtensionByFileName = (fileName: string) =>
-  fileName.match(/\.([^.]+)$/)?.[1];
+	fileName.match(/\.([^.]+)$/)?.[1]
 
-export type EntityWithFileName = BaseEntity & { file_name: string };
+export const generateUniqueFileName = async (extension: string): Promise<string> => {
+	const fileName = `${new Date().getTime()}.${extension}`
+	const exists = await RequestEntity.findOne({
+		where: {
+			curriculum: fileName
+		}
+	}).catch((error) => {
+		console.error('BookEntity.findOne', { error })
+		return undefined
+	})
 
-export async function generateUniqueFileName<T extends typeof BaseEntity>(
-  entityClass: T & {
-    findOne(
-      options: FindOneOptions<EntityWithFileName>
-    ): Promise<EntityWithFileName | undefined>;
-  },
-  extension: string
-): Promise<string> {
-  const fileName = `${new Date().getTime()}.${extension}`;
+	if (exists === undefined)
+		return Promise.reject({ message: 'Something went wrong' })
 
-  const exists = await entityClass
-    .findOne({
-      where: {
-        file_name: fileName,
-      },
-    })
-    .catch((error) => {
-      console.error("BaseEntity.findOne", { error });
-      return undefined;
-    });
+	if (exists) return generateUniqueFileName(extension)
 
-  if (exists === undefined)
-    return Promise.reject({ message: "Something went wrong" });
-
-  if (exists) return generateUniqueFileName(entityClass, extension);
-
-  return Promise.resolve(fileName);
+	return Promise.resolve(fileName)
 }
