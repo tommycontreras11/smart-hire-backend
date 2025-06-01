@@ -5,6 +5,7 @@ import { CandidateEntity } from "./candidate.entity";
 import { JobPositionEntity } from "./job-position.entity";
 import { RecruiterEntity } from "./recruiter.entity";
 import { RequestHistoryEntity } from "./request-history.entity";
+import { RecruitmentEntity } from "./recruitment.entity";
 
 @Entity({ name: "requests" })
 export class RequestEntity extends BaseEntity {
@@ -43,4 +44,7 @@ export class RequestEntity extends BaseEntity {
 
   @OneToMany(() => RequestHistoryEntity, (history) => history.request)
   history: RequestHistoryEntity[];
+
+  @OneToMany(() => RecruitmentEntity, (recruitment) => recruitment.request)
+  recruitment: RecruitmentEntity[];
 }

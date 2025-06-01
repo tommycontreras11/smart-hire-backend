@@ -38,6 +38,7 @@ export const getAllRecruitmentProcessController = async (
           (recruitmentProcess) =>
             recruitmentProcess?.requests?.map(async (request) => ({
               uuid: request?.uuid,
+              candidateUUID: request?.candidate?.uuid,
               name: request?.candidate?.name,
               email: request?.candidate?.email,
               institution: request?.recruiter?.institution?.name,

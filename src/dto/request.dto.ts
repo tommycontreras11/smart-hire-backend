@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -33,6 +34,10 @@ export class UpdateRequestDTO {
   @IsOptional()
   @IsString()
   interviewDate: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  nextStatus: boolean;
 
   @IsOptional()
   @IsEnum(StatusRequestEnum)

@@ -14,6 +14,7 @@ export async function updateRequestService(
     jobPositionUUID,
     interviewDate,
     nextStep,
+    nextStatus,
     status,
   }: UpdateRequestDTO
 ) {
@@ -24,6 +25,23 @@ export async function updateRequestService(
     console.error("updateRequestService -> RequestEntity.findOne: ", e);
     return null;
   });
+
+  const statuses = [
+    StatusRequestEnum.DRAFT,
+    StatusRequestEnum.SUBMITTED,
+    StatusRequestEnum.UNDER_REVIEW,
+    StatusRequestEnum.INTERVIEW,
+    StatusRequestEnum.EVALUATED,
+    StatusRequestEnum.HIRED,
+    StatusRequestEnum.REJECTED
+  ];
+
+  const indexOf = statuses.findIndex((a) => a === status);
+
+  if (nextStatus && indexOf > -1) {
+    const index = status === StatusRequestEnum.REJECTED ? indexOf - 1 : indexOf + 1
+    status = statuses[index];
+  }
 
   if (!foundRequest) {
     return Promise.reject({
@@ -66,19 +84,17 @@ export async function updateRequestService(
   }
 
   if (status) {
-    if (status == StatusRequestEnum.HIRED && foundCandidate) {
-      await RecruitmentEntity.create({
-        recruiter: foundRequest.recruiter,
-        candidate: foundCandidate,
-      })
-        .save()
-        .catch((e) => {
-          console.error(
-            "updateRequestService -> RecruitmentEntity.create: ",
-            e
-          );
-          return null;
-        });
+    if (
+      [StatusRequestEnum.HIRED, StatusRequestEnum.REJECTED].includes(
+        status as StatusRequestEnum
+      ) &&
+      foundCandidate
+    ) {
+      await changeStatus(
+        status as StatusRequestEnum,
+        foundRequest,
+        foundCandidate
+      );
     }
 
     await RequestHistoryEntity.create({
@@ -112,3 +128,44 @@ export async function updateRequestService(
 
   return "Request updated successfully";
 }
+
+export const changeStatus = async (
+  status: StatusRequestEnum,
+  foundRequest: RequestEntity,
+  foundCandidate: CandidateEntity
+) => {
+  switch (status) {
+    case StatusRequestEnum.HIRED:
+      await RecruitmentEntity.create({
+        recruiter: foundRequest.recruiter,
+        candidate: foundCandidate,
+        request: foundRequest,
+      })
+        .save()
+        .catch((e) => {
+          console.error(
+            "updateRequestService -> RecruitmentEntity.create: ",
+            e
+          );
+          return null;
+        });
+      break;
+    case StatusRequestEnum.REJECTED:
+      const foundRecruitment = await RecruitmentEntity.findOne({
+        where: { request: foundRequest },
+      }).catch((e) => {
+        console.error("updateRequestService -> RecruitmentEntity.findOne: ", e);
+        return null;
+      });
+
+      foundRecruitment &&
+        (await foundRecruitment.remove().catch((e) => {
+          console.error(
+            "updateRequestService -> RecruitmentEntity.remove: ",
+            e
+          );
+          return null;
+        }));
+      break;
+  }
+};
