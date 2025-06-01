@@ -50,11 +50,47 @@ router.use(
   country
 );
 router.use("/competencies", authMiddleware, competency);
-router.use("/departments", authMiddleware, department);
+router.use(
+  "/departments",
+  unless(
+    [
+      {
+        path: "/",
+        method: "GET",
+      },
+    ],
+    authMiddleware
+  ),
+  department
+);
 router.use("/languages", authMiddleware, language);
 router.use("/trainings", authMiddleware, training);
-router.use("/institutions", authMiddleware, institution);
-router.use("/position-types", authMiddleware, positionType);
+router.use(
+  "/institutions",
+  unless(
+    [
+      {
+        path: "/",
+        method: "GET",
+      },
+    ],
+    authMiddleware
+  ),
+  institution
+);
+router.use(
+  "/position-types",
+  unless(
+    [
+      {
+        path: "/",
+        method: "GET",
+      },
+    ],
+    authMiddleware
+  ),
+  positionType
+);
 router.use("/evaluation-methods", authMiddleware, evaluationMethod);
 router.use(
   "/job-positions",
@@ -62,10 +98,6 @@ router.use(
     [
       {
         path: "/",
-        method: "GET",
-      },
-      {
-        path: "/recruitment-process",
         method: "GET",
       },
     ],

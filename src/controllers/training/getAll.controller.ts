@@ -1,12 +1,25 @@
 import { Request, Response } from "express";
 import { getAllTrainingService } from "../../services/training/getAll.service";
 import { statusCode } from "../../utils/status.util";
+import { retrieveIfUserExists } from "./../../utils/user.util";
+import { RecruiterEntity } from "./../../database/entities/entity/recruiter.entity";
 
-export const getAllTrainingController = async (_req: Request, res: Response) => {
+export const getAllTrainingController = async (req: Request, res: Response) => {
+  const user = req?.user;
+
+  const validateUser = await retrieveIfUserExists(null, null, user.uuid);
+
   getAllTrainingService({
     relations: {
       institution: true,
-    }
+    },
+    ...(user && validateUser instanceof RecruiterEntity && {
+      where: {
+        institution: {
+          uuid: validateUser?.institution?.uuid
+        },
+      }
+    })
   })
     .then((data) => {
       const training = data.map((training) => ({
