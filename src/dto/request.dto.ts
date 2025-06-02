@@ -18,6 +18,16 @@ export class CreateRequestDTO {
   jobPositionUUID: string;
 }
 
+export class AcceptJobDTO {
+  @IsNotEmpty()
+  @IsUUID("4")
+  candidateUUID: string;
+
+  @IsNotEmpty()
+  @IsUUID("4")
+  requestUUID: string;
+}
+
 export class UpdateRequestDTO {
   @IsOptional()
   @IsUUID("4")

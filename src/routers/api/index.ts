@@ -107,6 +107,6 @@ router.use(
 );
 router.use("/work-experiences", authMiddleware, workExperience);
 router.use("/recruiters", authMiddleware, recruiter);
-router.use("/requests", request);
+router.use("/requests", unless([{ path: "/accept-job", method: "POST" }], authMiddleware), request);
 
 export default router;

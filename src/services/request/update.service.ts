@@ -16,7 +16,7 @@ export async function updateRequestService(
     nextStep,
     nextStatus,
     status,
-  }: UpdateRequestDTO
+  }: Partial<UpdateRequestDTO>
 ) {
   const foundRequest = await RequestEntity.findOne({
     where: { uuid },
