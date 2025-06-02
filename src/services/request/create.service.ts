@@ -9,13 +9,13 @@ import { uploadFile } from "./../../utils/upload.util";
 
 export async function createRequestService(
   { candidateUUID, jobPositionUUID }: CreateRequestDTO,
-  file: Express.Multer.File | undefined
+  _file: Express.Multer.File | undefined
 ) {
-  if (file === undefined)
-    return Promise.reject({
-      message: "File not found",
-      status: statusCode.BAD_REQUEST,
-    });
+  // if (file === undefined)
+  //   return Promise.reject({
+  //     message: "File not found",
+  //     status: statusCode.BAD_REQUEST,
+  //   });
 
   const foundCandidate = await CandidateEntity.findOneBy({
     uuid: candidateUUID,
@@ -53,9 +53,10 @@ export async function createRequestService(
     jobPosition: foundJobPosition,
     recruiter: foundJobPosition.recruiter,
     status: StatusRequestEnum.SUBMITTED,
+    curriculum: "",
   });
 
-  requestSaved.curriculum = await uploadFile<RequestEntity>(requestSaved, file);
+  //requestSaved.curriculum = await uploadFile<RequestEntity>(requestSaved, file);
 
   await requestSaved.save().catch((e) => {
     console.error("createRequestService -> RequestEntity.create: ", e);
