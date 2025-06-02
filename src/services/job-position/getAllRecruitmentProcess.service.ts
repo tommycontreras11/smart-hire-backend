@@ -9,7 +9,7 @@ export async function getAllRecruitmentProcessService(
   validateUser: CandidateEntity | EmployeeEntity | RecruiterEntity | null,
   options?: FindManyOptions<JobPositionEntity>
 ) {
-  if (!(validateUser instanceof CandidateEntity))
+  if (!(validateUser instanceof RecruiterEntity || validateUser instanceof CandidateEntity))
     return Promise.reject({
       message: "Unauthorized",
       status: statusCode.UNAUTHORIZED,

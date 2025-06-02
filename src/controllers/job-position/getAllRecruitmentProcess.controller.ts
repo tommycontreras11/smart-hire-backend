@@ -3,6 +3,7 @@ import { retrieveIfUserExists } from "./../../utils/user.util";
 import { getAllRecruitmentProcessService } from "./../../services/job-position/getAllRecruitmentProcess.service";
 import { statusCode } from "./../../utils/status.util";
 import { ObjectStorage } from "./../../libs/object-storage";
+import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 
 export const getAllRecruitmentProcessController = async (
   req: Request,
@@ -13,13 +14,15 @@ export const getAllRecruitmentProcessController = async (
   const validateUser = await retrieveIfUserExists(null, null, uuid);
 
   getAllRecruitmentProcessService(validateUser, {
-    where: {
-      requests: {
-        candidate: {
-          uuid,
+    ...(validateUser instanceof CandidateEntity && {
+      where: {
+        requests: {
+          candidate: {
+            uuid,
+          },
         },
       },
-    },
+    }),
     relations: {
       requests: {
         candidate: true,
