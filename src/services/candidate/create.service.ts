@@ -4,9 +4,7 @@ import { statusCode } from "../../utils/status.util";
 import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
 import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
 import { hashPassword } from "./../../utils/common.util";
-import {
-  validateProperty
-} from "./../../utils/user.util";
+import { validateProperty } from "./../../utils/user.util";
 
 export async function createCandidateService({
   identification,
@@ -24,14 +22,24 @@ export async function createCandidateService({
     "Identification"
   );
 
-  await validateProperty<CandidateEntity>(
-    CandidateEntity,
-    email,
-    "Email"
-  );
+  await validateProperty<CandidateEntity>(CandidateEntity, email, "Email");
 
-  const foundPositionType = await PositionTypeEntity.findOneBy({
-    uuid: positionUUID,
+  const foundDepartment = await DepartmentEntity.findOneBy({ uuid: departmentUUID ,
+  }).catch((e) => {
+    console.error("createCandidateService -> DepartmentEntity.findOne: ", e);
+    return null;
+  });
+
+  if (!foundDepartment) {
+    return Promise.reject({
+      message: "Department not found",
+      status: statusCode.NOT_FOUND,
+    });
+  }
+
+  const foundPositionType = await PositionTypeEntity.findOne({
+    relations: { department: true },
+    where: { uuid: positionUUID },
   }).catch((e) => {
     console.error(
       "createCandidateService -> PositionTypeEntity.findOneBy: ",
@@ -47,19 +55,11 @@ export async function createCandidateService({
     });
   }
 
-  const foundDepartment = await DepartmentEntity.findOneBy({
-    uuid: departmentUUID,
-  }).catch((e) => {
-    console.error("createCandidateService -> DepartmentEntity.findOneBy: ", e);
-    return null;
-  });
-
-  if (!foundDepartment) {
+  if (foundPositionType.department.uuid !== foundDepartment.uuid)
     return Promise.reject({
-      message: "Department not found",
-      status: statusCode.NOT_FOUND,
+      message: "Position type and department not match",
+      status: statusCode.BAD_REQUEST,
     });
-  }
 
   await CandidateEntity.create({
     identification,

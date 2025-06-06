@@ -2,18 +2,28 @@ import { Request, Response } from "express";
 import { getOnePositionTypeService } from "../../services/position-type/getOne.service";
 import { statusCode } from "../../utils/status.util";
 
-export const getOnePositionTypeController = async (req: Request, res: Response) => {
+export const getOnePositionTypeController = async (
+  req: Request,
+  res: Response
+) => {
   const { uuid } = req.params;
 
   getOnePositionTypeService({
     where: {
       uuid,
     },
+    relations: {
+      department: true,
+    },
   })
     .then((data) => {
       const positionType = {
         uuid: data.uuid,
         name: data.name,
+        department: {
+          uuid: data.department.uuid,
+          name: data.department.name,
+        },
         status: data.status,
       };
 

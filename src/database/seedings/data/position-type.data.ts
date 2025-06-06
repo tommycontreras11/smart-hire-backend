@@ -1,22 +1,29 @@
 import { StatusEnum } from "./../../../constants";
-import { PositionTypeEntity } from "./../../../database/entities/entity/position-type.entity";
+
+interface PositionType {
+  name: string;
+  department: string;
+  status: StatusEnum;
+}
 
 const positionTypes = [
-  "Full Stack",
-  "Front End",
-  "Back End",
-  "Mobile",
-  "DevOps",
-  "QA",
-  "Scrum Master",
-  "Product Owner",
-  "Business Analyst",
-  "UX Designer",
-  "UI Designer",
+  { name: "Full Stack", department: "IT" },
+  { name: "Front End", department: "IT" },
+  { name: "Back End", department: "IT" },
+  { name: "Mobile", department: "IT" },
+  { name: "DevOps", department: "IT" },
+  { name: "QA", department: "Quality Assurance" },
+  { name: "Scrum Master", department: "Operations" },
+  { name: "Product Owner", department: "Marketing" },
+  { name: "Business Analyst", department: "Finance" },
+  { name: "UX Designer", department: "Marketing" },
+  { name: "UI Designer", department: "Marketing" },
 ];
 
-export const positionTypesData: Partial<PositionTypeEntity>[] =
-  positionTypes.map((positionType) => ({
-    name: positionType,
+export const positionTypesData: PositionType[] = positionTypes.map(
+  (positionType) => ({
+    name: positionType.name,
+    department: positionType.department,
     status: StatusEnum.ACTIVE,
-  }));
+  })
+);
