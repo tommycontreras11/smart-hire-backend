@@ -1,4 +1,5 @@
 export * from './create.controller'
+export * from './acceptJob.controller'
 export * from './delete.controller'
 export * from './getAll.controller'
 export * from './getOne.controller'
