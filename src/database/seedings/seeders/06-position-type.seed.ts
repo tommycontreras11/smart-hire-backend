@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import { Factory, Seeder } from "typeorm-seeding";
 import { PositionTypeEntity } from "../../entities/entity/position-type.entity";
 import { positionTypesData } from "../data/position-type.data";
-import { DepartmentEntity } from "./../../../database/entities/entity/department.entity";
+import { DepartmentEntity } from "../../entities/entity/department.entity";
 
 export class PositionTypeSeeder implements Seeder {
   async run(_factory: Factory, dataSource: DataSource): Promise<void> {

@@ -2,9 +2,9 @@ import { DataSource, In } from "typeorm";
 import { Factory, Seeder } from "typeorm-seeding";
 import { CompetencyEntity } from "../../entities/entity/competency.entity";
 import { competenciesData } from "../data/competency.data";
-import { CategoryEntity } from "./../../../database/entities/entity/category.entity";
-import { EvaluationMethodEntity } from "./../../../database/entities/entity/evaluation-method.entity";
-import { PositionTypeEntity } from "./../../../database/entities/entity/position-type.entity";
+import { CategoryEntity } from "../../entities/entity/category.entity";
+import { EvaluationMethodEntity } from "../../entities/entity/evaluation-method.entity";
+import { PositionTypeEntity } from "../../entities/entity/position-type.entity";
 
 export class CompetencySeeder implements Seeder {
   async run(_factory: Factory, dataSource: DataSource): Promise<void> {
