@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Interview Scheduled</title>
+  </head>
+  <body style="background-color: white; font-family: sans-serif; padding: 16px;">
+    <div style="max-width: 465px; margin: 40px auto; border: 1px solid #eaeaea; border-radius: 8px; padding: 20px;">
+      <h2 style="text-align: center; color: black; font-weight: normal; font-size: 24px;">Interview Scheduled</h2>
+
+      <p style="color: black; font-size: 14px; line-height: 24px;">
+        Hello <strong>{{candidateName}}</strong>,
+      </p>
+
+      <p style="color: black; font-size: 14px; line-height: 24px;">
+        Your remote interview has been scheduled with the following details:
+      </p>
+
+      <p style="color: black; font-size: 14px; line-height: 24px;">
+        <strong>📆 Date:</strong> {{interviewDate}}<br />
+        <strong>🕒 Time:</strong> {{interviewTime}}<br />
+        <strong>👤 Interviewer:</strong> {{interviewerName}}
+      </p>
+
+      <p style="color: black; font-size: 14px; line-height: 24px; margin-top: 16px;">
+        You can join the interview using the link below:
+      </p>
+
+      <p style="text-align: center; margin-top: 16px;">
+        <a href="{{interviewLink}}" style="color: #2563eb; font-size: 16px; font-weight: 600; text-decoration: none;">
+          {{interviewLink}}
+        </a>
+      </p>
+
+      <hr style="border: 1px solid #eaeaea; margin: 26px 0;" />
+
+      <p style="color: #666666; font-size: 12px; line-height: 24px;">
+        This message was sent to <strong>{{candidateName}}</strong>. If you are not expecting this interview, please ignore this email.
+      </p>
+    </div>
+  </body>
+</html>

@@ -18,6 +18,7 @@ import jobPosition from "./job-position";
 import workExperience from "./work-experience";
 import recruiter from "./recruiter";
 import request from "./request";
+import email from "./email";
 
 const router = Router();
 
@@ -106,6 +107,7 @@ router.use(
   jobPosition
 );
 router.use("/work-experiences", authMiddleware, workExperience);
+router.use("/emails", authMiddleware, email);
 router.use("/recruiters", authMiddleware, recruiter);
 router.use("/requests", unless([{ path: "/accept-job", method: "POST" }], authMiddleware), request);
 

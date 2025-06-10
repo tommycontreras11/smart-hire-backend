@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>You're Hired! 🎉</title>
+  </head>
+  <body style="background-color: white; font-family: sans-serif; padding: 16px;">
+    <div style="max-width: 465px; margin: 40px auto; border: 1px solid #eaeaea; border-radius: 8px; padding: 20px;">
+      <h2 style="text-align: center; color: black; font-weight: normal; font-size: 24px;">
+        You're Hired! 🎉
+      </h2>
+
+      <p style="color: black; font-size: 14px; line-height: 24px;">
+        Dear <strong>{{candidateName}}</strong>,
+      </p>
+
+      <p style="color: black; font-size: 14px; line-height: 24px;">
+        We are thrilled to inform you that you have been selected for the position of
+        <strong>{{positionTitle}}</strong> at our company.
+      </p>
+
+      <p style="color: black; font-size: 14px; line-height: 24px;">
+        <strong>📅 Start Date:</strong> {{startDate}}<br />
+        <strong>📩 HR Contact:</strong> {{hrContactName}} ({{hrContactEmail}})
+      </p>
+
+      <p style="color: black; font-size: 14px; line-height: 24px; margin-top: 16px;">
+        Please review and accept your job offer by clicking the link below:
+      </p>
+
+      <p style="text-align: center; margin-top: 16px;">
+        <a
+          href="{{offerLink}}"
+          style="color: #2563eb; font-size: 16px; font-weight: 600; text-decoration: none;"
+        >
+          View Your Offer Letter
+        </a>
+      </p>
+
+      <hr style="border: 1px solid #eaeaea; margin: 26px 0;" />
+
+      <p style="color: #666666; font-size: 12px; line-height: 24px;">
+        Welcome aboard, <strong>{{candidateName}}</strong>! If you have any questions, feel free to reach out to our HR team.
+      </p>
+    </div>
+  </body>
+</html>

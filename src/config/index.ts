@@ -6,3 +6,8 @@ export const objectStorageConfig = {
     accessKey: process.env.OBJECT_STORAGE_ACCESS_KEY as string,
     secretKey: process.env.OBJECT_STORAGE_SECRET_KEY as string
 }
+
+export const emailConfig = {
+    user: process.env.SMART_HIRE_GMAIL_USER as string,
+    password: process.env.SMART_HIRE_GMAIL_APP_PASSWORD as string
+}
