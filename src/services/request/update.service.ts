@@ -33,13 +33,14 @@ export async function updateRequestService(
     StatusRequestEnum.INTERVIEW,
     StatusRequestEnum.EVALUATED,
     StatusRequestEnum.HIRED,
-    StatusRequestEnum.REJECTED
+    StatusRequestEnum.REJECTED,
   ];
 
   const indexOf = statuses.findIndex((a) => a === status);
 
   if (nextStatus && indexOf > -1) {
-    const index = status === StatusRequestEnum.REJECTED ? indexOf - 1 : indexOf + 1
+    const index =
+      status === StatusRequestEnum.REJECTED ? indexOf - 1 : indexOf + 1;
     status = statuses[index];
   }
 
@@ -97,18 +98,27 @@ export async function updateRequestService(
       );
     }
 
-    await RequestHistoryEntity.create({
-      request: foundRequest,
-      status,
-    })
-      .save()
-      .catch((e) => {
-        console.error(
-          "updateRequestService -> RequestHistoryEntity.create: ",
-          e
-        );
-        return null;
-      });
+    const existingHistory = await RequestHistoryEntity.findOne({
+      where: {
+        request: foundRequest,
+        status,
+      },
+    });
+
+    if (!existingHistory) {
+      await RequestHistoryEntity.create({
+        request: foundRequest,
+        status,
+      })
+        .save()
+        .catch((e) => {
+          console.error(
+            "updateRequestService -> RequestHistoryEntity.create: ",
+            e
+          );
+          return null;
+        });
+    }
   }
 
   await RequestEntity.update(

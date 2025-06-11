@@ -18,6 +18,7 @@ export async function sendHiredEmailService({
 
   await updateRequestService(requestUUID, {
     status: StatusRequestEnum.HIRED,
+    nextStep: "You have been hired 🔥",
   });
 
   return "Email sent successfully";
