@@ -18,7 +18,7 @@ export const getAllEmployeeController = async (_req: Request, res: Response) => 
         password: "******",
         monthly_salary: employee.monthly_salary,
         entry_date: employee.entry_date,
-        jobPosition: {
+        positionType: {
           uuid: employee.positionType.uuid,
           name: employee.positionType.name,
         },
