@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { sendInterviewEmailService } from "./../../services/email/sendInterviewEmail.service";
+import { sendHiredEmailService } from "./../../services/email/sendHiredEmail.service";
 import { statusCode } from "../../utils/status.util";
 
-export const sendInterviewEmailController = async (req: Request, res: Response) => {
-  sendInterviewEmailService(req.body)
+export const sendHiredEmailController = async (req: Request, res: Response) => {
+  sendHiredEmailService(req.body)
     .then((data) => res.status(statusCode.CREATED).json({ message: data }))
     .catch((e) =>
       res
