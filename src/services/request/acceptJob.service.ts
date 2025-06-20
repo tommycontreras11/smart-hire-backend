@@ -61,6 +61,7 @@ export async function acceptJobService({
   await updateRequestService(foundRequest.uuid, {
     candidateUUID: foundCandidate.uuid,
     status: StatusRequestEnum.HIRED,
+    nextStep: "You have been hired 🔥",
   });
 
   return "Request accepted successfully";

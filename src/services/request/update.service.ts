@@ -31,9 +31,7 @@ export async function updateRequestService(
     StatusRequestEnum.SUBMITTED,
     StatusRequestEnum.UNDER_REVIEW,
     StatusRequestEnum.INTERVIEW,
-    StatusRequestEnum.EVALUATED,
-    StatusRequestEnum.HIRED,
-    StatusRequestEnum.REJECTED,
+    StatusRequestEnum.EVALUATED
   ];
 
   const indexOf = statuses.findIndex((a) => a === status);
@@ -99,8 +97,13 @@ export async function updateRequestService(
     }
 
     const existingHistory = await RequestHistoryEntity.findOne({
+      relations: {
+        request: true,
+      },
       where: {
-        request: foundRequest,
+        request: {
+          id: foundRequest.id
+        },
         status,
       },
     });
