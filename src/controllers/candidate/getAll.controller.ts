@@ -7,7 +7,9 @@ export const getAllCandidateController = async (_req: Request, res: Response) =>
     relations: {
       desiredPosition: true,
       department: true,
-      workExperience: true
+      workExperience: true,
+      training: true,
+      competencies: true,
     }
   })
     .then((data) => {
@@ -22,6 +24,14 @@ export const getAllCandidateController = async (_req: Request, res: Response) =>
           uuid: candidate.desiredPosition.uuid,
           name: candidate.desiredPosition.name,
         },
+        trainings: candidate.training.map((training) => ({
+          uuid: training.uuid,
+          name: training.name,
+        })),
+        competencies: candidate.competencies.map((competency) => ({
+          uuid: competency.uuid,
+          name: competency.name,
+        })),
         department: {
           uuid: candidate.department.uuid,
           name: candidate.department.name,

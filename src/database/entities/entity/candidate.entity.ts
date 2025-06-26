@@ -30,7 +30,7 @@ export class CandidateEntity extends PersonBaseEntity {
   department_id: number;
 
   @Column()
-  file_name: string;
+  curriculum: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   status: StatusType;

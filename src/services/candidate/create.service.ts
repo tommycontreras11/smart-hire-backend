@@ -1,3 +1,4 @@
+import { uploadFile } from "./../../utils/upload.util";
 import { CandidateEntity } from "../../database/entities/entity/candidate.entity";
 import { CreateCandidateDTO } from "../../dto/candidate.dto";
 import { statusCode } from "../../utils/status.util";
@@ -15,7 +16,6 @@ export async function createCandidateService({
   departmentUUID,
   ...payload
 }: CreateCandidateDTO) {
-  // file?: Express.Multer.File | undefined
   await validateProperty<CandidateEntity>(
     CandidateEntity,
     identification,
@@ -68,10 +68,8 @@ export async function createCandidateService({
     desired_salary: parseFloat(desired_salary),
     desiredPosition: foundPositionType,
     department: foundDepartment,
-    file_name: "s",
     ...payload,
-  })
-    .save()
+  }).save()
     .catch((e) => {
       console.error("createCandidateService -> CandidateEntity.create: ", e);
       return null;

@@ -3,7 +3,7 @@ import { createRequestService } from "../../services/request/create.service";
 import { statusCode } from "../../utils/status.util";
 
 export const createRequestController = async (req: Request, res: Response) => {
-  createRequestService(req.body, req?.file)
+  createRequestService(req.body)
     .then((data) => res.status(statusCode.CREATED).json({ message: data }))
     .catch((e) =>
       res

@@ -28,16 +28,6 @@ export class CreateCandidateDTO extends PersonDTO {
   departmentUUID: string;
 }
 
-export class UpdateCandidateProfileDetailDTO {
-  @IsOptional()
-  @IsUUID("4", { each: true })
-  trainingUUIDs: string[];
-
-  @IsOptional()
-  @IsUUID("4", { each: true })
-  competencyUUIDs: string[];
-}
-
 export class UpdateCandidateDTO extends (class {} as { new (): PartialPersonDTO }) {
   @IsOptional()
   @IsNumberString()
@@ -54,6 +44,14 @@ export class UpdateCandidateDTO extends (class {} as { new (): PartialPersonDTO 
   @IsOptional()
   @IsUUID("4")
   departmentUUID: string;
+
+  @IsOptional()
+  @IsUUID("4", { each: true })
+  trainingUUIDs: string[];
+
+  @IsOptional()
+  @IsUUID("4", { each: true })
+  competencyUUIDs: string[];
 
   @IsOptional()
   @IsEnum(StatusEnum)

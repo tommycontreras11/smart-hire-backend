@@ -1,22 +1,14 @@
-import { RequestHistoryEntity } from "./../../database/entities/entity/request-history.entity";
 import { RequestEntity } from "../../database/entities/entity/request.entity";
 import { CreateRequestDTO } from "../../dto/request.dto";
 import { statusCode } from "../../utils/status.util";
 import { StatusRequestEnum } from "./../../constants";
 import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { JobPositionEntity } from "./../../database/entities/entity/job-position.entity";
-import { uploadFile } from "./../../utils/upload.util";
+import { RequestHistoryEntity } from "./../../database/entities/entity/request-history.entity";
 
 export async function createRequestService(
-  { candidateUUID, jobPositionUUID }: CreateRequestDTO,
-  file: Express.Multer.File | undefined
+  { candidateUUID, jobPositionUUID }: CreateRequestDTO
 ) {
-  if (file === undefined)
-    return Promise.reject({
-      message: "File not found",
-      status: statusCode.BAD_REQUEST,
-    });
-
   const foundCandidate = await CandidateEntity.findOneBy({
     uuid: candidateUUID,
   }).catch((e) => {
@@ -48,16 +40,12 @@ export async function createRequestService(
     });
   }
 
-  const requestSaved = RequestEntity.create({
+  const requestSaved = await RequestEntity.create({
     candidate: foundCandidate,
     jobPosition: foundJobPosition,
     recruiter: foundJobPosition.recruiter,
     status: StatusRequestEnum.SUBMITTED,
-  });
-
-  requestSaved.curriculum = await uploadFile<RequestEntity>(requestSaved, file);
-
-  await requestSaved.save().catch((e) => {
+  }).save().catch((e) => {
     console.error("createRequestService -> RequestEntity.create: ", e);
     return null;
   });
