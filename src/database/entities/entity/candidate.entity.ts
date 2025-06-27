@@ -9,17 +9,29 @@ import {
   OneToOne,
 } from "typeorm";
 import { PersonBaseEntity } from "../base/person.base.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
+import { CandidateSocialLinkEntity } from "./social-link.entity";
 import { CompetencyEntity } from "./competency.entity";
 import { DepartmentEntity } from "./department.entity";
 import { PositionTypeEntity } from "./position-type.entity";
+import { RecruitmentEntity } from "./recruitment.entity";
 import { RequestEntity } from "./request.entity";
 import { TrainingEntity } from "./training.entity";
 import { WorkExperienceEntity } from "./work-experience.entity";
-import { StatusEnum, StatusType } from "./../../../constants";
-import { RecruitmentEntity } from "./recruitment.entity";
+import { EducationEntity } from "./education.entity";
+import { CertificationEntity } from "./certification.entity";
 
 @Entity({ name: "candidates" })
 export class CandidateEntity extends PersonBaseEntity {
+  @Column({ nullable: true })
+  bio: string
+
+  @Column({ nullable: true })
+  location: string
+
+  @Column({ nullable: true })
+  phone: string
+
   @Column({ type: "float", precision: 10, scale: 2 })
   desired_salary: number;
 
@@ -82,4 +94,13 @@ export class CandidateEntity extends PersonBaseEntity {
 
   @OneToMany(() => RecruitmentEntity, (recruitment) => recruitment.candidate)
   recruitment: RecruitmentEntity[];
+
+  @OneToMany(() => CandidateSocialLinkEntity, (socialLink) => socialLink.candidate)
+  socialLinks: CandidateSocialLinkEntity[];
+
+  @OneToMany(() => EducationEntity, (education) => education.candidate)
+  educations: EducationEntity[];
+
+  @OneToMany(() => CertificationEntity, (certification) => certification.candidate)
+  certifications: CertificationEntity[];
 }

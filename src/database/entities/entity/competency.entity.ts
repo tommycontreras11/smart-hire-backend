@@ -14,6 +14,8 @@ import { CategoryEntity } from "./category.entity";
 import { EvaluationMethodEntity } from "./evaluation-method.entity";
 import { JobPositionEntity } from "./job-position.entity";
 import { PositionTypeEntity } from "./position-type.entity";
+import { EducationEntity } from "./education.entity";
+import { CertificationEntity } from "./certification.entity";
 
 export enum LevelCompetencyEnum {
   BEGINNER = "BEGINNER",
@@ -69,6 +71,18 @@ export class CompetencyEntity extends BaseEntity {
   @OneToMany(() => CandidateEntity, (candidate) => candidate.competencies)
   candidates: CandidateEntity[];
 
-  @ManyToMany(() => JobPositionEntity, (jobPosition) => jobPosition.competencies)
+  @ManyToMany(
+    () => JobPositionEntity,
+    (jobPosition) => jobPosition.competencies
+  )
   jobPositions: JobPositionEntity[];
+
+  @ManyToMany(() => EducationEntity, (education) => education.competencies)
+  educations: EducationEntity[];
+
+  @ManyToMany(
+    () => CertificationEntity,
+    (certification) => certification.competencies
+  )
+  certifications: CertificationEntity[];
 }

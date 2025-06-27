@@ -3,6 +3,8 @@ import { BaseEntity } from "../base/base.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
 import { RecruiterEntity } from "./recruiter.entity";
 import { TrainingEntity } from "./training.entity";
+import { CertificationEntity } from "./certification.entity";
+import { EducationEntity } from "./education.entity";
 
 @Entity({ name: "institutions" })
 export class InstitutionEntity extends BaseEntity {
@@ -17,4 +19,10 @@ export class InstitutionEntity extends BaseEntity {
 
   @OneToMany(() => RecruiterEntity, (recruiter) => recruiter.institution)
   recruiters: RecruiterEntity[];
+
+  @OneToMany(() => EducationEntity, (education) => education.institution)
+  educations: EducationEntity[];
+
+  @OneToMany(() => CertificationEntity, (certification) => certification.institution)
+  certifications: CertificationEntity[];
 }
