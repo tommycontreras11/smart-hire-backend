@@ -13,4 +13,7 @@ export class PersonBaseEntity extends BaseEntity {
 
   @Column()
   password: string;
+
+  @Column({ nullable: true })
+  photo: string;
 }

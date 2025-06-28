@@ -36,13 +36,13 @@ export class CandidateEntity extends PersonBaseEntity {
   desired_salary: number;
 
   @Column()
+  curriculum: string;
+
+  @Column()
   desired_position_id: number;
 
   @Column()
   department_id: number;
-
-  @Column()
-  curriculum: string;
 
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   status: StatusType;

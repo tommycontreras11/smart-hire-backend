@@ -23,9 +23,6 @@ export class EmployeeEntity extends PersonBaseEntity {
   @Column()
   position_type_id: number;
 
-  @Column()
-  file_name: string;
-
   @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
   status: StatusType;
 
