@@ -17,7 +17,6 @@ export async function createEmployeeService({
   positionTypeUUID,
   ...payload
 }: CreateEmployeeDTO) {
-  // file?: Express.Multer.File | undefined
   await validateProperty<EmployeeEntity>(
     EmployeeEntity,
     identification,
@@ -62,7 +61,6 @@ export async function createEmployeeService({
     entry_date: getFullDate(new Date(entry_date)),
     positionType: foundPositionType,
     department: foundDepartment,
-    file_name: "s",
     ...payload,
   })
     .save()

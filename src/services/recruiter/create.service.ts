@@ -12,7 +12,6 @@ export async function createRecruiterService({
   institution,
   ...payload
 }: CreateRecruiterDTO) {
-  // file?: Express.Multer.File | undefined
   await validateProperty<RecruiterEntity>(
     RecruiterEntity,
     identification,
@@ -53,7 +52,6 @@ export async function createRecruiterService({
     identification,
     password: hashPassword(password),
     institution: foundInstitution,
-    file_name: "s",
     email,
     ...payload,
   })

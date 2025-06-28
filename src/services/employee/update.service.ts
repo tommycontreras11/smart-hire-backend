@@ -6,6 +6,7 @@ import { DepartmentEntity } from "../../database/entities/entity/department.enti
 import { hashPassword } from "../../utils/common.util";
 import { getFullDate } from "./../../utils/date.util";
 import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
+import { uploadFile } from "./../../utils/upload.util";
 
 export async function updateEmployeeService(
   uuid: string,
@@ -19,9 +20,9 @@ export async function updateEmployeeService(
     positionTypeUUID,
     departmentUUID,
     status,
-  }: UpdateEmployeeDTO
+  }: UpdateEmployeeDTO,
+    file?: Express.Multer.File | undefined
 ) {
-  // file?: Express.Multer.File | undefined
   const foundEmployee = await EmployeeEntity.findOne({
     where: { uuid },
   }).catch((e) => {
@@ -92,17 +93,27 @@ export async function updateEmployeeService(
     }
   }
 
-  EmployeeEntity.update({ uuid }, {
-    ...(identification && { identification }),
-    ...(name && { name }),
-    ...(email && { email }),
-    ...(password && { password: hashPassword(password) }),
-    ...(monthly_salary && { monthly_salary: parseFloat(monthly_salary) }),
-    ...(entry_date && { entry_date: getFullDate(new Date(entry_date)) }),
-    ...(foundPositionType && { positionType: foundPositionType }),
-    ...(foundDepartment && { department: foundDepartment }),
-    ...(status && { status }),
-  }).catch((e) => {
+  foundEmployee.identification = identification ?? foundEmployee.identification;
+  foundEmployee.name = name ?? foundEmployee.name;
+  foundEmployee.email = email ?? foundEmployee.email;
+  foundEmployee.password = password
+    ? hashPassword(password)
+    : foundEmployee.password;
+  foundEmployee.monthly_salary = monthly_salary
+    ? parseFloat(monthly_salary)
+    : foundEmployee.monthly_salary;
+  
+    foundEmployee.entry_date = entry_date
+    ? new Date(getFullDate(entry_date))
+    : foundEmployee.entry_date;
+
+  foundEmployee.positionType = foundPositionType ?? foundEmployee.positionType;
+  foundEmployee.department = foundDepartment ?? foundEmployee.department;
+  foundEmployee.status = status ?? foundEmployee.status;
+
+  if(file) foundEmployee.photo = await uploadFile<EmployeeEntity>(foundEmployee, file);
+
+  await foundEmployee.save().catch((e) => {
     console.error("updateEmployeeService -> EmployeeEntity.update: ", e);
     return null;
   });

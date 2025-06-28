@@ -1,4 +1,3 @@
-import { uploadFile } from "./../../utils/upload.util";
 import { CandidateEntity } from "../../database/entities/entity/candidate.entity";
 import { CreateCandidateDTO } from "../../dto/candidate.dto";
 import { statusCode } from "../../utils/status.util";

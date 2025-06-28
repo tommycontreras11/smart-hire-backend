@@ -4,6 +4,7 @@ import { RecruiterEntity } from "../../database/entities/entity/recruiter.entity
 import { UpdateRecruiterDTO } from "../../dto/recruiter.dto";
 import { hashPassword } from "../../utils/common.util";
 import { statusCode } from "../../utils/status.util";
+import { uploadFile } from "./../../utils/upload.util";
 
 export async function updateRecruiterService(
   uuid: string,
@@ -13,9 +14,9 @@ export async function updateRecruiterService(
     password,
     institution,
     status,
-  }: UpdateRecruiterDTO
+  }: UpdateRecruiterDTO,
+  file?: Express.Multer.File | undefined
 ) {
-  // file?: Express.Multer.File | undefined
   const foundRecruiter = await RecruiterEntity.findOne({
     where: { uuid },
   }).catch((e) => {
@@ -67,16 +68,18 @@ export async function updateRecruiterService(
     }
   }
 
-  await RecruiterEntity.update(
-    { uuid },
-    {
-      ...(identification && { identification }),
-      ...(name && { name }),
-      ...(password && { password: hashPassword(password) }),
-      ...(foundInstitution && { institution: foundInstitution }),
-      ...(status && { status }),
-    }
-  ).catch((e) => {
+  foundRecruiter.identification = identification ?? foundRecruiter.identification;
+  foundRecruiter.name = name ?? foundRecruiter.name;
+  foundRecruiter.password = password
+    ? hashPassword(password)
+    : foundRecruiter.password;
+  foundRecruiter.institution = foundInstitution ?? foundRecruiter.institution;
+  foundRecruiter.status = status ?? foundRecruiter.status;
+
+
+  if(file) foundRecruiter.photo = await uploadFile<RecruiterEntity>(foundRecruiter, file);
+
+  await foundRecruiter.save().catch((e) => {
     console.error("updateRecruiterService -> RecruiterEntity.update: ", e);
     return null;
   });

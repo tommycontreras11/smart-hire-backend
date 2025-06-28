@@ -5,7 +5,7 @@ import { statusCode } from "../../utils/status.util";
 export const updateEmployeeController = async (req: Request, res: Response) => {
   const { uuid } = req.params;
 
-  updateEmployeeService(uuid, req.body)
+  updateEmployeeService(uuid, req.body, req?.file)
     .then((data) => res.status(statusCode.OK).json({ message: data }))
     .catch((e) =>
       res
