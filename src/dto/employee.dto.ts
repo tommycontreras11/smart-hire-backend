@@ -35,7 +35,7 @@ export class CreateEmployeeDTO extends PersonDTO {
 export class UpdateEmployeeDTO extends (class {} as { new (): PartialPersonDTO }) {
   @IsOptional()
   @IsNumberString()
-  @Matches(/^\d{1,8}(\.\d{1,2})?$/, {
+  @Matches(/^\d{1,10}(\.\d{1,2})?$/, {
     message:
       "Monthly salary must have at most 10 digits in total and 2 decimal places",
   })

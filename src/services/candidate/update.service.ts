@@ -4,10 +4,9 @@ import { UpdateCandidateDTO } from "../../dto/candidate.dto";
 import { statusCode } from "../../utils/status.util";
 import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
 import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
+import { TrainingEntity } from "./../../database/entities/entity/training.entity";
 import { hashPassword } from "./../../utils/common.util";
 import { uploadFile } from "./../../utils/upload.util";
-import { TrainingEntity } from "./../../database/entities/entity/training.entity";
-import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 
 export async function updateCandidateService(
   uuid: string,
@@ -17,10 +16,6 @@ export async function updateCandidateService(
     email,
     password,
     desired_salary,
-    positionUUID,
-    departmentUUID,
-    trainingUUIDs, 
-    competencyUUIDs,
     status,
   }: UpdateCandidateDTO,
   file?: Express.Multer.File | undefined
@@ -58,91 +53,51 @@ export async function updateCandidateService(
     }
   }
 
-  let foundPositionType: PositionTypeEntity | null = null;
-  if (positionUUID) {
-    foundPositionType = await PositionTypeEntity.findOneBy({
-      uuid: positionUUID,
-    }).catch((e) => {
-      console.error(
-        "updateCandidateService -> PositionTypeEntity.findOneBy: ",
-        e
-      );
-      return null;
-    });
-
-    if (!foundPositionType) {
-      return Promise.reject({
-        message: "Job position not found",
-        status: statusCode.NOT_FOUND,
-      });
-    }
-  }
-
-  let foundDepartment: DepartmentEntity | null = null;
-  if (departmentUUID) {
-    foundDepartment = await DepartmentEntity.findOneBy({
-      uuid: departmentUUID,
-    }).catch((e) => {
-      console.error(
-        "updateCandidateService -> DepartmentEntity.findOneBy: ",
-        e
-      );
-      return null;
-    });
-
-    if (!foundDepartment) {
-      return Promise.reject({
-        message: "Department not found",
-        status: statusCode.NOT_FOUND,
-      });
-    }
-  }
-
-    let foundTraining: TrainingEntity[] | null = [];
-    if (trainingUUIDs?.length > 0) {
-      foundTraining = await TrainingEntity.find({
-        where: {
-          uuid: In(trainingUUIDs),
-        },
-      }).catch((e) => {
-        console.error(
-          "updateProfileDetailService -> TrainingEntity.findOneBy: ",
-          e
-        );
-        return null;
-      });
+    // let foundTraining: TrainingEntity[] | null = [];
+    // if (trainingUUIDs?.length > 0) {
+    //   foundTraining = await TrainingEntity.find({
+    //     where: {
+    //       uuid: In(trainingUUIDs),
+    //     },
+    //   }).catch((e) => {
+    //     console.error(
+    //       "updateProfileDetailService -> TrainingEntity.findOneBy: ",
+    //       e
+    //     );
+    //     return null;
+    //   });
   
-      if (!foundTraining || foundTraining.length !== trainingUUIDs.length) {
-        return Promise.reject({
-          message: "Training not found",
-          status: statusCode.NOT_FOUND,
-        });
-      }
-    }
-    let foundCompetencies: CompetencyEntity[] | null = [];
-    if (competencyUUIDs?.length > 0) {
-      foundCompetencies = await CompetencyEntity.find({
-        where: {
-          uuid: In(competencyUUIDs),
-        },
-      }).catch((e) => {
-        console.error(
-          "updateProfileDetailService -> CompetencyEntity.findOneBy: ",
-          e
-        );
-        return null;
-      });
+    //   if (!foundTraining || foundTraining.length !== trainingUUIDs.length) {
+    //     return Promise.reject({
+    //       message: "Training not found",
+    //       status: statusCode.NOT_FOUND,
+    //     });
+    //   }
+    // }
+    // let foundCompetencies: CompetencyEntity[] | null = [];
+    // if (competencyUUIDs?.length > 0) {
+    //   foundCompetencies = await CompetencyEntity.find({
+    //     where: {
+    //       uuid: In(competencyUUIDs),
+    //     },
+    //   }).catch((e) => {
+    //     console.error(
+    //       "updateProfileDetailService -> CompetencyEntity.findOneBy: ",
+    //       e
+    //     );
+    //     return null;
+    //   });
   
-      if (
-        !foundCompetencies ||
-        foundCompetencies.length !== competencyUUIDs.length
-      ) {
-        return Promise.reject({
-          message: "Competencies not found",
-          status: statusCode.NOT_FOUND,
-        });
-      }
-    }
+    //   if (
+    //     !foundCompetencies ||
+    //     foundCompetencies.length !== competencyUUIDs.length
+    //   ) {
+    //     return Promise.reject({
+    //       message: "Competencies not found",
+    //       status: statusCode.NOT_FOUND,
+    //     });
+    //   }
+    // }
 
   foundCandidate.identification =
     identification ?? foundCandidate.identification;
@@ -153,13 +108,8 @@ export async function updateCandidateService(
     : foundCandidate.password;
   foundCandidate.desired_salary =
     parseFloat(desired_salary) ?? foundCandidate.desired_salary;
-  foundCandidate.desiredPosition =
-    foundPositionType ?? foundCandidate.desiredPosition;
-  foundCandidate.department = foundDepartment ?? foundCandidate.department;
   foundCandidate.status = status ?? foundCandidate.status;
-  foundCandidate.training = foundTraining ?? foundCandidate.training;
-  foundCandidate.competencies =
-    foundCompetencies ?? foundCandidate.competencies;
+  // foundCandidate.training = foundTraining ?? foundCandidate.training;
 
   if(file) foundCandidate.curriculum = await uploadFile<CandidateEntity>(foundCandidate, file);
 

@@ -1,19 +1,25 @@
 import {
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsNumberString,
   IsOptional,
   IsString,
   IsUUID,
   Matches,
+  Max,
+  Min,
+  Validate,
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
 import { PartialPersonDTO, PersonDTO } from "./common.dto";
+import { PlatformType, PlatformTypeEnum } from "./../database/entities/entity/social-link.entity";
 
 export class CreateCandidateDTO extends PersonDTO {
   @IsNotEmpty()
   @IsNumberString()
-  @Matches(/^\d{1,8}(\.\d{1,2})?$/, {
+  @Matches(/^\d{1,10}(\.\d{1,2})?$/, {
     message:
       "Desired salary must have at most 10 digits in total and 2 decimal places",
   })
@@ -28,30 +34,133 @@ export class CreateCandidateDTO extends PersonDTO {
   departmentUUID: string;
 }
 
-export class UpdateCandidateDTO extends (class {} as { new (): PartialPersonDTO }) {
+export class EducationCandidateDTO {
+  @IsOptional()
+  @IsUUID('4')
+  uuid: string;
+  
+  @IsNotEmpty()
+  @IsBoolean()
+  editMode: boolean;
+
+  @IsOptional()
+  @IsString()
+  title: string;
+
+  @IsOptional()
+  @IsNumber({}, { message: "Grade must be a valid number" })
+  @Min(0, { message: "Grade must be at least 0" })
+  @Max(100, { message: "Grade must be at most 100" })
+  @Validate(({ value }: { value: any }) => Number.isInteger(value * 100), {
+    message: "Grade must have at most 2 decimal places",
+  })
+  grade: string;
+
+  @IsOptional()
+  @IsString()
+  description: string;
+
+  @IsOptional()
+  @IsString()
+  start_date: Date;
+
+  @IsOptional()
+  @IsString()
+  end_date: Date;
+
+  @IsOptional()
+  @IsUUID("4")
+  institutionUUID: string;
+}
+
+export class CertificationCandidateDTO {
+  @IsOptional()
+  @IsUUID('4')
+  uuid: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  editMode: boolean;
+
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  expedition_date: Date;
+
+  @IsOptional()
+  @IsString()
+  expiration_date: Date;
+
+  @IsOptional()
+  @IsString()
+  credential_id: string;
+
+  @IsOptional()
+  @IsString()
+  credential_link: string;
+
+  @IsNotEmpty()
+  @IsUUID("4")
+  institutionUUID: string;
+}
+
+export class ProfessionalCandidateDTO {
+  @IsNotEmpty()
+  @IsUUID("4")
+  candidateUUID: string;
+
+  @IsOptional()
+  education: EducationCandidateDTO;
+
+  @IsOptional()
+  certification: CertificationCandidateDTO;
+
+  @IsOptional()
+  @IsUUID("4", { each: true })
+  competencyUUIDs: string[];
+}
+
+export class SocialLinkCandidateDTO { 
+  @IsNotEmpty()
+  @IsEnum(PlatformTypeEnum)  
+  key: PlatformType;
+
+  @IsNotEmpty()
+  @IsString()
+  value: string;
+}
+
+export class UpdateCandidateDTO extends (class {} as {
+  new (): PartialPersonDTO;
+}) {
   @IsOptional()
   @IsNumberString()
-  @Matches(/^\d{1,8}(\.\d{1,2})?$/, {
+  @Matches(/^\d{1,10}(\.\d{1,2})?$/, {
     message:
       "Desired salary must have at most 10 digits in total and 2 decimal places",
   })
   desired_salary: string;
 
   @IsOptional()
-  @IsUUID("4")
-  positionUUID: string;
+  @IsString()
+  phone: string;
 
   @IsOptional()
-  @IsUUID("4")
-  departmentUUID: string;
+  @IsString()
+  location: string;
 
   @IsOptional()
-  @IsUUID("4", { each: true })
-  trainingUUIDs: string[];
+  @IsString()
+  bio: string;
 
   @IsOptional()
-  @IsUUID("4", { each: true })
-  competencyUUIDs: string[];
+  social_links: SocialLinkCandidateDTO[];
+
+  @IsOptional()
+  professional: ProfessionalCandidateDTO;
 
   @IsOptional()
   @IsEnum(StatusEnum)
