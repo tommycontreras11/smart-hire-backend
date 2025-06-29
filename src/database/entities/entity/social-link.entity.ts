@@ -9,8 +9,8 @@ export enum PlatformTypeEnum {
 
 export type PlatformType = keyof typeof PlatformTypeEnum;
 
-@Entity({ name: "candidate_social_links" })
-export class CandidateSocialLinkEntity extends BaseEntity {
+@Entity({ name: "social_links" })
+export class SocialLinkEntity extends BaseEntity {
   @Column()
   url: string;
 

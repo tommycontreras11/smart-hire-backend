@@ -17,7 +17,7 @@ export class EducationEntity extends BaseEntity {
   @Column({ nullable: true })
   title: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: "float", precision: 5, scale: 2 })
   grade: number;
 
   @Column({ nullable: true, length: 1000 })

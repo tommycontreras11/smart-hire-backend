@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import { PersonBaseEntity } from "../base/person.base.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
-import { CandidateSocialLinkEntity } from "./social-link.entity";
+import { SocialLinkEntity } from "./social-link.entity";
 import { CompetencyEntity } from "./competency.entity";
 import { DepartmentEntity } from "./department.entity";
 import { PositionTypeEntity } from "./position-type.entity";
@@ -95,8 +95,8 @@ export class CandidateEntity extends PersonBaseEntity {
   @OneToMany(() => RecruitmentEntity, (recruitment) => recruitment.candidate)
   recruitment: RecruitmentEntity[];
 
-  @OneToMany(() => CandidateSocialLinkEntity, (socialLink) => socialLink.candidate)
-  socialLinks: CandidateSocialLinkEntity[];
+  @OneToMany(() => SocialLinkEntity, (socialLink) => socialLink.candidate)
+  socialLinks: SocialLinkEntity[];
 
   @OneToMany(() => EducationEntity, (education) => education.candidate)
   educations: EducationEntity[];
