@@ -1,5 +1,4 @@
 import {
-  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -10,11 +9,11 @@ import {
   Matches,
   Max,
   Min,
-  Validate,
+  Validate
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
-import { PartialPersonDTO, PersonDTO } from "./common.dto";
 import { PlatformType, PlatformTypeEnum } from "./../database/entities/entity/social-link.entity";
+import { PartialPersonDTO, PersonDTO } from "./common.dto";
 
 export class CreateCandidateDTO extends PersonDTO {
   @IsNotEmpty()
@@ -35,14 +34,6 @@ export class CreateCandidateDTO extends PersonDTO {
 }
 
 export class EducationCandidateDTO {
-  @IsOptional()
-  @IsUUID('4')
-  uuid: string;
-  
-  @IsNotEmpty()
-  @IsBoolean()
-  editMode: boolean;
-
   @IsOptional()
   @IsString()
   title: string;
@@ -71,17 +62,13 @@ export class EducationCandidateDTO {
   @IsOptional()
   @IsUUID("4")
   institutionUUID: string;
+
+  @IsNotEmpty()
+  @IsUUID("4")
+  candidateUUID: string;
 }
 
 export class CertificationCandidateDTO {
-  @IsOptional()
-  @IsUUID('4')
-  uuid: string;
-
-  @IsNotEmpty()
-  @IsBoolean()
-  editMode: boolean;
-
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -105,22 +92,10 @@ export class CertificationCandidateDTO {
   @IsNotEmpty()
   @IsUUID("4")
   institutionUUID: string;
-}
 
-export class ProfessionalCandidateDTO {
   @IsNotEmpty()
   @IsUUID("4")
   candidateUUID: string;
-
-  @IsOptional()
-  education: EducationCandidateDTO;
-
-  @IsOptional()
-  certification: CertificationCandidateDTO;
-
-  @IsOptional()
-  @IsUUID("4", { each: true })
-  competencyUUIDs: string[];
 }
 
 export class SocialLinkCandidateDTO { 
@@ -160,7 +135,8 @@ export class UpdateCandidateDTO extends (class {} as {
   social_links: SocialLinkCandidateDTO[];
 
   @IsOptional()
-  professional: ProfessionalCandidateDTO;
+  @IsUUID("4", { each: true })
+  competencyUUIDs: string[];
 
   @IsOptional()
   @IsEnum(StatusEnum)
