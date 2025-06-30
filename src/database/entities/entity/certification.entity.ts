@@ -1,8 +1,9 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { InstitutionEntity } from "./institution.entity";
-import { CompetencyEntity } from "./competency.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 import { CandidateEntity } from "./candidate.entity";
+import { CompetencyEntity } from "./competency.entity";
+import { InstitutionEntity } from "./institution.entity";
 
 @Entity({ name: "certifications" })
 export class CertificationEntity extends BaseEntity {
@@ -26,6 +27,9 @@ export class CertificationEntity extends BaseEntity {
 
   @Column()
   institution_id: number;
+
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
 
   @ManyToOne(() => CandidateEntity, (candidate) => candidate.certifications)
   @JoinColumn({ name: "candidate_id", referencedColumnName: "id" })

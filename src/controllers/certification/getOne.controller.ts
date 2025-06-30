@@ -13,7 +13,14 @@ export const getOneCertificationController = async (
       uuid,
     },
   })
-    .then((data) => res.status(statusCode.OK).json({ message: data }))
+    .then((data) => {
+      const certification = {
+        uuid: data.uuid,
+        name: data.name,
+        status: data.status,
+      };
+      
+    })
     .catch((e) =>
       res
         .status(e.status ?? statusCode.INTERNAL_SERVER_ERROR)

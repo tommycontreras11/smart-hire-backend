@@ -7,10 +7,11 @@ import {
   ManyToOne,
 } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { CandidateEntity } from "./candidate.entity";
-import { InstitutionEntity } from "./institution.entity";
-import { CompetencyEntity } from "./competency.entity";
+import { StatusEnum, StatusType } from "./../../../constants";
 import { AcademicDisciplineEntity } from "./academic-discipline.entity";
+import { CandidateEntity } from "./candidate.entity";
+import { CompetencyEntity } from "./competency.entity";
+import { InstitutionEntity } from "./institution.entity";
 
 @Entity({ name: "educations" })
 export class EducationEntity extends BaseEntity {
@@ -38,6 +39,9 @@ export class EducationEntity extends BaseEntity {
   @Column({ nullable: true })
   academic_discipline_id: number;
 
+  @Column({ type: "enum", enum: StatusEnum, default: StatusEnum.ACTIVE })
+  status: StatusType;
+
   @ManyToOne(() => CandidateEntity, (candidate) => candidate.educations)
   @JoinColumn({ name: "candidate_id", referencedColumnName: "id" })
   candidate: CandidateEntity;
@@ -46,20 +50,23 @@ export class EducationEntity extends BaseEntity {
   @JoinColumn({ name: "institution_id", referencedColumnName: "id" })
   institution: InstitutionEntity;
 
-  @ManyToOne(() => AcademicDisciplineEntity, (academicDiscipline) => academicDiscipline.educations)
+  @ManyToOne(
+    () => AcademicDisciplineEntity,
+    (academicDiscipline) => academicDiscipline.educations
+  )
   @JoinColumn({ name: "academic_discipline_id", referencedColumnName: "id" })
   academicDiscipline: AcademicDisciplineEntity;
 
   @ManyToMany(() => CompetencyEntity, (competency) => competency.educations)
   @JoinTable({
     name: "education_competencies",
-    joinColumn: { 
-      name: "education_id", 
-      referencedColumnName: "id" 
+    joinColumn: {
+      name: "education_id",
+      referencedColumnName: "id",
     },
-    inverseJoinColumn: { 
-      name: "competency_id", 
-      referencedColumnName: "id" 
+    inverseJoinColumn: {
+      name: "competency_id",
+      referencedColumnName: "id",
     },
   })
   competencies: CompetencyEntity[];
