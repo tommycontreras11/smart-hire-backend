@@ -6,14 +6,31 @@ import { getFullDate } from "./../../utils/date.util";
 import { statusCode } from "./../../utils/status.util";
 
 export async function createEducationService({
-  candidate,
   title,
   grade,
   description,
   start_date,
   end_date,
   institutionUUID,
-}: EducationCandidateDTO & { candidate: CandidateEntity }) {
+  candidateUUID,
+}: EducationCandidateDTO) {
+  const foundCandidate = await CandidateEntity.findOneBy({
+    uuid: candidateUUID,
+  }).catch((e) => {
+    console.error(
+      "updateCandidateProfessionalService -> CandidateEntity.findOneBy: ",
+      e
+    );
+    return null;
+  });
+
+  if (!foundCandidate) {
+    return Promise.reject({
+      message: "Candidate not found",
+      status: statusCode.NOT_FOUND,
+    });
+  }
+
   const foundInstitution = await InstitutionEntity.findOneBy({
     uuid: institutionUUID,
   }).catch((e) => {
@@ -36,7 +53,7 @@ export async function createEducationService({
       institution: true,
     },
     where: {
-      candidate: { uuid: candidate.uuid },
+      candidate: { uuid: foundCandidate.uuid },
       institution: { uuid: institutionUUID },
       title,
     },
@@ -48,14 +65,14 @@ export async function createEducationService({
       status: statusCode.BAD_REQUEST,
     });
 
-  await EducationEntity.create({
+  const educationSaved = await EducationEntity.create({
     ...(title && { title }),
     ...(grade && { grade: parseFloat(grade) }),
     ...(description && { description }),
     ...(start_date && { start_date: getFullDate(start_date) }),
     ...(end_date && { end_date: getFullDate(end_date) }),
-    ...(institutionUUID && { institution: { uuid: institutionUUID } }),
-    ...(candidate && { candidate: { uuid: candidate.uuid } }),
+    institution: foundInstitution,
+    candidate: foundCandidate
   })
     .save()
     .catch((e) => {
@@ -63,5 +80,8 @@ export async function createEducationService({
       return null;
     });
 
-  return "Education created successfully";
+  return {
+    success: educationSaved?.id !== undefined,
+    entity: "Education",
+  };
 }
