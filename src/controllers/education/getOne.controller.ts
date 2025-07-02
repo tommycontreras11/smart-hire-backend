@@ -13,7 +13,18 @@ export const getOneEducationController = async (
       uuid,
     },
   })
-    .then((data) => res.status(statusCode.OK).json({ message: data }))
+    .then((data) => {
+      const education = {
+        title: data.title,
+        grade: data.grade,
+        description: data.description,
+        start_date: data.start_date,
+        end_date: data.end_date,
+        status: data.status,
+      };
+
+      return res.status(statusCode.OK).json({ data: education });
+    })
     .catch((e) =>
       res
         .status(e.status ?? statusCode.INTERNAL_SERVER_ERROR)

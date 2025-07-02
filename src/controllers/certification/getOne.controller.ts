@@ -17,9 +17,14 @@ export const getOneCertificationController = async (
       const certification = {
         uuid: data.uuid,
         name: data.name,
+        expedition_date: data.expedition_date,
+        expiration_date: data.expiration_date,
+        credential_id: data.credential_id,
+        credential_link: data.credential_link,
         status: data.status,
       };
-      
+
+      return res.status(statusCode.OK).json({ data: certification });
     })
     .catch((e) =>
       res
