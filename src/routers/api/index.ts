@@ -3,6 +3,7 @@ import { unless } from "./../../utils/unless.util";
 import { authMiddleware } from "./../../middlewares/auth/auth.middleware";
 
 import auth from "./auth";
+import academicDiscipline from "./academic-discipline";
 import category from "./category";
 import candidate from "./candidate";
 import employee from "./employee";
@@ -33,6 +34,19 @@ router.use(
     authMiddleware
   ),
   auth
+);
+router.use(
+  "/academic-disciplines",
+  unless(
+    [
+      {
+        path: "/",
+        method: "GET",
+      },
+    ],
+    authMiddleware
+  ),
+  academicDiscipline
 );
 router.use("/categories", authMiddleware, category);
 router.use("/candidates", authMiddleware, candidate);

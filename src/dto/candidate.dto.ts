@@ -66,6 +66,10 @@ export class EducationCandidateDTO {
   @IsNotEmpty()
   @IsUUID("4")
   candidateUUID: string;
+
+  @IsNotEmpty()
+  @IsUUID("4")
+  academicDisciplineUUID: string;
 }
 
 export class CertificationCandidateDTO {
