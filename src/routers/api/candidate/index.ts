@@ -5,28 +5,35 @@ import {
   getOneCandidateController,
   updateCandidateController,
 } from "../../../controllers/candidate";
-import {
-  EducationCandidateDTO,
-  UpdateCandidateDTO,
-} from "../../../dto/candidate.dto";
+import { UpdateCandidateDTO } from "../../../dto/candidate.dto";
 import { UuidDTO } from "../../../dto/common.dto";
 import { validateDTO } from "../../../middlewares/dto/validate-dto.middleware";
 import {
   createCertificationController,
   deleteCertificationController,
   getOneCertificationController,
+  updateCertificationController,
 } from "./../../../controllers/certification";
 import {
   createEducationController,
   deleteEducationController,
   getOneEducationController,
+  updateEducationController,
 } from "./../../../controllers/education";
+import {
+  CreateCertificationDTO,
+  UpdateCertificationDTO,
+} from "./../../../dto/certification.dto";
+import {
+  CreateEducationDTO,
+  UpdateEducationDTO,
+} from "./../../../dto/education.dto";
 
 const router = Router();
 
 router.post(
   "/:uuid/education",
-  validateDTO(EducationCandidateDTO),
+  validateDTO(CreateEducationDTO),
   createEducationController
 );
 router.delete(
@@ -41,13 +48,13 @@ router.get(
 );
 router.patch(
   "/:uuid/education",
-  [validateDTO(UuidDTO, "params"), validateDTO(EducationCandidateDTO)],
-  updateCandidateController
+  [validateDTO(UuidDTO, "params"), validateDTO(UpdateEducationDTO)],
+  updateEducationController
 );
 
 router.post(
   "/:uuid/certification",
-  validateDTO(EducationCandidateDTO),
+  validateDTO(CreateCertificationDTO),
   createCertificationController
 );
 router.delete(
@@ -62,8 +69,8 @@ router.get(
 );
 router.patch(
   "/:uuid/certification",
-  [validateDTO(UuidDTO, "params"), validateDTO(EducationCandidateDTO)],
-  updateCandidateController
+  [validateDTO(UuidDTO, "params"), validateDTO(UpdateCertificationDTO)],
+  updateCertificationController
 );
 
 router.delete(

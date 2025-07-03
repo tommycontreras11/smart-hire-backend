@@ -5,6 +5,8 @@ import {
 } from "../../dto/candidate.dto";
 import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
+import { DepartmentEntity } from "./../../database/entities/entity/department.entity";
+import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
 import { SocialLinkEntity } from "./../../database/entities/entity/social-link.entity";
 import { hashPassword } from "./../../utils/common.util";
 import { statusCode } from "./../../utils/status.util";
@@ -23,17 +25,23 @@ export async function updateCandidateService(
     location,
     bio,
     social_links,
+    departmentUUID,
+    positionUUID,
     competencyUUIDs,
     status,
   }: UpdateCandidateDTO,
   file?: Express.Multer.File | undefined
 ) {
-  const foundCandidate = await CandidateEntity.findOneBy({ uuid }).catch(
-    (e) => {
-      console.error("updateCandidateService -> CandidateEntity.findOneBy: ", e);
-      return null;
-    }
-  );
+  const foundCandidate = await CandidateEntity.findOne({
+    relations: {
+      department: true,
+      competencies: true,
+    },
+    where: { uuid },
+  }).catch((e) => {
+    console.error("updateCandidateService -> CandidateEntity.findOne: ", e);
+    return null;
+  });
 
   if (!foundCandidate) {
     return Promise.reject({
@@ -48,7 +56,7 @@ export async function updateCandidateService(
       identification,
       "Identification"
     ).catch((e) => {
-      console.error("updateCandidatePersonalService -> validateProperty: ", e);
+      console.error("updateCandidateService -> validateProperty: ", e);
       return null;
     });
 
@@ -66,7 +74,7 @@ export async function updateCandidateService(
       email,
       "Email"
     ).catch((e) => {
-      console.error("updateCandidatePersonalService -> validateProperty: ", e);
+      console.error("updateCandidateService -> validateProperty: ", e);
       return null;
     });
 
@@ -78,6 +86,55 @@ export async function updateCandidateService(
     }
   }
 
+  let foundDepartment: DepartmentEntity | null = null;
+  if (departmentUUID) {
+    foundDepartment = await DepartmentEntity.findOneBy({
+      uuid: departmentUUID,
+    }).catch((e) => {
+      console.error(
+        "updateCandidateService -> DepartmentEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (!foundDepartment) {
+      return Promise.reject({
+        message: "Department not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+
+  let foundPositionType: PositionTypeEntity | null = null;
+  if (positionUUID) {
+    foundPositionType = await PositionTypeEntity.findOne({
+      relations: { department: true },
+      where: { uuid: positionUUID },
+    }).catch((e) => {
+      console.error(
+        "updateCandidateService -> PositionTypeEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (!foundPositionType) {
+      return Promise.reject({
+        message: "Position type not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+
+  if (foundDepartment && foundPositionType) {
+    if (foundPositionType.department.uuid !== foundDepartment.uuid)
+      return Promise.reject({
+        message: "Position type and department not match",
+        status: statusCode.BAD_REQUEST,
+      });
+  }
+
   let foundCompetencies: CompetencyEntity[] | null = [];
   if (competencyUUIDs?.length > 0) {
     foundCompetencies = await CompetencyEntity.find({
@@ -86,7 +143,7 @@ export async function updateCandidateService(
       },
     }).catch((e) => {
       console.error(
-        "updateCandidatePersonalService -> CompetencyEntity.findOneBy: ",
+        "updateCandidateService -> CompetencyEntity.findOneBy: ",
         e
       );
       return null;
@@ -119,14 +176,12 @@ export async function updateCandidateService(
   foundCandidate.phone = phone ?? foundCandidate.phone;
   foundCandidate.location = location ?? foundCandidate.location;
   foundCandidate.bio = bio ?? foundCandidate.bio;
-  foundCandidate.competencies = foundCompetencies
-    ? foundCompetencies
-    : foundCandidate.competencies;
+  foundCandidate.department = foundDepartment ?? foundCandidate.department;
+  foundCandidate.desiredPosition =
+    foundPositionType ?? foundCandidate.desiredPosition;
+  foundCandidate.competencies =
+    foundCompetencies ?? foundCandidate.competencies;
   foundCandidate.status = status ?? foundCandidate.status;
-
-  await foundCandidate.save().catch((e) => {
-    console.error("updateCandidatePersonalService -> save: ", e);
-  });
 
   if (file)
     foundCandidate.curriculum = await uploadFile<CandidateEntity>(
@@ -161,9 +216,9 @@ const recursiveUpdateOrCreateSocialLinks = async (
   });
 
   if (foundSocialLinks) {
-    payload.value = foundSocialLinks.url;
+    foundSocialLinks.url = payload.value;
     await foundSocialLinks.save().catch((e) => {
-      console.error("updateCandidatePersonalService -> save: ", e);
+      console.error("updateCandidateService -> save: ", e);
     });
   } else {
     await SocialLinkEntity.create({
@@ -173,7 +228,7 @@ const recursiveUpdateOrCreateSocialLinks = async (
     })
       .save()
       .catch((e) => {
-        console.error("updateCandidatePersonalService -> save: ", e);
+        console.error("updateCandidateService -> save: ", e);
       });
   }
 
