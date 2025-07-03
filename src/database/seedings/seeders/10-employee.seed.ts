@@ -4,6 +4,7 @@ import { EmployeeEntity } from "../../entities/entity/employee.entity";
 import { employeesData } from "../data/employee.data";
 import { DepartmentEntity } from "../../entities/entity/department.entity";
 import { PositionTypeEntity } from "./../../../database/entities/entity/position-type.entity";
+const bcrypt = require("bcrypt");
 
 export class EmployeeSeeder implements Seeder {
   async run(_factory: Factory, dataSource: DataSource): Promise<void> {
@@ -36,7 +37,7 @@ export class EmployeeSeeder implements Seeder {
             identification: employee.identification,
             name: employee.name,
             email: employee.email,
-            password: employee.password,
+            password: await bcrypt.hash(employee.password, 10),
             monthly_salary: employee.monthly_salary,
             entry_date: employee.entry_date,
             positionType: foundPositionType,
