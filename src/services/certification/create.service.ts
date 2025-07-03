@@ -1,9 +1,9 @@
+import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { CertificationEntity } from "./../../database/entities/entity/certification.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
-import { CertificationCandidateDTO } from "./../../dto/candidate.dto";
-import { statusCode } from "./../../utils/status.util";
+import { CreateCertificationDTO } from "./../../dto/certification.dto";
 import { getFullDate } from "./../../utils/date.util";
-import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
+import { statusCode } from "./../../utils/status.util";
 
 export async function createCertificationService({
   name,
@@ -12,9 +12,9 @@ export async function createCertificationService({
   credential_id,
   credential_link,
   institutionUUID,
-  candidateUUID
-}: CertificationCandidateDTO) {
-    const foundCandidate = await CandidateEntity.findOneBy({
+  candidateUUID,
+}: CreateCertificationDTO) {
+  const foundCandidate = await CandidateEntity.findOneBy({
     uuid: candidateUUID,
   }).catch((e) => {
     console.error(
@@ -31,7 +31,6 @@ export async function createCertificationService({
     });
   }
 
-  
   const foundInstitution = await InstitutionEntity.findOneBy({
     uuid: institutionUUID,
   }).catch((e) => {
@@ -64,7 +63,7 @@ export async function createCertificationService({
       status: statusCode.BAD_REQUEST,
     });
 
-  const certificationSaved = await CertificationEntity.create({
+  await CertificationEntity.create({
     name,
     ...(expedition_date && { expedition_date: getFullDate(expedition_date) }),
     ...(expiration_date && { expiration_date: getFullDate(expiration_date) }),
@@ -82,8 +81,5 @@ export async function createCertificationService({
       return null;
     });
 
-  return {
-    success: certificationSaved?.id !== undefined,
-    entity: "Certification",
-  };
+  return "Certification created successfully";
 }
