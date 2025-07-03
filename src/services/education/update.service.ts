@@ -1,7 +1,7 @@
-import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
+import { AcademicDisciplineEntity } from "./../../database/entities/entity/academic-discipline.entity";
 import { EducationEntity } from "./../../database/entities/entity/education.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
-import { EducationCandidateDTO } from "./../../dto/candidate.dto";
+import { UpdateEducationDTO } from "./../../dto/education.dto";
 import { getFullDate } from "./../../utils/date.util";
 import { statusCode } from "./../../utils/status.util";
 
@@ -14,51 +14,20 @@ export async function updateEducationService(
     start_date,
     end_date,
     institutionUUID,
-    candidateUUID,
-  }: EducationCandidateDTO
+    academicDisciplineUUID,
+  }: UpdateEducationDTO
 ) {
-  const foundCandidate = await CandidateEntity.findOneBy({
-    uuid: candidateUUID,
-  }).catch((e) => {
-    console.error(
-      "updateCandidateProfessionalService -> CandidateEntity.findOneBy: ",
-      e
-    );
-    return null;
-  });
-
-  if (!foundCandidate) {
-    return Promise.reject({
-      message: "Candidate not found",
-      status: statusCode.NOT_FOUND,
-    });
-  }
-
-  const foundInstitution = await InstitutionEntity.findOneBy({
-    uuid: institutionUUID,
-  }).catch((e) => {
-    console.error(
-      "updateCandidateEducationService -> InstitutionEntity.findOneBy: ",
-      e
-    );
-    return null;
-  });
-
-  if (!foundInstitution)
-    return Promise.reject({
-      message: "Institution not found",
-      status: statusCode.NOT_FOUND,
-    });
-
   const foundEducation = await EducationEntity.findOne({
+    relations: {
+      candidate: true,
+      institution: true,
+      academicDiscipline: true,
+    },
     where: {
       uuid,
     },
   }).catch((e) => {
-    console.error(
-      "updateCandidateEducationService -> EducationEntity.findOneBy: ",
-      e
-    );
+    console.error("updateEducationService -> EducationEntity.findOne: ", e);
     return null;
   });
 
@@ -68,20 +37,52 @@ export async function updateEducationService(
       status: statusCode.NOT_FOUND,
     });
 
-  if (title) {
-    const foundEducation = await EducationEntity.findOne({
-      relations: {
-        candidate: true,
-        institution: true,
-      },
-      where: {
-        candidate: { uuid: foundCandidate.uuid },
-        institution: { uuid: institutionUUID },
-        title,
-      },
+  let foundInstitution: InstitutionEntity | null = null;
+  if (institutionUUID) {
+    foundInstitution = await InstitutionEntity.findOneBy({
+      uuid: institutionUUID,
+    }).catch((e) => {
+      console.error(
+        "updateEducationService -> InstitutionEntity.findOneBy: ",
+        e
+      );
+      return null;
     });
 
-    if (foundEducation)
+    if (!foundInstitution)
+      return Promise.reject({
+        message: "Institution not found",
+        status: statusCode.NOT_FOUND,
+      });
+  }
+
+  let foundAcademicDiscipline: AcademicDisciplineEntity | null = null;
+  if (academicDisciplineUUID) {
+    foundAcademicDiscipline = await AcademicDisciplineEntity.findOneBy({
+      uuid: academicDisciplineUUID,
+    }).catch((e) => {
+      console.error(
+        "updateCandidateEducationService -> AcademicDisciplineEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (!foundAcademicDiscipline)
+      return Promise.reject({
+        message: "Academic Discipline not found",
+        status: statusCode.NOT_FOUND,
+      });
+  }
+
+  if (title) {
+    const foundEducationTitle = await EducationEntity.findOneBy({
+      title,
+      candidate: { uuid: foundEducation.candidate.uuid },
+      institution: { uuid: institutionUUID ?? foundEducation.institution.uuid },
+    });
+
+    if (foundEducationTitle)
       return Promise.reject({
         message: "Education already exists for this candidate and institution",
         status: statusCode.BAD_REQUEST,
@@ -97,9 +98,9 @@ export async function updateEducationService(
   foundEducation.end_date = end_date
     ? new Date(getFullDate(end_date))
     : foundEducation.end_date;
-  foundEducation.institution = foundInstitution;
+  foundEducation.institution = foundInstitution ?? foundEducation.institution;
 
-  const educationUpdated = await foundEducation.save().catch((e) => {
+  await foundEducation.save().catch((e) => {
     console.error(
       "updateCandidateEducationService -> EducationEntity.update: ",
       e
@@ -107,8 +108,5 @@ export async function updateEducationService(
     return null;
   });
 
-  return {
-    success: educationUpdated?.id !== undefined,
-    entity: "Education",
-  };
+  return "Education updated successfully";
 }

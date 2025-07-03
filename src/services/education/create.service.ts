@@ -1,7 +1,8 @@
+import { AcademicDisciplineEntity } from "./../../database/entities/entity/academic-discipline.entity";
 import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { EducationEntity } from "./../../database/entities/entity/education.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
-import { EducationCandidateDTO } from "./../../dto/candidate.dto";
+import { CreateEducationDTO } from "./../../dto/education.dto";
 import { getFullDate } from "./../../utils/date.util";
 import { statusCode } from "./../../utils/status.util";
 
@@ -13,14 +14,12 @@ export async function createEducationService({
   end_date,
   institutionUUID,
   candidateUUID,
-}: EducationCandidateDTO) {
+  academicDisciplineUUID,
+}: CreateEducationDTO) {
   const foundCandidate = await CandidateEntity.findOneBy({
     uuid: candidateUUID,
   }).catch((e) => {
-    console.error(
-      "updateCandidateProfessionalService -> CandidateEntity.findOneBy: ",
-      e
-    );
+    console.error("createEducationService -> CandidateEntity.findOneBy: ", e);
     return null;
   });
 
@@ -34,10 +33,7 @@ export async function createEducationService({
   const foundInstitution = await InstitutionEntity.findOneBy({
     uuid: institutionUUID,
   }).catch((e) => {
-    console.error(
-      "updateCandidateEducationService -> InstitutionEntity.findOneBy: ",
-      e
-    );
+    console.error("createEducationService -> InstitutionEntity.findOneBy: ", e);
     return null;
   });
 
@@ -46,6 +42,25 @@ export async function createEducationService({
       message: "Institution not found",
       status: statusCode.NOT_FOUND,
     });
+
+  let foundAcademicDiscipline: AcademicDisciplineEntity | null = null;
+  if (academicDisciplineUUID) {
+    foundAcademicDiscipline = await AcademicDisciplineEntity.findOneBy({
+      uuid: academicDisciplineUUID,
+    }).catch((e) => {
+      console.error(
+        "createEducationService -> AcademicDisciplineEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (!foundAcademicDiscipline)
+      return Promise.reject({
+        message: "Academic Discipline not found",
+        status: statusCode.NOT_FOUND,
+      });
+  }
 
   const foundEducation = await EducationEntity.findOne({
     relations: {
@@ -72,7 +87,10 @@ export async function createEducationService({
     ...(start_date && { start_date: getFullDate(start_date) }),
     ...(end_date && { end_date: getFullDate(end_date) }),
     institution: foundInstitution,
-    candidate: foundCandidate
+    candidate: foundCandidate,
+    ...(foundAcademicDiscipline && {
+      academicDiscipline: foundAcademicDiscipline,
+    }),
   })
     .save()
     .catch((e) => {
@@ -80,8 +98,5 @@ export async function createEducationService({
       return null;
     });
 
-  return {
-    success: educationSaved?.id !== undefined,
-    entity: "Education",
-  };
+  return "Education created successfully";
 }
