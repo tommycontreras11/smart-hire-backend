@@ -9,6 +9,10 @@ export const getOneEducationController = async (
   const { uuid } = req.params;
 
   getOneEducationService({
+    relations: {
+      institution: true,
+      academicDiscipline: true
+    },
     where: {
       uuid,
     },
@@ -20,6 +24,14 @@ export const getOneEducationController = async (
         description: data.description,
         start_date: data.start_date,
         end_date: data.end_date,
+        institution: {
+          uuid: data.institution.uuid,
+          name: data.institution.name,
+        },
+        academicDiscipline: {
+          uuid: data.academicDiscipline.uuid,
+          name: data.academicDiscipline.name,
+        },
         status: data.status,
       };
 

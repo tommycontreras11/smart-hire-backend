@@ -1,12 +1,11 @@
 import {
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
   Max,
   Min,
-  Validate,
+  Validate
 } from "class-validator";
 
 export class CreateEducationDTO {
@@ -39,10 +38,6 @@ export class CreateEducationDTO {
   @IsUUID("4")
   institutionUUID: string;
 
-  @IsNotEmpty()
-  @IsUUID("4")
-  candidateUUID: string;
-
   @IsOptional()
   @IsUUID("4")
   academicDisciplineUUID: string;
@@ -50,4 +45,4 @@ export class CreateEducationDTO {
 
 export class UpdateEducationDTO
   extends CreateEducationDTO
-  implements Partial<Omit<CreateEducationDTO, "candidateUUID">> {}
+  implements Partial<CreateEducationDTO> {}

@@ -6,7 +6,9 @@ export const createEducationController = async (
   req: Request,
   res: Response
 ) => {
-  createEducationService(req.body)
+  const { candidateUUID } = req.params
+  
+  createEducationService(candidateUUID, req.body)
     .then((data) => res.status(statusCode.OK).json({ message: data }))
     .catch((e) =>
       res

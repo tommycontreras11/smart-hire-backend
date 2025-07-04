@@ -6,14 +6,13 @@ import { CreateEducationDTO } from "./../../dto/education.dto";
 import { getFullDate } from "./../../utils/date.util";
 import { statusCode } from "./../../utils/status.util";
 
-export async function createEducationService({
+export async function createEducationService(candidateUUID: string, {
   title,
   grade,
   description,
   start_date,
   end_date,
   institutionUUID,
-  candidateUUID,
   academicDisciplineUUID,
 }: CreateEducationDTO) {
   const foundCandidate = await CandidateEntity.findOneBy({
