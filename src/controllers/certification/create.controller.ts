@@ -6,7 +6,9 @@ export const createCertificationController = async (
   req: Request,
   res: Response
 ) => {
-  createCertificationService(req.body)
+  const { candidateUUID } = req.params;
+
+  createCertificationService(candidateUUID, req.body)
     .then((data) => res.status(statusCode.OK).json({ message: data }))
     .catch((e) =>
       res

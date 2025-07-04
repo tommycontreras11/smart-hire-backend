@@ -9,6 +9,10 @@ export const getOneCertificationController = async (
   const { uuid } = req.params;
 
   getOneCertificationService({
+    relations: {
+      institution: true,
+      competencies: true,
+    },
     where: {
       uuid,
     },
@@ -21,6 +25,16 @@ export const getOneCertificationController = async (
         expiration_date: data.expiration_date,
         credential_id: data.credential_id,
         credential_link: data.credential_link,
+        institution: {
+          uuid: data.institution.uuid,
+          name: data.institution.name,
+        },
+        ...(data.competencies && {
+          competencies: data.competencies.map((competency) => ({
+            uuid: competency.uuid,
+            name: competency.name,
+          })),
+        }),
         status: data.status,
       };
 

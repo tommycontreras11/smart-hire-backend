@@ -24,10 +24,8 @@ export class CreateCertificationDTO {
   @IsNotEmpty()
   @IsUUID("4")
   institutionUUID: string;
-
-  @IsNotEmpty()
-  @IsUUID("4")
-  candidateUUID: string;
 }
 
-export class UpdateCertificationDTO extends CreateCertificationDTO implements Partial<Omit<CreateCertificationDTO, "candidateUUID">> {}
+export class UpdateCertificationDTO
+  extends CreateCertificationDTO
+  implements Partial<CreateCertificationDTO> {}

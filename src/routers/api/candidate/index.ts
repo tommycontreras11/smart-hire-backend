@@ -32,7 +32,7 @@ import {
 const router = Router();
 
 router.post(
-  "/:uuid/education",
+  "/:candidateUUID/education",
   validateDTO(CreateEducationDTO),
   createEducationController
 );
@@ -53,7 +53,7 @@ router.patch(
 );
 
 router.post(
-  "/:uuid/certification",
+  "/:candidateUUID/certification",
   validateDTO(CreateCertificationDTO),
   createCertificationController
 );

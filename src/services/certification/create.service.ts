@@ -5,15 +5,17 @@ import { CreateCertificationDTO } from "./../../dto/certification.dto";
 import { getFullDate } from "./../../utils/date.util";
 import { statusCode } from "./../../utils/status.util";
 
-export async function createCertificationService({
-  name,
-  expedition_date,
-  expiration_date,
-  credential_id,
-  credential_link,
-  institutionUUID,
-  candidateUUID,
-}: CreateCertificationDTO) {
+export async function createCertificationService(
+  candidateUUID: string,
+  {
+    name,
+    expedition_date,
+    expiration_date,
+    credential_id,
+    credential_link,
+    institutionUUID,
+  }: CreateCertificationDTO
+) {
   const foundCandidate = await CandidateEntity.findOneBy({
     uuid: candidateUUID,
   }).catch((e) => {

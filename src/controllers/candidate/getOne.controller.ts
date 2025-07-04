@@ -16,6 +16,14 @@ export const getOneCandidateController = async (
       desiredPosition: true,
       department: true,
       workExperience: true,
+      educations: {
+        institution: true,
+        academicDiscipline: true,
+      },
+      certifications: {
+        institution: true,
+        competencies: true,
+      },
     },
   })
     .then((data) => {
@@ -39,6 +47,44 @@ export const getOneCandidateController = async (
             uuid: data.workExperience.uuid,
             company: data.workExperience.company,
           },
+        }),
+        ...(data.educations && {
+          educations: data.educations.map((education) => ({
+            uuid: education.uuid,
+            title: education?.title,
+            grade: education?.grade,
+            description: education?.description,
+            start_date: education?.start_date,
+            end_date: education?.end_date,
+            institution: {
+              uuid: education.institution.uuid,
+              name: education.institution.name,
+            },
+            academicDiscipline: {
+              uuid: education.academicDiscipline.uuid,
+              name: education.academicDiscipline.name,
+            },
+          })),
+        }),
+        ...(data.certifications && {
+          certifications: data.certifications.map((certification) => ({
+            uuid: certification.uuid,
+            name: certification.name,
+            expedition_date: certification?.expedition_date,
+            expiration_date: certification?.expiration_date,
+            credential_id: certification?.credential_id,
+            credential_link: certification?.credential_link,
+            institution: {
+              uuid: certification.institution.uuid,
+              name: certification.institution.name,
+            },
+            ...(certification.competencies && {
+              competencies: certification.competencies.map((competency) => ({
+                uuid: competency.uuid,
+                name: competency.name,
+              })),
+            }),
+          })),
         }),
         status: data.status,
       };
