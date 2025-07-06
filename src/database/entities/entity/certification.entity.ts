@@ -10,6 +10,9 @@ export class CertificationEntity extends BaseEntity {
   @Column()
   name: string;
 
+  @Column({ type: "text", nullable: true })
+  description: string;
+
   @Column({ type: "date", nullable: true })
   expedition_date: Date;
 
