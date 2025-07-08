@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { updateCandidateProfileService } from "services/candidate/updateProfile.service";
+import { updateCandidateProfileService } from "./../../services/candidate/updateProfile.service";
 import { statusCode } from "../../utils/status.util";
 
 export const updateCandidateProfileController = async (req: Request, res: Response) => {

@@ -102,8 +102,4 @@ export class UpdateCandidateProfileDTO {
 
   @IsOptional()
   professional: ProfessionalDTO;
-
-  @IsOptional()
-  @IsEnum(StatusEnum)
-  status: StatusType;
 }

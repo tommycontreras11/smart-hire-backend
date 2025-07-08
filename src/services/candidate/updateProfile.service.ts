@@ -7,7 +7,7 @@ import { updateCandidateService } from "./update.service";
 
 export async function updateCandidateProfileService(
   uuid: string,
-  { personal, professional, status }: UpdateCandidateProfileDTO,
+  { personal, professional }: UpdateCandidateProfileDTO,
   file?: Express.Multer.File | undefined
 ) {
   await updateCandidateService(
@@ -15,7 +15,6 @@ export async function updateCandidateProfileService(
     {
       ...personal,
       competencyUUIDs: professional.competencyUUIDs,
-      status,
     },
     file
   );
