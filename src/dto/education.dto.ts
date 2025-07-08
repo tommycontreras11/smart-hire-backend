@@ -10,6 +10,10 @@ import {
 
 export class CreateEducationDTO {
   @IsOptional()
+  @IsUUID("4")
+  uuid: string
+
+  @IsOptional()
   @IsString()
   title: string;
 

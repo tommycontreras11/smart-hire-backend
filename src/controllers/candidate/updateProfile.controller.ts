@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
-import { createCertificationService } from "../../services/certification/create.service";
+import { updateCandidateProfileService } from "services/candidate/updateProfile.service";
 import { statusCode } from "../../utils/status.util";
 
-export const createCertificationController = async (
-  req: Request,
-  res: Response
-) => {
-  const { candidateUUID } = req.params;
+export const updateCandidateProfileController = async (req: Request, res: Response) => {
+  const { uuid } = req.params;
 
-  createCertificationService(candidateUUID, req.body)
+  updateCandidateProfileService(uuid, req.body, req?.file)
     .then((data) => res.status(statusCode.OK).json({ message: data }))
     .catch((e) =>
       res

@@ -1,6 +1,10 @@
 import { IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateCertificationDTO {
+  @IsOptional()
+  @IsUUID("4")
+  uuid: string
+
   @IsNotEmpty()
   @IsString()
   name: string;

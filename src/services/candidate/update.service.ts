@@ -29,7 +29,7 @@ export async function updateCandidateService(
     positionUUID,
     competencyUUIDs,
     status,
-  }: UpdateCandidateDTO,
+  }: Partial<UpdateCandidateDTO> & { competencyUUIDs: string[] },
   file?: Express.Multer.File | undefined
 ) {
   const foundCandidate = await CandidateEntity.findOne({

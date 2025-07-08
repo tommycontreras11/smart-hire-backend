@@ -4,38 +4,25 @@ import {
   getAllCandidateController,
   getOneCandidateController,
   updateCandidateController,
+  updateCandidateProfileController,
 } from "../../../controllers/candidate";
-import { UpdateCandidateDTO } from "../../../dto/candidate.dto";
+import {
+  UpdateCandidateDTO,
+  UpdateCandidateProfileDTO,
+} from "../../../dto/candidate.dto";
 import { UuidDTO } from "../../../dto/common.dto";
 import { validateDTO } from "../../../middlewares/dto/validate-dto.middleware";
 import {
-  createCertificationController,
   deleteCertificationController,
   getOneCertificationController,
-  updateCertificationController,
 } from "./../../../controllers/certification";
 import {
-  createEducationController,
   deleteEducationController,
   getOneEducationController,
-  updateEducationController,
 } from "./../../../controllers/education";
-import {
-  CreateCertificationDTO,
-  UpdateCertificationDTO,
-} from "./../../../dto/certification.dto";
-import {
-  CreateEducationDTO,
-  UpdateEducationDTO,
-} from "./../../../dto/education.dto";
 
 const router = Router();
 
-router.post(
-  "/:candidateUUID/education",
-  validateDTO(CreateEducationDTO),
-  createEducationController
-);
 router.delete(
   "/:uuid/education",
   validateDTO(UuidDTO, "params"),
@@ -46,17 +33,7 @@ router.get(
   validateDTO(UuidDTO, "params"),
   getOneEducationController
 );
-router.patch(
-  "/:uuid/education",
-  [validateDTO(UuidDTO, "params"), validateDTO(UpdateEducationDTO)],
-  updateEducationController
-);
 
-router.post(
-  "/:candidateUUID/certification",
-  validateDTO(CreateCertificationDTO),
-  createCertificationController
-);
 router.delete(
   "/:uuid/certification",
   validateDTO(UuidDTO, "params"),
@@ -66,11 +43,6 @@ router.get(
   "/:uuid/certification",
   validateDTO(UuidDTO, "params"),
   getOneCertificationController
-);
-router.patch(
-  "/:uuid/certification",
-  [validateDTO(UuidDTO, "params"), validateDTO(UpdateCertificationDTO)],
-  updateCertificationController
 );
 
 router.delete(
@@ -84,6 +56,11 @@ router.patch(
   "/:uuid",
   [validateDTO(UuidDTO, "params"), validateDTO(UpdateCandidateDTO)],
   updateCandidateController
+);
+router.patch(
+  "/:uuid/profile",
+  validateDTO(UpdateCandidateProfileDTO),
+  updateCandidateProfileController
 );
 
 export default router;

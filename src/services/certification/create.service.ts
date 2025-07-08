@@ -1,38 +1,18 @@
-import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { CertificationEntity } from "./../../database/entities/entity/certification.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
 import { CreateCertificationDTO } from "./../../dto/certification.dto";
 import { getFullDate } from "./../../utils/date.util";
 import { statusCode } from "./../../utils/status.util";
 
-export async function createCertificationService(
-  candidateUUID: string,
-  {
-    name,
-    expedition_date,
-    expiration_date,
-    credential_id,
-    credential_link,
-    institutionUUID,
-  }: CreateCertificationDTO
-) {
-  const foundCandidate = await CandidateEntity.findOneBy({
-    uuid: candidateUUID,
-  }).catch((e) => {
-    console.error(
-      "updateCandidateProfessionalService -> CandidateEntity.findOneBy: ",
-      e
-    );
-    return null;
-  });
-
-  if (!foundCandidate) {
-    return Promise.reject({
-      message: "Candidate not found",
-      status: statusCode.NOT_FOUND,
-    });
-  }
-
+export async function createCertificationService({
+  candidateUUID,
+  name,
+  expedition_date,
+  expiration_date,
+  credential_id,
+  credential_link,
+  institutionUUID,
+}: CreateCertificationDTO & { candidateUUID: string }) {
   const foundInstitution = await InstitutionEntity.findOneBy({
     uuid: institutionUUID,
   }).catch((e) => {
@@ -55,7 +35,7 @@ export async function createCertificationService(
     where: {
       name,
       institution: { id: foundInstitution.id },
-      candidate: { uuid: foundCandidate.uuid },
+      candidate: { uuid: candidateUUID },
     },
   });
 
@@ -72,7 +52,7 @@ export async function createCertificationService(
     ...(credential_id && { credential_id }),
     ...(credential_link && { credential_link }),
     institution: foundInstitution,
-    candidate: foundCandidate,
+    candidate: { uuid: candidateUUID },
   })
     .save()
     .catch((e) => {
