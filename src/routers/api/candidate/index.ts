@@ -20,6 +20,7 @@ import {
   deleteEducationController,
   getOneEducationController,
 } from "./../../../controllers/education";
+import { upload } from "./../../../utils/upload.util";
 
 const router = Router();
 
@@ -59,6 +60,7 @@ router.patch(
 );
 router.patch(
   "/:uuid/profile",
+  upload.single('file'),
   validateDTO(UpdateCandidateProfileDTO),
   updateCandidateProfileController
 );

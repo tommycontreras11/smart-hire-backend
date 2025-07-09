@@ -29,7 +29,7 @@ export async function updateCandidateService(
     positionUUID,
     competencyUUIDs,
     status,
-  }: Partial<UpdateCandidateDTO> & { competencyUUIDs: string[] },
+  }: Partial<UpdateCandidateDTO>,
   file?: Express.Multer.File | undefined
 ) {
   const foundCandidate = await CandidateEntity.findOne({
@@ -136,7 +136,7 @@ export async function updateCandidateService(
   }
 
   let foundCompetencies: CompetencyEntity[] | null = [];
-  if (competencyUUIDs?.length > 0) {
+  if (competencyUUIDs && competencyUUIDs?.length > 0) {
     foundCompetencies = await CompetencyEntity.find({
       where: {
         uuid: In(competencyUUIDs),

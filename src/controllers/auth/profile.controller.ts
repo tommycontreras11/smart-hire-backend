@@ -114,7 +114,7 @@ export const getProfileController = async (req: Request, res: Response) => {
           socialLinks: data.socialLinks.map((socialLink) => ({
             uuid: socialLink.uuid,
             url: socialLink.url,
-            platform: socialLink.platform
+            type: socialLink.platform
           })),
         }),
         ...(data.competencies && {

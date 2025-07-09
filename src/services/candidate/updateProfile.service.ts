@@ -10,11 +10,19 @@ export async function updateCandidateProfileService(
   { personal, professional }: UpdateCandidateProfileDTO,
   file?: Express.Multer.File | undefined
 ) {
+  const hasAnyEducationValue = Object.values(professional?.education || {}).some(
+  (val) => val !== null && val !== undefined && val !== ''
+);
+
+const hasAnyCertificationValue = Object.values(professional?.certification || {}).some(
+  (val) => val !== null && val !== undefined && val !== ''
+);
+
   await updateCandidateService(
     uuid,
     {
       ...personal,
-      competencyUUIDs: professional.competencyUUIDs,
+      competencyUUIDs: professional?.competencyUUIDs || [],
     },
     file
   );
@@ -25,8 +33,8 @@ export async function updateCandidateProfileService(
       professional.education
     );
   } else {
-    await createEducationService({
-      ...professional.education,
+    hasAnyEducationValue && await createEducationService({
+      ...professional?.education,
       candidateUUID: uuid,
     });
   }
@@ -37,8 +45,8 @@ export async function updateCandidateProfileService(
       professional.certification
     );
   } else {
-    await createCertificationService({
-      ...professional.certification,
+    hasAnyCertificationValue && await createCertificationService({
+      ...professional?.certification,
       candidateUUID: uuid,
     });
   }
