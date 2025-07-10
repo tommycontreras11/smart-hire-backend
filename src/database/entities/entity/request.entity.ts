@@ -9,9 +9,6 @@ import { RecruitmentEntity } from "./recruitment.entity";
 
 @Entity({ name: "requests" })
 export class RequestEntity extends BaseEntity {
-  @Column()
-  curriculum: string;
-
   @Column({ nullable: true })
   next_step: string;
 

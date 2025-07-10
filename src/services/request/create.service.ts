@@ -6,9 +6,10 @@ import { CandidateEntity } from "./../../database/entities/entity/candidate.enti
 import { JobPositionEntity } from "./../../database/entities/entity/job-position.entity";
 import { RequestHistoryEntity } from "./../../database/entities/entity/request-history.entity";
 
-export async function createRequestService(
-  { candidateUUID, jobPositionUUID }: CreateRequestDTO
-) {
+export async function createRequestService({
+  candidateUUID,
+  jobPositionUUID,
+}: CreateRequestDTO) {
   const foundCandidate = await CandidateEntity.findOneBy({
     uuid: candidateUUID,
   }).catch((e) => {
@@ -22,6 +23,12 @@ export async function createRequestService(
       status: statusCode.NOT_FOUND,
     });
   }
+
+  if (!foundCandidate.curriculum)
+    return Promise.reject({
+      message: "Candidate has no curriculum",
+      status: statusCode.BAD_REQUEST,
+    });
 
   const foundJobPosition = await JobPositionEntity.findOne({
     where: {
@@ -45,10 +52,12 @@ export async function createRequestService(
     jobPosition: foundJobPosition,
     recruiter: foundJobPosition.recruiter,
     status: StatusRequestEnum.SUBMITTED,
-  }).save().catch((e) => {
-    console.error("createRequestService -> RequestEntity.create: ", e);
-    return null;
-  });
+  })
+    .save()
+    .catch((e) => {
+      console.error("createRequestService -> RequestEntity.create: ", e);
+      return null;
+    });
 
   requestSaved &&
     (await RequestHistoryEntity.create({

@@ -46,8 +46,8 @@ export const getAllRecruitmentProcessController = async (
               email: request?.candidate?.email,
               institution: request?.recruiter?.institution?.name,
               position: request?.jobPosition?.name,
-              ...(request?.curriculum && {
-                curriculum: await storage.getUrl(request?.curriculum),
+              ...(request?.candidate?.curriculum && {
+                curriculum: await storage.getUrl(request?.candidate?.curriculum),
               }),
               next_step: request?.next_step,
               interview_date: request?.interview_date,
