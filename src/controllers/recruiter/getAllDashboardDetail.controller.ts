@@ -40,6 +40,7 @@ export const getAllDashboardDetailController = async (
         candidate: {
           desiredPosition: true,
         },
+        histories: true
       },
       recruiter: {
         institution: true,
@@ -125,6 +126,7 @@ export const getAllDashboardDetailController = async (
         recruitmentDepartmentActivity,
         activeVacancies,
         recentCandidates,
+        totalDaysToHire: getTotalsDaysToHireByDepartment(data),
       };
 
       res.status(statusCode.OK).json({ data: dashboardDetails });
@@ -202,4 +204,32 @@ export const getTotalRequestByStatus = (
 
 export const existsRequest = (data: JobPositionEntity[]) => {
   return data.some((dashboard) => dashboard?.requests?.length > 0);
+};
+
+export const getTotalsDaysToHireByDepartment = (data: JobPositionEntity[]) => {
+  return data.flatMap((dashboard) => {
+    return dashboard.requests
+      .filter((r) => r.status === StatusRequestEnum.HIRED)
+      .map((r) => {
+        const requestHistories = r.histories
+          ?.filter((h) => h.request_id === r.id)
+          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
+        if (!requestHistories || requestHistories.length < 2) {
+          return null; // Not enough data to calculate
+        }
+
+        const start = new Date(requestHistories[0].createdAt);
+        const end = new Date(requestHistories[requestHistories.length - 1].createdAt);
+
+        const diffMs = end.getTime() - start.getTime();
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+        return {
+          department: dashboard.department.name,
+          days: parseFloat(diffDays.toFixed(4)),
+        };
+      })
+      .filter(Boolean);
+  });
 };

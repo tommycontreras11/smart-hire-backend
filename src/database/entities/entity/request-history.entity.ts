@@ -11,7 +11,7 @@ export class RequestHistoryEntity extends BaseEntity {
   @Column({ type: "enum", enum: StatusRequestEnum, default: StatusRequestEnum.DRAFT })
   status: StatusRequestType;
 
-  @ManyToOne(() => RequestEntity, (request) => request.history)
+  @ManyToOne(() => RequestEntity, (request) => request.histories)
   @JoinColumn({ name: "request_id", referencedColumnName: "id" })
   request: RequestEntity
 }

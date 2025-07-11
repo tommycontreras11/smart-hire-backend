@@ -40,7 +40,7 @@ export class RequestEntity extends BaseEntity {
   recruiter: RecruiterEntity;
 
   @OneToMany(() => RequestHistoryEntity, (history) => history.request)
-  history: RequestHistoryEntity[];
+  histories: RequestHistoryEntity[];
 
   @OneToMany(() => RecruitmentEntity, (recruitment) => recruitment.request)
   recruitment: RecruitmentEntity[];
