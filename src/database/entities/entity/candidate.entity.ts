@@ -35,7 +35,7 @@ export class CandidateEntity extends PersonBaseEntity {
   @Column({ type: "float", precision: 10, scale: 2 })
   desired_salary: number;
 
-  @Column()
+  @Column({ nullable: true })
   curriculum: string;
 
   @Column()
