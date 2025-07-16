@@ -30,7 +30,8 @@ export const getOneJobPositionController = async (req: Request, res: Response) =
         description: data.description,
         minimum_salary: data.minimum_salary,
         maximum_salary: data.maximum_salary,
-        contract_type: data.contract_type,
+        work_type: data.work_type,
+        work_location: data.work_location,
         country: {
           uuid: data.country.uuid,
           name: data.country.name,

@@ -1,25 +1,31 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
 import { BaseEntity } from "../base/base.entity";
+import { WorkMetadata } from "../interfaces/work-metadata.interface";
 import { StatusEnum, StatusType } from "./../../../constants";
+import {
+  WorkContractType,
+  WorkContractTypeEnum,
+  WorkLocationType,
+  WorkLocationTypeEnum,
+} from "./../../../enums/work.enum";
 import { CompetencyEntity } from "./competency.entity";
 import { CountryEntity } from "./country.entity";
+import { DepartmentEntity } from "./department.entity";
 import { LanguageEntity } from "./language.entity";
+import { PositionTypeEntity } from "./position-type.entity";
 import { RecruiterEntity } from "./recruiter.entity";
 import { RequestEntity } from "./request.entity";
-import { DepartmentEntity } from "./department.entity";
-import { PositionTypeEntity } from "./position-type.entity";
-
-export enum JobPositionContractTypeEnum {
-  FULL_TIME = "FULL_TIME",
-  PART_TIME = "PART_TIME",
-  CONTRACT = "CONTRACT",
-  INTERN = "INTERN",
-}
-
-export type JobPositionContractType = keyof typeof JobPositionContractTypeEnum;
 
 @Entity({ name: "job_positions" })
-export class JobPositionEntity extends BaseEntity {
+export class JobPositionEntity extends BaseEntity implements WorkMetadata {
   @Column()
   name: string;
 
@@ -32,11 +38,14 @@ export class JobPositionEntity extends BaseEntity {
   @Column({ type: "float", precision: 10, scale: 2 })
   maximum_salary: number;
 
-  @Column({ type: "enum", enum: JobPositionContractTypeEnum })
-  contract_type: JobPositionContractType;
-
   @Column({ type: "datetime" })
   due_date: Date;
+
+  @Column({ type: "enum", enum: WorkContractTypeEnum })
+  work_type: WorkContractType;
+
+  @Column({ type: "enum", enum: WorkLocationTypeEnum })
+  work_location: WorkLocationType;
 
   @Column()
   country_id: string;
@@ -59,23 +68,26 @@ export class JobPositionEntity extends BaseEntity {
   @ManyToOne(() => CountryEntity, (country) => country.jobPositions)
   @JoinColumn({ name: "country_id", referencedColumnName: "id" })
   country: CountryEntity;
-  
+
   @ManyToOne(() => LanguageEntity, (language) => language.jobPositions)
   @JoinColumn({ name: "language_id", referencedColumnName: "id" })
   language: LanguageEntity;
-  
+
   @ManyToOne(() => RecruiterEntity, (recruiter) => recruiter.jobPositions)
   @JoinColumn({ name: "recruiter_id", referencedColumnName: "id" })
   recruiter: RecruiterEntity;
-  
+
   @ManyToOne(() => DepartmentEntity, (department) => department.jobPositions)
   @JoinColumn({ name: "department_id", referencedColumnName: "id" })
   department: DepartmentEntity;
 
-  @ManyToOne(() => PositionTypeEntity, (positionType) => positionType.jobPositions)
+  @ManyToOne(
+    () => PositionTypeEntity,
+    (positionType) => positionType.jobPositions
+  )
   @JoinColumn({ name: "position_type_id", referencedColumnName: "id" })
   positionType: PositionTypeEntity;
- 
+
   @OneToMany(() => RequestEntity, (request) => request.jobPosition)
   requests: RequestEntity[];
 

@@ -16,7 +16,8 @@ export async function updateJobPositionService(
     description,
     minimum_salary,
     maximum_salary,
-    contract_type,
+    work_type,
+    work_location,
     due_date,
     countryUUID,
     languageUUID,
@@ -189,8 +190,9 @@ export async function updateJobPositionService(
     parseFloat(minimum_salary) ?? foundJobPosition.minimum_salary;
   foundJobPosition.maximum_salary =
     parseFloat(maximum_salary) ?? foundJobPosition.maximum_salary;
-  foundJobPosition.contract_type =
-    contract_type ?? foundJobPosition.contract_type;
+  foundJobPosition.work_type = work_type ?? foundJobPosition.work_type;
+  foundJobPosition.work_location =
+    work_location ?? foundJobPosition.work_location;
   foundJobPosition.due_date = due_date ?? foundJobPosition.due_date;
   foundJobPosition.language = foundLanguage ?? foundJobPosition.language;
   foundJobPosition.recruiter = foundRecruiter ?? foundJobPosition.recruiter;

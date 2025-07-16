@@ -20,7 +20,8 @@ export const getAllJobPositionController = async (
         description: jobPosition.description,
         minimum_salary: jobPosition.minimum_salary,
         maximum_salary: jobPosition.maximum_salary,
-        contract_type: jobPosition.contract_type,
+        work_type: jobPosition.work_type,
+        work_location: jobPosition.work_location,
         country: {
           uuid: jobPosition.country.uuid,
           name: jobPosition.country.name,
