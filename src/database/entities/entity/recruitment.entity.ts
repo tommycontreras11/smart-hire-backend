@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -12,9 +13,12 @@ import { RequestEntity } from "./request.entity";
 @Entity({ name: "recruitment" })
 export class RecruitmentEntity extends BaseEntity {
   @PrimaryColumn()
+  request_id: number;
+
+  @Column()
   recruiter_id: number;
 
-  @PrimaryColumn()
+  @Column()
   candidate_id: number;
 
   @ManyToOne(() => RecruiterEntity, (recruiter) => recruiter.recruitment)

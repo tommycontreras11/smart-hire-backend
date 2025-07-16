@@ -15,7 +15,6 @@ export const getOneCandidateController = async (
     relations: {
       desiredPosition: true,
       department: true,
-      workExperience: true,
     },
   })
     .then((data) => {
@@ -34,12 +33,6 @@ export const getOneCandidateController = async (
           uuid: data.department.uuid,
           name: data.department.name,
         },
-        ...(data.workExperience && {
-          workExperience: {
-            uuid: data.workExperience.uuid,
-            company: data.workExperience.company,
-          },
-        }),
         status: data.status,
       };
 

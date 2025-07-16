@@ -12,6 +12,7 @@ import { PlatformType, PlatformTypeEnum } from "./../database/entities/entity/so
 import { CreateCertificationDTO } from "./certification.dto";
 import { PersonDTO } from "./common.dto";
 import { CreateEducationDTO } from "./education.dto";
+import { CreateWorkExperienceDTO } from "./work-experience.dto";
 
 export class CreateCandidateDTO extends PersonDTO {
   @IsNotEmpty()
@@ -73,6 +74,9 @@ class ProfessionalDTO {
   
   @IsOptional()
   certification: CreateCertificationDTO;
+
+  @IsOptional()
+  workExperience: CreateWorkExperienceDTO
 
   @IsOptional()
   @IsUUID("4", { each: true })

@@ -8,10 +8,12 @@ import {
   Matches,
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
-// import {
-//   // JobPositionContractType,
-//   // JobPositionContractTypeEnum,
-// } from "./../database/entities/entity/job-position.entity";
+import {
+  WorkContractType,
+  WorkContractTypeEnum, 
+  WorkLocationType, 
+  WorkLocationTypeEnum
+} from "./../enums/work.enum";
 
 export class CreateJobPositionDTO {
   @IsNotEmpty()
@@ -38,9 +40,13 @@ export class CreateJobPositionDTO {
   })
   maximum_salary: string;
 
-  // @IsNotEmpty()
-  // @IsEnum(JobPositionContractTypeEnum)
-  // contract_type: JobPositionContractType;
+  @IsNotEmpty()
+  @IsEnum(WorkContractTypeEnum)
+  work_type: WorkContractType;
+
+  @IsNotEmpty()
+  @IsEnum(WorkLocationTypeEnum)
+  work_location: WorkLocationType;
 
   @IsNotEmpty()
   @IsString()
@@ -96,9 +102,13 @@ export class UpdateJobPositionDTO {
   })
   maximum_salary: string;
 
-  // @IsOptional()
-  // @IsEnum(JobPositionContractTypeEnum)
-  // contract_type: JobPositionContractType;
+  @IsOptional()
+  @IsEnum(WorkContractTypeEnum)
+  work_type: WorkContractType;
+
+  @IsOptional()
+  @IsEnum(WorkLocationTypeEnum)
+  work_location: WorkLocationType;
 
   @IsNotEmpty()
   @IsString()

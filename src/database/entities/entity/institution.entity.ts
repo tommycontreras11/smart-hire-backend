@@ -1,10 +1,11 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
-import { RecruiterEntity } from "./recruiter.entity";
-import { TrainingEntity } from "./training.entity";
 import { CertificationEntity } from "./certification.entity";
 import { EducationEntity } from "./education.entity";
+import { RecruiterEntity } from "./recruiter.entity";
+import { TrainingEntity } from "./training.entity";
+import { WorkExperienceEntity } from "./work-experience.entity";
 
 @Entity({ name: "institutions" })
 export class InstitutionEntity extends BaseEntity {
@@ -25,4 +26,10 @@ export class InstitutionEntity extends BaseEntity {
 
   @OneToMany(() => CertificationEntity, (certification) => certification.institution)
   certifications: CertificationEntity[];
+
+  @OneToMany(
+    () => WorkExperienceEntity,
+    (workExperience) => workExperience.institution
+  )
+  workExperience: WorkExperienceEntity[];
 }

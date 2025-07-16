@@ -16,6 +16,7 @@ import { JobPositionEntity } from "./job-position.entity";
 import { PositionTypeEntity } from "./position-type.entity";
 import { EducationEntity } from "./education.entity";
 import { CertificationEntity } from "./certification.entity";
+import { WorkExperienceEntity } from "./work-experience.entity";
 
 export enum LevelCompetencyEnum {
   BEGINNER = "BEGINNER",
@@ -85,4 +86,10 @@ export class CompetencyEntity extends BaseEntity {
     (certification) => certification.competencies
   )
   certifications: CertificationEntity[];
+
+  @ManyToMany(
+    () => WorkExperienceEntity,
+    (workExperience) => workExperience.competencies
+  )
+  workExperiences: WorkExperienceEntity[];
 }

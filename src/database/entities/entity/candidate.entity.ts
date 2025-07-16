@@ -5,21 +5,20 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToMany,
-  OneToOne,
+  OneToMany
 } from "typeorm";
 import { PersonBaseEntity } from "../base/person.base.entity";
 import { StatusEnum, StatusType } from "./../../../constants";
-import { SocialLinkEntity } from "./social-link.entity";
+import { CertificationEntity } from "./certification.entity";
 import { CompetencyEntity } from "./competency.entity";
 import { DepartmentEntity } from "./department.entity";
+import { EducationEntity } from "./education.entity";
 import { PositionTypeEntity } from "./position-type.entity";
 import { RecruitmentEntity } from "./recruitment.entity";
 import { RequestEntity } from "./request.entity";
+import { SocialLinkEntity } from "./social-link.entity";
 import { TrainingEntity } from "./training.entity";
 import { WorkExperienceEntity } from "./work-experience.entity";
-import { EducationEntity } from "./education.entity";
-import { CertificationEntity } from "./certification.entity";
 
 @Entity({ name: "candidates" })
 export class CandidateEntity extends PersonBaseEntity {
@@ -55,11 +54,11 @@ export class CandidateEntity extends PersonBaseEntity {
   @JoinColumn({ name: "department_id", referencedColumnName: "id" })
   department: DepartmentEntity;
 
-  @OneToOne(
+  @OneToMany(
     () => WorkExperienceEntity,
     (workExperience) => workExperience.candidate
   )
-  workExperience: WorkExperienceEntity;
+  workExperiences: WorkExperienceEntity[];
 
   @OneToMany(() => RequestEntity, (request) => request.candidate)
   requests: RequestEntity[];

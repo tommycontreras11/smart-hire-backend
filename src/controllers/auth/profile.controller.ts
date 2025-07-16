@@ -14,7 +14,11 @@ export const getProfileController = async (req: Request, res: Response) => {
     relations: {
       desiredPosition: true,
       department: true,
-      workExperience: true,
+      workExperiences: {
+        position: true,
+        institution: true,
+        jobSource: true,
+      },
       competencies: true,
       educations: {
         institution: true,
@@ -87,13 +91,39 @@ export const getProfileController = async (req: Request, res: Response) => {
             }),
           })),
         }),
+        ...(data.workExperiences && {
+          workExperiences: data.workExperiences.map((workExperience) => ({
+            uuid: workExperience.uuid,
+            description: workExperience.description,
+            date_from: workExperience.date_from,
+            date_to: workExperience.date_to,
+            location: workExperience.location,
+            work_type: workExperience.work_type,
+            work_location: workExperience.work_location,
+            current_position: workExperience.current_position,
+            position: {
+              uuid: workExperience.position.uuid,
+              name: workExperience.position.name,
+            },
+            institution: {
+              uuid: workExperience.institution.uuid,
+              name: workExperience.institution.name,
+            },
+            ...(workExperience.jobSource && {
+              jobSource: {
+                uuid: workExperience.jobSource.uuid,
+                name: workExperience.jobSource.name,
+              },
+            }),
+          })),
+        }),
         ...(data.requests && {
           requests: data.requests.map((request) => ({
             uuid: request.uuid,
             recruitment: {
               recruiter: {
-                uuid: request.recruitment[0].recruiter.uuid,
-                name: request.recruitment[0].recruiter.name,
+                uuid: request?.recruitment[0]?.recruiter?.uuid,
+                name: request?.recruitment[0]?.recruiter?.name,
               },
             },
             jobPosition: {
@@ -114,7 +144,7 @@ export const getProfileController = async (req: Request, res: Response) => {
           socialLinks: data.socialLinks.map((socialLink) => ({
             uuid: socialLink.uuid,
             url: socialLink.url,
-            type: socialLink.platform
+            type: socialLink.platform,
           })),
         }),
         ...(data.competencies && {
