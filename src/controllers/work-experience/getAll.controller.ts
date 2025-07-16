@@ -7,7 +7,7 @@ export const getAllWorkExperienceController = async (_req: Request, res: Respons
     .then((data) => {
       const workExperiences = data.map((workExperience) => ({
         uuid: workExperience.uuid,
-        company: workExperience.company,
+        // company: workExperience.company,
         status: workExperience.status,
       }));
 

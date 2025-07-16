@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumberString,
@@ -8,11 +9,21 @@ import {
   Matches
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
+import {
+  WorkContractType,
+  WorkContractTypeEnum, 
+  WorkLocationType, 
+  WorkLocationTypeEnum
+} from "./../enums/work.enum";
 
 export class CreateWorkExperienceDTO {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  company: string;
+  uuid: string;
+
+  @IsOptional()
+  @IsString()
+  description: string;
 
   @IsNotEmpty()
   @IsString()
@@ -22,17 +33,21 @@ export class CreateWorkExperienceDTO {
   @IsString()
   date_to: Date;
 
-  @IsNotEmpty()
-  @IsNumberString()
-  @Matches(/^\d{1,8}(\.\d{1,2})?$/, {
-    message:
-      "Salary must have at most 10 digits in total and 2 decimal places",
-  })
-  salary: string;
-
   @IsOptional()
   @IsString()
-  recommendBy: string;
+  location: string;
+
+  @IsOptional()
+  @IsEnum(WorkContractTypeEnum)
+  work_type: WorkContractType;
+
+  @IsOptional()
+  @IsEnum(WorkLocationTypeEnum)
+  work_location: WorkLocationType;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  current_position: boolean;
 
   @IsNotEmpty()
   @IsUUID("4")
@@ -41,6 +56,14 @@ export class CreateWorkExperienceDTO {
   @IsNotEmpty()
   @IsUUID("4")
   candidateUUID: string;
+
+  @IsNotEmpty()
+  @IsUUID("4")
+  institutionUUID: string;
+
+  @IsOptional()
+  @IsUUID("4")
+  jobSourceUUID: string;
 }
 
 export class UpdateWorkExperienceDTO {

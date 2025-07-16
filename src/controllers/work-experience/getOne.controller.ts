@@ -13,7 +13,7 @@ export const getOneWorkExperienceController = async (req: Request, res: Response
     .then((data) => {
       const workExperience = {
         uuid: data.uuid,
-        company: data.company,
+        // company: data.company,
         status: data.status,
       };
 
