@@ -1,10 +1,9 @@
 import {
   BaseEntity,
-  Column,
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryColumn
 } from "typeorm";
 import { CandidateEntity } from "./candidate.entity";
 import { RecruiterEntity } from "./recruiter.entity";
@@ -15,10 +14,10 @@ export class RecruitmentEntity extends BaseEntity {
   @PrimaryColumn()
   request_id: number;
 
-  @Column()
+  @PrimaryColumn()
   recruiter_id: number;
 
-  @Column()
+  @PrimaryColumn()
   candidate_id: number;
 
   @ManyToOne(() => RecruiterEntity, (recruiter) => recruiter.recruitment)

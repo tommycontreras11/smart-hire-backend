@@ -7,7 +7,6 @@ import {
   ManyToOne
 } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
-import { WorkMetadata } from "../interfaces/work-metadata.interface";
 import { StatusEnum, StatusType } from "./../../../constants";
 import {
   WorkContractType,
@@ -22,7 +21,7 @@ import { JobSourceEntity } from "./job-source.entity";
 import { PositionTypeEntity } from "./position-type.entity";
 
 @Entity({ name: "work_experiences" })
-export class WorkExperienceEntity extends BaseEntity implements WorkMetadata {
+export class WorkExperienceEntity extends BaseEntity {
   @Column({ type: "text", nullable: true })
   description: string;
 
@@ -67,16 +66,16 @@ export class WorkExperienceEntity extends BaseEntity implements WorkMetadata {
   @JoinColumn({ name: "candidate_id", referencedColumnName: "id" })
   candidate: CandidateEntity;
 
-  @ManyToOne(() => JobSourceEntity, (jobSource) => jobSource.workExperiences)
-  @JoinColumn({ name: "job_source_id", referencedColumnName: "id" })
-  jobSource: JobSourceEntity;
-
   @ManyToOne(
     () => InstitutionEntity,
-    (institution) => institution.workExperience
+    (institution) => institution.workExperiences
   )
   @JoinColumn({ name: "institution_id", referencedColumnName: "id" })
   institution: InstitutionEntity;
+
+  @ManyToOne(() => JobSourceEntity, (jobSource) => jobSource.workExperiences)
+  @JoinColumn({ name: "job_source_id", referencedColumnName: "id" })
+  jobSource: JobSourceEntity;
 
   @ManyToMany(
     () => CompetencyEntity,

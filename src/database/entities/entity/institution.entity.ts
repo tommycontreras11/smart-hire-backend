@@ -31,5 +31,5 @@ export class InstitutionEntity extends BaseEntity {
     () => WorkExperienceEntity,
     (workExperience) => workExperience.institution
   )
-  workExperience: WorkExperienceEntity[];
+  workExperiences: WorkExperienceEntity[];
 }
