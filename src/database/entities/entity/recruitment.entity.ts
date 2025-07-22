@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -14,10 +15,10 @@ export class RecruitmentEntity extends BaseEntity {
   @PrimaryColumn()
   request_id: number;
 
-  @PrimaryColumn()
+  @Column()
   recruiter_id: number;
 
-  @PrimaryColumn()
+  @Column()
   candidate_id: number;
 
   @ManyToOne(() => RecruiterEntity, (recruiter) => recruiter.recruitment)

@@ -82,6 +82,7 @@ export class WorkExperienceEntity extends BaseEntity {
     (competency) => competency.workExperiences
   )
   @JoinTable({
+    name: "work_experience_competencies",
     joinColumns: [{ name: "work_experience_id", referencedColumnName: "id" }],
     inverseJoinColumns: [{ name: "competency_id", referencedColumnName: "id" }],
   })
