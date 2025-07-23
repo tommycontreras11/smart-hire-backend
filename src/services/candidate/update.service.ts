@@ -10,7 +10,6 @@ import { PositionTypeEntity } from "./../../database/entities/entity/position-ty
 import { SocialLinkEntity } from "./../../database/entities/entity/social-link.entity";
 import { hashPassword } from "./../../utils/common.util";
 import { statusCode } from "./../../utils/status.util";
-import { uploadFile } from "./../../utils/upload.util";
 import { validateProperty } from "./../../utils/user.util";
 
 export async function updateCandidateService(
@@ -29,8 +28,7 @@ export async function updateCandidateService(
     positionUUID,
     competencyUUIDs,
     status,
-  }: Partial<UpdateCandidateDTO>,
-  file?: Express.Multer.File | undefined
+  }: Partial<UpdateCandidateDTO>
 ) {
   const foundCandidate = await CandidateEntity.findOne({
     relations: {
@@ -182,12 +180,6 @@ export async function updateCandidateService(
   foundCandidate.competencies =
     foundCompetencies ?? foundCandidate.competencies;
   foundCandidate.status = status ?? foundCandidate.status;
-
-  if (file)
-    foundCandidate.curriculum = await uploadFile<CandidateEntity>(
-      foundCandidate,
-      file
-    );
 
   await foundCandidate.save().catch((e) => {
     console.error("updateCandidateService -> CandidateEntity.update: ", e);

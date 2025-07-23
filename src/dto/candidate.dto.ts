@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsEnum,
   IsNotEmpty,
@@ -5,10 +6,11 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  Matches
+  Matches,
+  ValidateNested,
 } from "class-validator";
 import { StatusEnum, StatusType } from "../constants";
-import { PlatformType, PlatformTypeEnum } from "./../database/entities/entity/social-link.entity";
+import { PlatformTypeEnum } from "./../database/entities/entity/social-link.entity";
 import { CreateCertificationDTO } from "./certification.dto";
 import { PersonDTO } from "./common.dto";
 import { CreateEducationDTO } from "./education.dto";
@@ -32,17 +34,20 @@ export class CreateCandidateDTO extends PersonDTO {
   departmentUUID: string;
 }
 
-export class SocialLinkCandidateDTO { 
+export class SocialLinkCandidateDTO {
   @IsNotEmpty()
-  @IsEnum(PlatformTypeEnum)  
-  key: PlatformType;
+  @IsEnum(PlatformTypeEnum)
+  key: PlatformTypeEnum;
 
   @IsNotEmpty()
   @IsString()
   value: string;
 }
 
-export class UpdateCandidateDTO extends CreateCandidateDTO implements Partial<CreateCandidateDTO> {
+export class UpdateCandidateDTO
+  extends CreateCandidateDTO
+  implements Partial<CreateCandidateDTO>
+{
   @IsOptional()
   @IsString()
   phone: string;
@@ -67,23 +72,39 @@ export class UpdateCandidateDTO extends CreateCandidateDTO implements Partial<Cr
   status: StatusType;
 }
 
-
 class ProfessionalDTO {
   @IsOptional()
   education: CreateEducationDTO;
-  
+
   @IsOptional()
   certification: CreateCertificationDTO;
 
   @IsOptional()
-  workExperience: CreateWorkExperienceDTO
+  workExperience: CreateWorkExperienceDTO;
 
   @IsOptional()
   @IsUUID("4", { each: true })
   competencyUUIDs: string[];
 }
 
-class PersonalDTO extends CreateCandidateDTO implements Partial<CreateCandidateDTO> {
+class PersonalDTO
+{
+  @IsOptional()
+  @IsString()
+  identification: string;
+
+  @IsOptional()
+  @IsString()
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  email: string;
+
+  @IsOptional()
+  @IsString()
+  password: string;
+
   @IsOptional()
   @IsString()
   phone: string;
@@ -97,13 +118,19 @@ class PersonalDTO extends CreateCandidateDTO implements Partial<CreateCandidateD
   bio: string;
 
   @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => SocialLinkCandidateDTO)
   social_links: SocialLinkCandidateDTO[];
 }
 
 export class UpdateCandidateProfileDTO {
   @IsOptional()
+  @ValidateNested()
+  @Type(() => PersonalDTO)
   personal: PersonalDTO;
 
   @IsOptional()
+  @ValidateNested()
+  @Type(() => ProfessionalDTO)
   professional: ProfessionalDTO;
 }

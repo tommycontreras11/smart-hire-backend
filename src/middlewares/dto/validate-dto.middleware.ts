@@ -40,12 +40,19 @@ export const validateDTO = (
     });
 
     try {
-      const errors = await validate(data, { whitelist: true });
+      const errors = await validate(data, { whitelist: true, forbidNonWhitelisted: true, forbidUnknownValues: true });
       if (errors.length > 0) {
         const error = errors[0];
-        const errorMessage = formatError(
-          Object.values(error.constraints || {})[0]
-        );
+        let errorMessage = "";
+        if (error?.children && error?.children[0]?.constraints) {
+          errorMessage = formatError(
+            Object.values(error?.children[0]?.constraints ?? {})[0]
+          );
+        } else {
+          errorMessage = formatError(
+            Object.values(error?.constraints ?? {})[0]
+          );
+        }
         res
           .status(statusCode.BAD_REQUEST)
           .json({ error: { message: errorMessage } });
@@ -72,6 +79,7 @@ export const validateDTO = (
         const userErrors = await validate(userInstance, { whitelist: true });
         if (userErrors.length > 0) {
           const userError = userErrors[0];
+
           const userErrorMessage = formatError(
             Object.values(userError.constraints || {})[0]
           );
@@ -109,6 +117,7 @@ export const validateDTO = (
 };
 
 const formatError = (error: string) => {
+  console.log("Error: ", error);
   error = error.replace("_", " ");
   return error[0].toUpperCase() + error.slice(1);
 };

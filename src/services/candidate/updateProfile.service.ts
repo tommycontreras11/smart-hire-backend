@@ -9,8 +9,7 @@ import { updateCandidateService } from "./update.service";
 
 export async function updateCandidateProfileService(
   uuid: string,
-  { personal, professional }: UpdateCandidateProfileDTO,
-  file?: Express.Multer.File | undefined
+  { personal, professional }: UpdateCandidateProfileDTO
 ) {
   const hasAnyEducationValue = Object.values(
     professional?.education || {}
@@ -29,8 +28,7 @@ export async function updateCandidateProfileService(
     {
       ...personal,
       competencyUUIDs: professional?.competencyUUIDs || [],
-    },
-    file
+    }
   );
 
   if (professional?.education?.uuid) {

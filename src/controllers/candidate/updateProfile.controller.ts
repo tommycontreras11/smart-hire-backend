@@ -5,7 +5,7 @@ import { statusCode } from "../../utils/status.util";
 export const updateCandidateProfileController = async (req: Request, res: Response) => {
   const { uuid } = req.params;
 
-  updateCandidateProfileService(uuid, req.body, req?.file)
+  updateCandidateProfileService(uuid, req.body)
     .then((data) => res.status(statusCode.OK).json({ message: data }))
     .catch((e) =>
       res

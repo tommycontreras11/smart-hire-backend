@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { updateCandidateService } from "../../services/candidate/update.service";
 import { statusCode } from "../../utils/status.util";
+import { uploadCandidateCvService } from "./../../services/candidate/uploadCv.service";
 
-export const updateCandidateController = async (req: Request, res: Response) => {
+export const uploadCandidateCvController = async (req: Request, res: Response) => {
   const { uuid } = req.params;
 
-  updateCandidateService(uuid, req.body)
+  uploadCandidateCvService(req?.file, uuid)
     .then((data) => res.status(statusCode.OK).json({ message: data }))
     .catch((e) =>
       res

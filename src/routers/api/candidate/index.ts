@@ -5,6 +5,7 @@ import {
   getOneCandidateController,
   updateCandidateController,
   updateCandidateProfileController,
+  uploadCandidateCvController,
 } from "../../../controllers/candidate";
 import {
   UpdateCandidateDTO,
@@ -60,9 +61,13 @@ router.patch(
 );
 router.patch(
   "/:uuid/profile",
-  upload.single('file'),
   validateDTO(UpdateCandidateProfileDTO),
   updateCandidateProfileController
+);
+router.patch(
+  "/:uuid/upload-cv",
+  upload.single('file'),
+  uploadCandidateCvController
 );
 
 export default router;
