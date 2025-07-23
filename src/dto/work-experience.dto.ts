@@ -55,10 +55,6 @@ export class CreateWorkExperienceDTO {
 
   @IsNotEmpty()
   @IsUUID("4")
-  candidateUUID: string;
-
-  @IsNotEmpty()
-  @IsUUID("4")
   institutionUUID: string;
 
   @IsOptional()
@@ -94,10 +90,6 @@ export class UpdateWorkExperienceDTO {
   @IsOptional()
   @IsUUID("4")
   positionUUID: string;
-
-  @IsOptional()
-  @IsUUID("4")
-  candidateUUID: string;
 
   @IsOptional()
   @IsEnum(StatusEnum)

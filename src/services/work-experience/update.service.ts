@@ -1,13 +1,11 @@
-import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
 import { WorkExperienceEntity } from "../../database/entities/entity/work-experience.entity";
 import {
-  CreateWorkExperienceDTO,
-  UpdateWorkExperienceDTO,
+  CreateWorkExperienceDTO
 } from "../../dto/work-experience.dto";
 import { statusCode } from "../../utils/status.util";
-import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
 import { JobSourceEntity } from "./../../database/entities/entity/job-source.entity";
+import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
 
 export async function updateWorkExperienceService(
   uuid: string,
@@ -20,7 +18,6 @@ export async function updateWorkExperienceService(
     work_location,
     current_position,
     positionUUID,
-    candidateUUID,
     institutionUUID,
     jobSourceUUID,
   }: CreateWorkExperienceDTO
@@ -62,28 +59,8 @@ export async function updateWorkExperienceService(
     }
   }
 
-  let foundCandidate: CandidateEntity | null = null;
-  if (candidateUUID) {
-    foundCandidate = await CandidateEntity.findOneBy({
-      uuid: candidateUUID,
-    }).catch((e) => {
-      console.error(
-        "updateWorkExperienceService -> CandidateEntity.findOneBy: ",
-        e
-      );
-      return null;
-    });
-
-    if (!foundCandidate) {
-      return Promise.reject({
-        message: "Candidate not found",
-        status: statusCode.NOT_FOUND,
-      });
-    }
-  }
-
   let foundInstitution: InstitutionEntity | null = null;
-  if (candidateUUID) {
+  if (institutionUUID) {
     foundInstitution = await InstitutionEntity.findOneBy({
       uuid: institutionUUID,
     }).catch((e) => {
@@ -103,7 +80,7 @@ export async function updateWorkExperienceService(
   }
 
   let foundJobSource: JobSourceEntity | null = null;
-  if (candidateUUID) {
+  if (jobSourceUUID) {
     foundJobSource = await JobSourceEntity.findOneBy({
       uuid: jobSourceUUID,
     }).catch((e) => {
@@ -130,7 +107,6 @@ export async function updateWorkExperienceService(
   foundWorkExperience.work_location = work_location ?? foundWorkExperience.work_location;
   foundWorkExperience.current_position = current_position ?? foundWorkExperience.current_position;
   foundWorkExperience.position = foundPositionType ?? foundWorkExperience.position;
-  foundWorkExperience.candidate = foundCandidate ?? foundWorkExperience.candidate;
   foundWorkExperience.institution = foundInstitution ?? foundWorkExperience.institution;
   foundWorkExperience.jobSource = foundJobSource ?? foundWorkExperience.jobSource;
 

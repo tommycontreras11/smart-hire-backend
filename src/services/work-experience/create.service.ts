@@ -12,7 +12,7 @@ export async function createWorkExperienceService({
   institutionUUID,
   jobSourceUUID,
   ...payload
-}: CreateWorkExperienceDTO) {
+}: CreateWorkExperienceDTO & { candidateUUID: string }) {
   const foundPositionType = await PositionTypeEntity.findOneBy({
     uuid: positionUUID,
   }).catch((e) => {
