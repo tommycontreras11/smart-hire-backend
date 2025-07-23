@@ -14,7 +14,7 @@ export class SocialLinkEntity extends BaseEntity {
   @Column()
   url: string;
 
-  @Column()
+  @Column({ type: "enum", enum: PlatformTypeEnum })
   platform: PlatformType;
 
   @Column()
