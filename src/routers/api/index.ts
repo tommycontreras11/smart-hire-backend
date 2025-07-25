@@ -16,6 +16,7 @@ import institution from "./institution";
 import positionType from "./position-type";
 import evaluationMethod from "./evaluation-method";
 import jobPosition from "./job-position";
+import jobSource from "./job-source";
 import workExperience from "./work-experience";
 import recruiter from "./recruiter";
 import request from "./request";
@@ -109,6 +110,19 @@ router.use(
 router.use("/evaluation-methods", authMiddleware, evaluationMethod);
 router.use(
   "/job-positions",
+  unless(
+    [
+      {
+        path: "/",
+        method: "GET",
+      },
+    ],
+    authMiddleware
+  ),
+  jobPosition
+);
+router.use(
+  "/job-sources",
   unless(
     [
       {
