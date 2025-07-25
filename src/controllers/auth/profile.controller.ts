@@ -18,11 +18,13 @@ export const getProfileController = async (req: Request, res: Response) => {
         position: true,
         institution: true,
         jobSource: true,
+        competencies: true,
       },
       competencies: true,
       educations: {
         institution: true,
         academicDiscipline: true,
+        competencies: true,
       },
       certifications: {
         institution: true,
@@ -68,6 +70,12 @@ export const getProfileController = async (req: Request, res: Response) => {
               uuid: education.academicDiscipline.uuid,
               name: education.academicDiscipline.name,
             },
+            ...(education.competencies && {
+              competencies: education.competencies.map((competency) => ({
+                uuid: competency.uuid,
+                name: competency.name,
+              })),
+            }),
           })),
         }),
         ...(data.certifications && {
@@ -114,6 +122,12 @@ export const getProfileController = async (req: Request, res: Response) => {
                 uuid: workExperience.jobSource.uuid,
                 name: workExperience.jobSource.name,
               },
+            }),
+            ...(workExperience.competencies && {
+              competencies: workExperience.competencies.map((competency) => ({
+                uuid: competency.uuid,
+                name: competency.name,
+              })),
             }),
           })),
         }),
