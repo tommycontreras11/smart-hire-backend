@@ -45,8 +45,9 @@ export async function validateProperty<T>(
 ) {
   const propertyToValidate = columnName === "Identification" ? true : false;
   const foundUser = await retrieveIfUserExists(
-    propertyToValidate ? property : null,
-    property
+    propertyToValidate ? property as string : null,
+    propertyToValidate ? null : property as string,
+    null
   );
 
   const isEntityClassType = foundUser instanceof entityClass;
