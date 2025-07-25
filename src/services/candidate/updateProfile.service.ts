@@ -5,6 +5,8 @@ import { createEducationService } from "./../../services/education/create.servic
 import { updateEducationService } from "./../../services/education/update.service";
 import { createWorkExperienceService } from "./../../services/work-experience/create.service";
 import { updateWorkExperienceService } from "./../../services/work-experience/update.service";
+import { statusCode } from "./../../utils/status.util";
+import { getOneCandidateService } from "./getOne.service";
 import { updateCandidateService } from "./update.service";
 
 export async function updateCandidateProfileService(
@@ -23,6 +25,18 @@ export async function updateCandidateProfileService(
     professional?.workExperience || {}
   ).some((val) => val !== null && val !== undefined && val !== "");
 
+  const foundCandidate = await getOneCandidateService({ where: { uuid } }).catch((e) => {
+    console.error("updateCandidateProfileService -> getOneCandidateService: ", e);
+    return null;
+  });
+
+  if (!foundCandidate) {
+    return Promise.reject({
+      message: "Candidate not found",
+      status: statusCode.NOT_FOUND,
+    });
+  }
+
   await updateCandidateService(
     uuid,
     {
@@ -40,7 +54,7 @@ export async function updateCandidateProfileService(
     hasAnyEducationValue &&
       (await createEducationService({
         ...professional?.education,
-        candidateUUID: uuid,
+        candidate: foundCandidate,
       }));
   }
 
@@ -53,7 +67,7 @@ export async function updateCandidateProfileService(
     hasAnyCertificationValue &&
       (await createCertificationService({
         ...professional?.certification,
-        candidateUUID: uuid,
+        candidate: foundCandidate,
       }));
   }
 
@@ -66,7 +80,9 @@ export async function updateCandidateProfileService(
     hasAnyWorkExperienceValue &&
       (await createWorkExperienceService({
         ...professional?.workExperience,
-        candidateUUID: uuid,
+        candidate: foundCandidate,
       }));
   }
+
+  return "Candidate profile updated successfully";
 }

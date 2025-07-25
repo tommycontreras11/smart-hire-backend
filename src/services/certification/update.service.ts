@@ -1,4 +1,6 @@
+import { In } from "typeorm";
 import { CertificationEntity } from "./../../database/entities/entity/certification.entity";
+import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
 import { UpdateCertificationDTO } from "./../../dto/certification.dto";
 import { getFullDate } from "./../../utils/date.util";
@@ -13,12 +15,14 @@ export async function updateCertificationService(
     credential_id,
     credential_link,
     institutionUUID,
+    competencyUUIDs
   }: UpdateCertificationDTO
 ) {
   const foundCertification = await CertificationEntity.findOne({
     relations: {
       candidate: true,
       institution: true,
+      competencies: true,
     },
     where: { uuid },
   }).catch((e) => {
@@ -40,7 +44,7 @@ export async function updateCertificationService(
     uuid: institutionUUID,
   }).catch((e) => {
     console.error(
-      "createCertificationService -> InstitutionEntity.findOneBy: ",
+      "updateCertificationService -> InstitutionEntity.findOneBy: ",
       e
     );
     return null;
@@ -69,6 +73,32 @@ export async function updateCertificationService(
       });
   }
 
+    let foundCompetencies: CompetencyEntity[] | null = [];
+    if (competencyUUIDs && competencyUUIDs?.length > 0) {
+      foundCompetencies = await CompetencyEntity.find({
+        where: {
+          uuid: In(competencyUUIDs),
+        },
+      }).catch((e) => {
+        console.error(
+          "updateCertificationService -> CompetencyEntity.findOneBy: ",
+          e
+        );
+        return null;
+      });
+  
+      if (
+        !foundCompetencies ||
+        foundCompetencies.length !== competencyUUIDs.length
+      ) {
+        return Promise.reject({
+          message: "Competencies not found",
+          status: statusCode.NOT_FOUND,
+        });
+      }
+    }
+  
+
   foundCertification.name = name ?? foundCertification.name;
   foundCertification.expedition_date = expedition_date
     ? new Date(getFullDate(expedition_date))
@@ -82,6 +112,7 @@ export async function updateCertificationService(
     credential_link ?? foundCertification.credential_link;
   foundCertification.institution =
     foundInstitution ?? foundCertification.institution;
+  foundCertification.competencies = foundCompetencies ?? foundCertification.competencies;
 
   await foundCertification.save().catch((e) => {
     console.error(

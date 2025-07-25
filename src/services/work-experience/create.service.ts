@@ -1,18 +1,24 @@
-import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
-import { JobSourceEntity } from "./../../database/entities/entity/job-source.entity";
+import { In } from "typeorm";
 import { WorkExperienceEntity } from "../../database/entities/entity/work-experience.entity";
 import { CreateWorkExperienceDTO } from "../../dto/work-experience.dto";
 import { statusCode } from "../../utils/status.util";
 import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
+import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
+import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
+import { JobSourceEntity } from "./../../database/entities/entity/job-source.entity";
 import { PositionTypeEntity } from "./../../database/entities/entity/position-type.entity";
+import { getFullDate } from "./../../utils/date.util";
 
 export async function createWorkExperienceService({
   positionUUID,
-  candidateUUID,
+  candidate,
   institutionUUID,
   jobSourceUUID,
+  date_from,
+  date_to,
+  competencyUUIDs,
   ...payload
-}: CreateWorkExperienceDTO & { candidateUUID: string }) {
+}: CreateWorkExperienceDTO & { candidate: CandidateEntity }) {
   const foundPositionType = await PositionTypeEntity.findOneBy({
     uuid: positionUUID,
   }).catch((e) => {
@@ -26,23 +32,6 @@ export async function createWorkExperienceService({
   if (!foundPositionType) {
     return Promise.reject({
       message: "Job position not found",
-      status: statusCode.NOT_FOUND,
-    });
-  }
-
-  const foundCandidate = await CandidateEntity.findOneBy({
-    uuid: candidateUUID,
-  }).catch((e) => {
-    console.error(
-      "createWorkExperienceService -> CandidateEntity.findOneBy: ",
-      e
-    );
-    return null;
-  });
-
-  if (!foundCandidate) {
-    return Promise.reject({
-      message: "Candidate not found",
       status: statusCode.NOT_FOUND,
     });
   }
@@ -81,11 +70,39 @@ export async function createWorkExperienceService({
     });
   }
 
+  let foundCompetencies: CompetencyEntity[] | null = [];
+  if (competencyUUIDs && competencyUUIDs?.length > 0) {
+    foundCompetencies = await CompetencyEntity.find({
+      where: {
+        uuid: In(competencyUUIDs),
+      },
+    }).catch((e) => {
+      console.error(
+        "createWorkExperienceService -> CompetencyEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (
+      !foundCompetencies ||
+      foundCompetencies.length !== competencyUUIDs.length
+    ) {
+      return Promise.reject({
+        message: "Competencies not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+
   await WorkExperienceEntity.create({
     institution: foundInstitution,
     ...(foundJobSource && { jobSource: foundJobSource }),
+    ...(date_from && { date_from: getFullDate(new Date(date_from)) }),
+    ...(date_to && { date_to: getFullDate(new Date(date_to)) }),
     position: foundPositionType,
-    candidate: foundCandidate,
+    candidate,
+    ...(foundCompetencies && { competencies: foundCompetencies }),
     ...payload,
   })
     .save()

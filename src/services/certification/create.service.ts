@@ -1,18 +1,22 @@
+import { In } from "typeorm";
+import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
 import { CertificationEntity } from "./../../database/entities/entity/certification.entity";
+import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
 import { CreateCertificationDTO } from "./../../dto/certification.dto";
 import { getFullDate } from "./../../utils/date.util";
 import { statusCode } from "./../../utils/status.util";
 
 export async function createCertificationService({
-  candidateUUID,
+  candidate,
   name,
   expedition_date,
   expiration_date,
   credential_id,
   credential_link,
   institutionUUID,
-}: CreateCertificationDTO & { candidateUUID: string }) {
+  competencyUUIDs,
+}: CreateCertificationDTO & { candidate: CandidateEntity }) {
   const foundInstitution = await InstitutionEntity.findOneBy({
     uuid: institutionUUID,
   }).catch((e) => {
@@ -35,7 +39,7 @@ export async function createCertificationService({
     where: {
       name,
       institution: { id: foundInstitution.id },
-      candidate: { uuid: candidateUUID },
+      candidate: { uuid: candidate.uuid },
     },
   });
 
@@ -45,14 +49,44 @@ export async function createCertificationService({
       status: statusCode.BAD_REQUEST,
     });
 
+  let foundCompetencies: CompetencyEntity[] | null = [];
+  if (competencyUUIDs && competencyUUIDs?.length > 0) {
+    foundCompetencies = await CompetencyEntity.find({
+      where: {
+        uuid: In(competencyUUIDs),
+      },
+    }).catch((e) => {
+      console.error(
+        "createCertificationService -> CompetencyEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (
+      !foundCompetencies ||
+      foundCompetencies.length !== competencyUUIDs.length
+    ) {
+      return Promise.reject({
+        message: "Competencies not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+
   await CertificationEntity.create({
     name,
-    ...(expedition_date && { expedition_date: getFullDate(expedition_date) }),
-    ...(expiration_date && { expiration_date: getFullDate(expiration_date) }),
+    ...(expedition_date && {
+      expedition_date: getFullDate(new Date(expedition_date)),
+    }),
+    ...(expiration_date && {
+      expiration_date: getFullDate(new Date(expiration_date)),
+    }),
     ...(credential_id && { credential_id }),
     ...(credential_link && { credential_link }),
     institution: foundInstitution,
-    candidate: { uuid: candidateUUID },
+    ...(foundCompetencies && { competencies: foundCompetencies }),
+    candidate,
   })
     .save()
     .catch((e) => {

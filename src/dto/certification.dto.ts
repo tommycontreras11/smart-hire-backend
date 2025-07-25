@@ -28,6 +28,10 @@ export class CreateCertificationDTO {
   @IsNotEmpty()
   @IsUUID("4")
   institutionUUID: string;
+
+  @IsOptional()
+  @IsUUID("4", { each: true })
+  competencyUUIDs: string[];
 }
 
 export class UpdateCertificationDTO

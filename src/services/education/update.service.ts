@@ -1,4 +1,6 @@
+import { In } from "typeorm";
 import { AcademicDisciplineEntity } from "./../../database/entities/entity/academic-discipline.entity";
+import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 import { EducationEntity } from "./../../database/entities/entity/education.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
 import { UpdateEducationDTO } from "./../../dto/education.dto";
@@ -15,6 +17,7 @@ export async function updateEducationService(
     end_date,
     institutionUUID,
     academicDisciplineUUID,
+    competencyUUIDs,
   }: UpdateEducationDTO
 ) {
   const foundEducation = await EducationEntity.findOne({
@@ -22,6 +25,7 @@ export async function updateEducationService(
       candidate: true,
       institution: true,
       academicDiscipline: true,
+      competencies: true,
     },
     where: {
       uuid,
@@ -89,6 +93,31 @@ export async function updateEducationService(
       });
   }
 
+  let foundCompetencies: CompetencyEntity[] | null = [];
+  if (competencyUUIDs && competencyUUIDs?.length > 0) {
+    foundCompetencies = await CompetencyEntity.find({
+      where: {
+        uuid: In(competencyUUIDs),
+      },
+    }).catch((e) => {
+      console.error(
+        "updateCandidateEducationService -> CompetencyEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (
+      !foundCompetencies ||
+      foundCompetencies.length !== competencyUUIDs.length
+    ) {
+      return Promise.reject({
+        message: "Competencies not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+
   foundEducation.title = title ?? foundEducation.title;
   foundEducation.grade = grade ? parseFloat(grade) : foundEducation.grade;
   foundEducation.description = description ?? foundEducation.description;
@@ -99,6 +128,9 @@ export async function updateEducationService(
     ? new Date(getFullDate(end_date))
     : foundEducation.end_date;
   foundEducation.institution = foundInstitution ?? foundEducation.institution;
+  foundEducation.academicDiscipline =
+    foundAcademicDiscipline ?? foundEducation.academicDiscipline;
+  foundEducation.competencies = foundCompetencies ?? foundEducation.competencies;
 
   await foundEducation.save().catch((e) => {
     console.error(

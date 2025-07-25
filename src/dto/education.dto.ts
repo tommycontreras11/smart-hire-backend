@@ -45,6 +45,10 @@ export class CreateEducationDTO {
   @IsOptional()
   @IsUUID("4")
   academicDisciplineUUID: string;
+
+  @IsOptional()
+  @IsUUID("4", { each: true })
+  competencyUUIDs: string[];
 }
 
 export class UpdateEducationDTO

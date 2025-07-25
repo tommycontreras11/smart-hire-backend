@@ -1,4 +1,7 @@
+import { In } from "typeorm";
 import { AcademicDisciplineEntity } from "./../../database/entities/entity/academic-discipline.entity";
+import { CandidateEntity } from "./../../database/entities/entity/candidate.entity";
+import { CompetencyEntity } from "./../../database/entities/entity/competency.entity";
 import { EducationEntity } from "./../../database/entities/entity/education.entity";
 import { InstitutionEntity } from "./../../database/entities/entity/institution.entity";
 import { CreateEducationDTO } from "./../../dto/education.dto";
@@ -6,16 +9,16 @@ import { getFullDate } from "./../../utils/date.util";
 import { statusCode } from "./../../utils/status.util";
 
 export async function createEducationService({
-    candidateUUID,
-    title,
-    grade,
-    description,
-    start_date,
-    end_date,
-    institutionUUID,
-    academicDisciplineUUID,
-  }: CreateEducationDTO & { candidateUUID: string }
-) {
+  candidate,
+  title,
+  grade,
+  description,
+  start_date,
+  end_date,
+  institutionUUID,
+  academicDisciplineUUID,
+  competencyUUIDs,
+}: CreateEducationDTO & { candidate: CandidateEntity }) {
   const foundInstitution = await InstitutionEntity.findOneBy({
     uuid: institutionUUID,
   }).catch((e) => {
@@ -54,7 +57,7 @@ export async function createEducationService({
       institution: true,
     },
     where: {
-      candidate: { uuid: candidateUUID },
+      candidate: { uuid: candidate.uuid },
       institution: { uuid: institutionUUID },
       title,
     },
@@ -66,17 +69,43 @@ export async function createEducationService({
       status: statusCode.BAD_REQUEST,
     });
 
+  let foundCompetencies: CompetencyEntity[] | null = [];
+  if (competencyUUIDs && competencyUUIDs?.length > 0) {
+    foundCompetencies = await CompetencyEntity.find({
+      where: {
+        uuid: In(competencyUUIDs),
+      },
+    }).catch((e) => {
+      console.error(
+        "createEducationService -> CompetencyEntity.findOneBy: ",
+        e
+      );
+      return null;
+    });
+
+    if (
+      !foundCompetencies ||
+      foundCompetencies.length !== competencyUUIDs.length
+    ) {
+      return Promise.reject({
+        message: "Competencies not found",
+        status: statusCode.NOT_FOUND,
+      });
+    }
+  }
+
   const educationSaved = await EducationEntity.create({
     ...(title && { title }),
     ...(grade && { grade: parseFloat(grade) }),
     ...(description && { description }),
-    ...(start_date && { start_date: getFullDate(start_date) }),
-    ...(end_date && { end_date: getFullDate(end_date) }),
+    ...(start_date && { start_date: getFullDate(new Date(start_date)) }),
+    ...(end_date && { end_date: getFullDate(new Date(end_date)) }),
     institution: foundInstitution,
-    candidate: { uuid: candidateUUID },
+    candidate,
     ...(foundAcademicDiscipline && {
       academicDiscipline: foundAcademicDiscipline,
     }),
+    ...(foundCompetencies && { competencies: foundCompetencies }),
   })
     .save()
     .catch((e) => {
