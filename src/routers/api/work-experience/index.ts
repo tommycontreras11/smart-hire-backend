@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  createWorkExperienceController,
   deleteWorkExperienceController,
   getAllWorkExperienceController,
   getOneWorkExperienceController,
@@ -11,11 +10,6 @@ import { CreateWorkExperienceDTO } from "./../../../dto/work-experience.dto";
 
 const router = Router();
 
-router.post(
-  "/",
-  validateDTO(CreateWorkExperienceDTO),
-  createWorkExperienceController
-);
 router.delete(
   "/:uuid",
   validateDTO(UuidDTO, "params"),
