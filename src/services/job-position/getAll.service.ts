@@ -4,13 +4,13 @@ import { JobPositionEntity } from "../../database/entities/entity/job-position.e
 interface IJobPositionFilter {
   jobOrSkill?: string | undefined;
   location?: string | undefined;
-  contractType?: string | undefined;
+  workType?: string | undefined;
 }
 
 export async function getAllJobPositionService({
   jobOrSkill,
   location,
-  contractType,
+  workType,
 }: IJobPositionFilter) {
   let query = JobPositionEntity.createQueryBuilder("job")
     .leftJoinAndSelect("job.country", "country")
@@ -47,8 +47,8 @@ export async function getAllJobPositionService({
     query.andWhere("country.name LIKE :location", { location: `%${location}%` });
   }
 
-  if (contractType) {
-    query.andWhere("job.contract_type LIKE :contractType", { contractType: `%${contractType}%` });
+  if (workType) {
+    query.andWhere("job.work_type LIKE :workType", { workType: `%${workType}%` });
   }
 
   const jobPositions = await query.getMany();

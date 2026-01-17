@@ -10,9 +10,9 @@ export const getAllJobPositionController = async (
 ) => {
   const jobOrSkill = req.query.jobOrSkill?.toString().trim();
   const location = req.query.location?.toString().trim();
-  const contractType = req.query.contractType?.toString().trim();
+  const workType = req.query.workType?.toString().trim();
 
-  getAllJobPositionService({ jobOrSkill, location, contractType })
+  getAllJobPositionService({ jobOrSkill, location, workType })
     .then((data) => {
       const jobPositions = data.map((jobPosition) => ({
         uuid: jobPosition.uuid,
